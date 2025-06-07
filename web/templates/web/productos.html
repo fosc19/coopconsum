@@ -1,0 +1,69 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/unified-gallery.css' %}">
+{% endblock %}
+
+{% block title %}Productes | Civada{% endblock %}
+
+{% block content %}
+<div class="container gallery-container">
+  <h1 class="mb-4 text-center">Els nostres productes</h1>
+  <form method="get" class="gallery-filter">
+    <div class="input-group">
+      <select name="categoria" class="form-select" onchange="this.form.submit()">
+        <option value="">Totes les categories</option>
+        {% for categoria in categorias %}
+          <option value="{{ categoria.id }}" {% if categoria_seleccionada and categoria.id == categoria_seleccionada.id %}selected{% endif %}>
+            {{ categoria.nombre }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-outline-secondary" type="submit">Filtrar</button>
+    </div>
+  </form>
+  {% if productos %}
+    <div class="gallery-grid">
+      {% for producto in productos %}
+        <div class="gallery-card">
+          <div class="gallery-img-container">
+            {% if producto.imagen %}
+              <img class="gallery-img" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            {% else %}
+              <img class="gallery-img" src="{% static 'img/no-image.png' %}" alt="Imatge no disponible">
+            {% endif %}
+          </div>
+          <div class="gallery-card-body">
+            {% if producto.categoria %}
+              <div class="product-category">{{ producto.categoria.nombre }}</div>
+            {% endif %}
+            
+            <h5 class="gallery-title">{{ producto.nombre }}</h5>
+            
+            {% if producto.descripcion %}
+              <p class="gallery-text">{{ producto.descripcion|truncatewords:20 }}</p>
+            {% endif %}
+            
+            <div class="gallery-meta">
+              {% if producto.precio %}
+                <div class="price-tag">
+                  <i class="fas fa-tag"></i> {{ producto.precio }} €
+                </div>
+              {% endif %}
+              
+              {% if producto.proveedor %}
+                <div class="provider-tag">
+                  <i class="fas fa-user"></i> {{ producto.proveedor.nombre }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hi ha productes disponibles.</p>
+  {% endif %}
+</div>
+{% endblock %}

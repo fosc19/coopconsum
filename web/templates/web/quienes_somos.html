@@ -1,0 +1,68 @@
+{% extends "web/base.html" %}
+{% block title %}Qui som | Civada{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="display-4 fw-bold mb-4 text-center">Qui som</h1>
+  <div class="row justify-content-center mb-5">
+    <div class="col-lg-10">
+      <div class="card shadow-sm border-0 bg-light mb-4">
+        <div class="card-body">
+          <p class="lead text-center mb-0">
+            La Civada és una cooperativa de consum ecològic de Sant Cugat del Vallès. Ens autogestionem amb l’objectiu d’accedir a productes ecològics, de proximitat i sense intermediaris. Cada setmana, els dimecres de 19.30 a 20.30 ens trobem al nostre local per recollir una cistella de verdures i fruites, a més d’altres productes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="fw-bold mb-3"><i class="fas fa-shopping-basket text-success me-2"></i>La cistella</h2>
+          <p>
+            Cada dimecres podem recollir una cistella de fruites i verdures que ens porta <a href="https://www.laruraldecollserola.com" target="_blank">La Rural de Collserola</a>, una cooperativa de pagesos que estan a Valldoreix i fan producció agroecològica. Cada família és sòcia de La Rural i fem la comanda directament al seu web.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="fw-bold mb-3"><i class="fas fa-leaf text-success me-2"></i>Altres productes</h2>
+          <ul>
+            <li>Setmanalment: làctics (iogurts, formatges, quallades), pa, ous, fruits secs…</li>
+            <li>Periòdicament: comandes directes a proveïdors (vedella, pollastre, xai, peix, oli, vins, productes d’higiene...)</li>
+            <li>Petit estoc al local: mel, arròs, llegums, cafè, te, sucre, pots de tomàquet, cigrons, llenties, olives, sucs, cerveses…</li>
+          </ul>
+          <div class="mt-3">
+            <strong>Criteris de selecció:</strong>
+            <ul class="mb-0">
+              <li>Productes ecològics, sense químics, amb certificació CCPAE o relació de confiança.</li>
+              <li>De proximitat, per reduir transport i apropar consumidors i productors.</li>
+              <li>Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d’exclusió, etc.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 bg-light">
+        <div class="card-body d-flex align-items-center">
+          <i class="fas fa-map-marker-alt fa-2x text-danger me-3"></i>
+          <div>
+            <h3 class="fw-bold mb-2">On som</h3>
+            <p class="mb-0">
+              El nostre local es troba a Cal Temerari:<br>
+              Carrer Plana de l’Hospital 26, Carrer Sant Esteve 11, Sant Cugat del Vallès
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

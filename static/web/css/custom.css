@@ -1,0 +1,11 @@
+/* Archivo de estilos personalizado para la web de Civada.
+   Puedes añadir aquí tus reglas CSS personalizadas. */
+
+/* Ajuste para la línea indicadora del menú activo */
+.civada-menu .nav-link::after {
+  bottom: -1px; /* Ajustado para que la línea esté justo en el borde inferior del menú */
+}
+
+.civada-menu .nav-link.active::after {
+  width: 100%; /* Hacemos que la línea ocupe todo el ancho del enlace */
+}

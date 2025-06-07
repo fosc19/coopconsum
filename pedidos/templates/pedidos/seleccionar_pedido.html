@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+  /* Estilos para la galería de productos de pedido */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  /* Se elimina el efecto de elevación para que las tarjetas sean completamente estáticas */
+  /* .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  } */
+  
+  .product-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+  
+  /* Se elimina el efecto de zoom en la imagen */
+  /* .product-card:hover .product-image {
+    transform: scale(1.05);
+  } */
+  
+  .product-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    flex-grow: 1;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-meta {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .product-price {
+    font-weight: 600;
+    color: #2c7be5;
+    margin-bottom: 5px;
+  }
+  
+  .stock-info {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .separator-line {
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 10px 0;
+    width: 100%;
+  }
+  
+  .quantity-container {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+  }
+  
+  .quantity-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .quantity-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .quantity-input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .submit-button:hover {
+    background-color: #0069d9;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Seleccionar Productes{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Seleccionar Productes</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Form que abarca todo el formset -->
+    <form method="post">
+      {% csrf_token %}
+      {{ formset.management_form }}
+
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h3 class="card-title">Comanda: {{ pedido }}</h3>
+        </div>
+        <div class="card-body">
+          <div class="product-grid">
+            {% for counter, pair in enumerated_pairs %}
+              {% with producto=pair.0 form=pair.1 %}
+                <div class="product-card">
+                  <!-- Imagen (miniatura) -->
+                  <div class="product-image-container">
+                    {% if producto.imagen %}
+                      <img class="product-image"
+                           src="{{ producto.imagen.url }}"
+                           alt="{{ producto.nombre }}"
+                           data-toggle="modal"
+                           data-target="#modalImagen{{ counter }}">
+                    {% else %}
+                      <img class="product-image"
+                           src="{% static 'img/no-image.png' %}"
+                           alt="Sense imatge">
+                    {% endif %}
+                  </div>
+
+                  <div class="product-content">
+                    <!-- Datos del producto -->
+                    <h5 class="product-title">{{ producto.nombre }}</h5>
+                    <div class="separator-line"></div>
+                    
+                    <p class="product-description">{{ producto.descripcion|truncatewords:15 }}</p>
+                    <div class="separator-line"></div>
+                    
+                    <div class="product-price">
+                      {{ producto.precio }} € / {{ producto.get_unidad_venta_display }}
+                    </div>
+
+                    <!-- Campo "producto" (oculto, se envía pero no se muestra) -->
+                    <div style="display:none;">
+                      {{ form.producto }}
+                    </div>
+
+                    <!-- Campo "cantidad" -->
+                    <div class="quantity-container">
+                      <label class="quantity-label" for="{{ form.cantidad.id_for_label }}">
+                        Quantitat ({{ producto.get_unidad_venta_display }}):
+                      </label>
+                      {{ form.cantidad }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal para imagen grande (solo si hay imagen) -->
+                {% if producto.imagen %}
+                  <div class="modal fade"
+                       id="modalImagen{{ counter }}"
+                       tabindex="-1"
+                       role="dialog"
+                       aria-labelledby="modalImagenLabel{{ counter }}"
+                       aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="modalImagenLabel{{ counter }}">
+                            {{ producto.nombre }}
+                          </h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body text-center">
+                          <img src="{{ producto.imagen.url }}"
+                               alt="{{ producto.nombre }}"
+                               class="img-fluid">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endwith %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="card-footer text-center">
+          <button type="submit" class="submit-button">Enviar Comanda</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  // Añadir clase a los inputs de cantidad
+  document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('input[type="number"]');
+    quantityInputs.forEach(input => {
+      input.classList.add('quantity-input');
+    });
+  });
+</script>
+{% endblock %}
+
+{% endblock %}

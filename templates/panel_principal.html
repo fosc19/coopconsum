@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Principal{% endblock %}
+
+{% block extra_css %}
+<!-- FullCalendar CSS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+
+<style>
+  /* Ajuste de tamaño para el título del calendario */
+  .fc .fc-toolbar-title {
+    font-size: 1rem !important;
+  }
+
+  /* Forzar la altura mínima de cada small box */
+  .small-box .inner {
+    min-height: 180px;
+  }
+
+  /* Quitar margen extra a los párrafos dentro de las small-box */
+  .small-box .inner p {
+    margin-bottom: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        {# <h1>Dashboard Principal</h1> #} {# Título eliminado #}
+      </div>
+      <div class="col-sm-6 text-right">
+        {# <small>{{ socio.nombre }} {{ socio.apellido }}</small> #} {# Nombre del socio eliminado #}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Fila de small boxes eliminada -->
+
+    <!-- Calendario -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Calendari d'Obertura-Tancament</h3> {# Título traducido #}
+          </div>
+          <div class="card-body">
+            <div id="calendar" style="height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+<!-- Datos de eventos en una etiqueta script separada -->
+<script id="calendar-events-data" type="application/json">
+  {{ events_json|safe }}
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  // Leer los datos JSON de la etiqueta script
+  var eventsDataElement = document.getElementById('calendar-events-data');
+  var eventsData = []; // Valor por defecto si no se encuentran datos
+  if (eventsDataElement) {
+    try {
+      eventsData = JSON.parse(eventsDataElement.textContent);
+    } catch (e) {
+      console.error("Error parsing calendar events JSON:", e);
+      // Opcional: Mostrar un mensaje al usuario
+    }
+  } else {
+      console.warn("Could not find calendar events data element (#calendar-events-data).");
+  }
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'ca', // Cambiado a catalán
+    firstDay: 1,
+    headerToolbar: {
+      left: '',
+      center: 'title',
+      right: ''
+    },
+    events: eventsData
+  });
+  calendar.render();
+});
+</script>
+{% endblock %}
+

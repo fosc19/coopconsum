@@ -1,0 +1,75 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/unified-gallery.css' %}">
+{% endblock %}
+
+{% block title %}Productors | Civada{% endblock %}
+{% block content %}
+<div class="container gallery-container">
+  <h1 class="mb-4 text-center">Els nostres productors</h1>
+
+  {# Filtro de categorías #}
+  <div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+      <form method="get" action="{% url 'web_productores' %}">
+        <div class="input-group">
+          <select name="categoria" class="form-select" onchange="this.form.submit()">
+            <option value="">Totes les categories</option>
+            {% for cat in categorias %}
+              <option value="{{ cat.id }}" {% if categoria_seleccionada and categoria_seleccionada.id == cat.id %}selected{% endif %}>
+                {{ cat.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-outline-secondary" type="submit">Filtrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if categoria_seleccionada %}
+    <h2 class="mb-3 text-center h4">Productors de: {{ categoria_seleccionada.nombre }}</h2>
+  {% endif %}
+
+  {% if productores %}
+    <div class="gallery-grid">
+      {% for productor in productores %}
+        <div class="gallery-card">
+          <div class="gallery-logo-container">
+            {% if productor.imagen %}
+              <img src="{{ productor.imagen.url }}" class="gallery-logo" alt="{{ productor.nombre }}">
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" class="gallery-logo" alt="Imatge no disponible">
+            {% endif %}
+          </div>
+          <div class="gallery-card-body">
+            <h5 class="gallery-title">{{ productor.nombre }}</h5>
+            {% if productor.descripcion_corta %}
+              <p class="gallery-text">{{ productor.descripcion_corta }}</p>
+            {% endif %}
+            <div class="gallery-meta">
+              {% if productor.contacto %}
+                {% if productor.contacto|slice:":4" == "http" %}
+                  <p>
+                    <i class="fas fa-user me-1"></i>
+                    <a href="{{ productor.contacto }}" target="_blank" rel="noopener noreferrer">{{ productor.contacto }}</a>
+                  </p>
+                {% else %}
+                  <p><i class="fas fa-user me-1"></i> {{ productor.contacto }}</p>
+                {% endif %}
+              {% endif %}
+              {% if productor.email %}
+                <p><i class="fas fa-envelope me-1"></i> <a href="mailto:{{ productor.email }}">{{ productor.email }}</a></p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hi ha productors disponibles.</p>
+  {% endif %}
+</div>
+{% endblock %}

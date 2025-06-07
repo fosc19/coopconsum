@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Comanda Inactiva</h1>
+    <hr>
+    <div class="alert alert-warning" role="alert">
+        La comanda <strong>{{ comanda.nombre }}</strong> ya no está activa. No puedes gestionarla en este momento.
+    </div>
+    <p>Si crees que esto es un error, por favor contacta con el administrador.</p>
+    <a href="{% url 'seleccionar_comanda' %}" class="btn btn-secondary">Volver a Mis Comandas</a>
+</div>
+{% endblock %}

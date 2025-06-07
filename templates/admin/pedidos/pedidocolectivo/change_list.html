@@ -1,0 +1,17 @@
+{% extends "admin/change_list.html" %}
+{% load i18n static %}
+
+{% block object-tools-items %}
+  {# Mantenemos los botones originales (Add) #}
+  {% if has_add_permission %}
+    {{ block.super }}
+  {% endif %}
+
+  {# Añadimos nuestro botón visual de borrado #}
+  {# Custom delete button removed #}
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{# Custom delete button script removed #}
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block title %}Recursos per a Cooperatives - Civada{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 mb-4">🤝 Recursos per a Cooperatives</h1>
+            <p class="lead">Compartim coneixement i recursos per enfortir el moviment cooperatiu</p>
+        </div>
+    </div>
+
+    <!-- Dos secciones principales -->
+    <div class="row">
+        <!-- Sección 1: Código Abierto -->
+        <div class="col-lg-6 mb-5">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fab fa-github fa-4x text-primary mb-3"></i>
+                        <h2 class="h3">🚀 Crea la teva Cooperativa</h2>
+                        <p class="text-muted">Codi obert per a noves cooperatives</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>💡 Per a qui és?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Grups que volen crear una nova cooperativa</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Cooperatives que necessiten una plataforma digital</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Desenvolupadors que volen contribuir al moviment cooperatiu</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>🛠️ Què inclou?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-star text-warning me-2"></i> Sistema complet de gestió de cooperatives</li>
+                            <li><i class="fas fa-star text-warning me-2"></i> Gestió de socis i comptes</li>
+                            <li><i class="fas fa-star text-warning me-2"></i> Sistema de comandes</li>
+                            <li><i class="fas fa-star text-warning me-2"></i> Gestió de proveedors i productes</li>
+                            <li><i class="fas fa-star text-warning me-2"></i> Web pública amb catàleg</li>
+                            <li><i class="fas fa-star text-warning me-2"></i> API per compartir informació</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>📋 Com començar?</h4>
+                        <ol class="ps-3">
+                            <li>Descarrega el codi des de GitHub</li>
+                            <li>Segueix la guia d'instal·lació</li>
+                            <li>Personalitza per a la teva cooperativa</li>
+                            <li>Desplega en el teu servidor</li>
+                        </ol>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="#" class="btn btn-primary btn-lg mb-3" target="_blank">
+                            <i class="fab fa-github me-2"></i>Veure a GitHub
+                        </a>
+                        <br>
+                        <small class="text-muted">
+                            <i class="fas fa-code me-1"></i>Llicència: MIT (Codi lliure)
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 2: API -->
+        <div class="col-lg-6 mb-5">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-exchange-alt fa-4x text-success mb-3"></i>
+                        <h2 class="h3">🌐 API per Cooperatives</h2>
+                        <p class="text-muted">Comparteix i accedeix a informació entre cooperatives</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4>🎯 Per a qui és?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Cooperatives que ja funcionen</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Desenvolupadors de cooperatives</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Xarxes de cooperatives</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>📊 Què pots obtenir?</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-database text-info me-2"></i> <strong>Proveedors:</strong> Contactes i informació</li>
+                            <li><i class="fas fa-database text-info me-2"></i> <strong>Productes:</strong> Catàleg amb preus</li>
+                            <li><i class="fas fa-database text-info me-2"></i> <strong>Categories:</strong> Organització de productes</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>🔧 Exemples d'ús</h4>
+                        <div class="bg-light p-3 rounded">
+                            <code class="small">
+                                # Obtenir proveedors<br>
+                                GET /api/proveedores/<br><br>
+                                # Buscar productes ecològics<br>
+                                GET /api/productos/?search=ecològic<br><br>
+                                # Obtenir categories<br>
+                                GET /api/categorias/
+                            </code>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>📈 Beneficis</h4>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-handshake text-primary me-2"></i> Compartir proveedors entre cooperatives</li>
+                            <li><i class="fas fa-handshake text-primary me-2"></i> Accedir a catàlegs de productes</li>
+                            <li><i class="fas fa-handshake text-primary me-2"></i> Crear xarxes de cooperació</li>
+                        </ul>
+                    </div>
+
+                    <div class="text-center">
+                        <a href="/api/" class="btn btn-success btn-lg mb-3" target="_blank">
+                            <i class="fas fa-code me-2"></i>Explorar API
+                        </a>
+                        <br>
+                        <small class="text-muted">
+                            <i class="fas fa-lock-open me-1"></i>API pública i gratuïta
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,696 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+{% load dict_extras %}  {# si usas dict_get, o quítalo si no lo usas #}
+
+{% block title %}Gestió de Comanda: {{ comanda.nombre }}{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-info" style="font-size:1.1em;">
+      {{ message }}
+      {% if "pendientes de validación" in message or "pendents de validació" in message %}
+        <br>
+        <strong>Nota:</strong> Els canvis que has realitzat no es reflectiran a la taula fins que el gestor de la comanda els validi.
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <h1>Gestió de Comanda: {{ comanda.nombre }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Estilos para impresión */
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}
+
+/* Estilos generales */
+.print-icon {
+  cursor: pointer;
+  float: right;
+  font-size: 1.2rem;
+  color: #000;
+  margin-left: 10px;
+}
+.print-icon:hover {
+  color: #333;
+}
+
+/* Estilos para pestañas */
+.nav-tabs .nav-link {
+  font-weight: 500;
+  border-radius: 0;
+  border-top: 3px solid transparent;
+}
+.nav-tabs .nav-link.active {
+  border-top: 3px solid #007bff;
+}
+.nav-tabs .nav-link:hover:not(.active) {
+  border-top: 3px solid #ccc;
+}
+
+/* Estilos para tablas */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+.table th {
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.table-sm td, .table-sm th {
+  padding: 0.5rem;
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(0,123,255,0.05);
+}
+
+/* Estilos para inputs */
+.cantidad-input {
+  width: 70px;
+  text-align: right;
+  padding: 0.25rem;
+}
+
+/* Estilos para tarjetas */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  margin-bottom: 1.5rem;
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header h3 {
+  margin-bottom: 0;
+}
+
+/* Estilos para propuestas */
+.propuesta-item {
+  border-left: 3px solid #ffc107;
+  padding-left: 10px;
+}
+</style>
+
+<script>
+function printSection(sectionId) {
+  var content = document.getElementById(sectionId).innerHTML;
+  var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+  mywindow.document.write('<html><head><title>Resum</title>');
+  mywindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+  mywindow.document.write('<style>body{font-family:sans-serif;margin:1cm;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:5px;text-align:center;} h3{text-align:center;} </style>');
+  mywindow.document.write('</head><body>');
+  mywindow.document.write(content);
+  mywindow.document.write('</body></html>');
+  mywindow.document.close();
+  mywindow.focus();
+  mywindow.print();
+  mywindow.close();
+  return true;
+}
+
+// Función para cambiar entre pestañas
+function switchTab(tabId) {
+  // Ocultar todos los contenidos de pestañas
+  document.querySelectorAll('.tab-pane').forEach(function(tab) {
+    tab.classList.remove('show', 'active');
+  });
+  
+  // Desactivar todos los enlaces de pestañas
+  document.querySelectorAll('.nav-link').forEach(function(link) {
+    link.classList.remove('active');
+  });
+  
+  // Mostrar el contenido de la pestaña seleccionada
+  document.getElementById(tabId).classList.add('show', 'active');
+  
+  // Activar el enlace de la pestaña seleccionada
+  document.querySelector('[href="#' + tabId + '"]').classList.add('active');
+}
+
+// Inicializar pestañas al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  // Comprobar si hay un hash en la URL
+  var hash = window.location.hash;
+  var tabIdToActivate = null;
+
+  if (hash) {
+    // Intentar encontrar el enlace y el panel correspondientes al hash
+    var targetLink = document.querySelector('.nav-link[href="' + hash + '"]');
+    var targetPane = document.querySelector(hash + '.tab-pane'); // Asegurarse que es un tab-pane
+
+    if (targetLink && targetPane) {
+      // Si se encuentran, obtener el ID del panel (sin el #)
+      tabIdToActivate = hash.substring(1);
+    }
+  }
+
+  if (tabIdToActivate) {
+    // Si se encontró una pestaña válida en el hash, activarla
+    switchTab(tabIdToActivate);
+  } else {
+    // Si no hay hash o no es válido, activar la primera pestaña por defecto
+    var firstNavLink = document.querySelectorAll('.nav-link')[0];
+    var firstTabPane = document.querySelectorAll('.tab-pane')[0];
+    if (firstNavLink && firstTabPane) {
+        firstNavLink.classList.add('active');
+        firstTabPane.classList.add('show', 'active');
+    }
+  }
+});
+</script>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Menú de navegación por pestañas -->
+    <div class="card no-print mb-3">
+      <div class="card-body p-0">
+        <ul class="nav nav-tabs" id="comandaTabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" id="resumen-tab" data-toggle="tab" href="#tab-resumen" role="tab" aria-controls="resumen" aria-selected="true" onclick="switchTab('tab-resumen')">
+              <i class="fas fa-chart-pie mr-1"></i> Resum Global
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="pedidos-tab" data-toggle="tab" href="#tab-pedidos" role="tab" aria-controls="pedidos" aria-selected="false" onclick="switchTab('tab-pedidos')">
+              <i class="fas fa-users mr-1"></i> Comandes per Soci
+              {% if estado_pedido_actual == 'listo_para_finalizar' %}
+                <span class="badge badge-success ml-1" title="A punt per finalitzar">1</span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="propuestas-tab" data-toggle="tab" href="#tab-propuestas" role="tab" aria-controls="propuestas" aria-selected="false" onclick="switchTab('tab-propuestas')">
+              <i class="fas fa-clipboard-check mr-1"></i> Propostes
+              {% if propuestas_pendientes %}
+                <span class="badge badge-warning">{{ propuestas_pendientes|length }}</span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="historial-tab" data-toggle="tab" href="#tab-historial" role="tab" aria-controls="historial" aria-selected="false" onclick="switchTab('tab-historial')">
+              <i class="fas fa-history mr-1"></i> Historial
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Contenido de las pestañas -->
+    <div class="tab-content" id="comandaTabsContent">
+      <!-- Pestaña 1: Resumen Global -->
+      <div class="tab-pane fade" id="tab-resumen" role="tabpanel" aria-labelledby="resumen-tab">
+        <div class="card" id="resumen-global">
+          <div class="card-header bg-gradient-info text-white">
+            <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Resum Global</h3>
+            <div>
+              <i class="fas fa-print print-icon no-print" title="Imprimir" onclick="printSection('resumen-global')"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle mr-2"></i>
+              <strong>Total de Comandes assignades:</strong> {{ total_pedidos }}
+            </div>
+            {# Información adicional para impresión #}
+            <div class="print-info">
+              {% if comanda.proveedor %}
+                <p><strong>Proveïdor:</strong> {{ comanda.proveedor.nombre }}</p>
+              {% endif %}
+              {% if pedidos %}
+                <p><strong>Data de Lliurament:</strong> {{ pedidos.0.fecha_entrega|date:"d/m/Y" }}</p>
+              {% endif %}
+            </div>
+            <div class="table-container">
+              <table class="table table-hover table-sm">
+                <thead>
+                  <tr class="bg-light">
+                    <th>Producte</th>
+                    <th class="text-center">Quantitat</th>
+                    <th class="text-right">Subtotal (€)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in resumen_global_data %}
+                    <tr>
+                      <td>{{ row.producto }}</td>
+                      <td class="text-center">{{ row.cantidad }}</td>
+                      <td class="text-right">{{ row.precio|floatformat:2 }} €</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="3" class="text-center text-muted">No hi ha dades per mostrar</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                <tfoot>
+                  <tr class="table-info">
+                    <th>Total General (Quant.)</th>
+                    <th class="text-center">{{ resumen_global_total_cantidad }}</th>
+                    <th></th>
+                  </tr>
+                  <tr class="table-info">
+                    <th>Total General (Preu)</th>
+                    <th></th>
+                    <th class="text-right">{{ resumen_global_total_precio|floatformat:2 }} €</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 2: Pedidos por Socio -->
+      <div class="tab-pane fade" id="tab-pedidos" role="tabpanel" aria-labelledby="pedidos-tab">
+        <div class="card" id="resumen-socios">
+          <div class="card-header bg-gradient-primary text-white">
+            <h3 class="card-title"><i class="fas fa-users mr-2"></i>Comandes per Soci</h3>
+            <div>
+              <i class="fas fa-print print-icon no-print" title="Imprimir" onclick="printSection('resumen-socios')"></i>
+            </div>
+          </div>
+          <div class="card-body">
+            {% if propuestas_pendientes %}
+              <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Ja existeix una proposta de correcció pendent de validació. No pots proposar més canvis fins que el gestor la validi.
+              </div>
+            {% endif %}
+            
+            <form method="post" action="{% url 'finalizar_comanda' comanda.id %}" id="form-pedidos">
+              {% csrf_token %}
+              <div class="table-container">
+                <table class="table table-hover table-sm">
+                  <thead>
+                    <tr class="bg-light">
+                      <th rowspan="2" class="align-middle">Soci</th>
+                      {% for producto_obj in productos_obj_list %}
+                        <th colspan="2" class="text-center">
+                          {{ producto_obj.nombre }}
+                          <small class="d-block text-muted">({{ producto_obj.get_unidad_venta_display }})</small>
+                        </th>
+                      {% endfor %}
+                      <th colspan="2" class="text-center bg-light">Total Soci</th>
+                    </tr>
+                    <tr class="bg-light">
+                      {% for producto_obj in productos_obj_list %}
+                        <th class="text-center">Quant.</th>
+                        <th class="text-center">€</th>
+                      {% endfor %}
+                      <th class="text-center">Quant.</th>
+                      <th class="text-center">€</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for row in pivot_data %}
+                      <tr>
+                        <td>{{ row.socio_nombre }}</td>
+                        {% for producto_obj in productos_obj_list %}
+                          {% with info=row.productos|get_item:producto_obj.nombre %}
+                            <td class="text-center">
+                              <input type="number"
+                                    name="cantidad_{{ row.socio_id }}_{{ producto_obj.id }}"
+                                    value="{{ info.cantidad|default:'0' }}"
+                                    min="0"
+                                    step="any"
+                                    class="form-control form-control-sm cantidad-input">
+                            </td>
+                            <td class="text-right">{{ info.precio|floatformat:2|default:"0.00" }} €</td>
+                          {% endwith %}
+                        {% endfor %}
+                        <td class="text-center font-weight-bold">{{ row.row_total_cantidad }}</td>
+                        <td class="text-right font-weight-bold">{{ row.row_total_precio|floatformat:2 }} €</td>
+                      </tr>
+                    {% empty %}
+                      <tr>
+                        <td colspan="{{ colspan_pivot }}" class="text-center text-muted">No hi ha dades per mostrar</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="{{ colspan_pivot }}" class="text-left pt-3">
+                        {% if user.id == comanda.socio_asignado.user.id and comanda.estado == 'activa' %}
+                          {# --- Botón NUEVO: Guardar Cambios (Solo Pendiente) --- #}
+                          {# Botón deshabilitado si pedido no está pendiente O si ya se puede finalizar #}
+                          <button type="submit" class="btn btn-info mr-2"
+                                  formaction="{% url 'guardar_cambios_comanda_pendiente' comanda.id %}"
+                                  {% comment %} Nueva condición: Deshabilitado si el estado NO es 'pendiente' {% endcomment %}
+                                  {% if estado_pedido_actual != 'pendiente' %}disabled{% endif %}
+                                  title="{% if estado_pedido_actual == 'pendiente' %}Guarda els canvis sense finalitzar (només actiu si la comanda està 'pendent'){% else %}Botó inactiu (la comanda no està en estat 'pendent'){% endif %}">
+                            <i class="fas fa-pencil-alt mr-1"></i> Desar Canvis (Comanda Pendent)
+                          </button>
+                          {% if estado_pedido_actual != 'pendiente' %}
+                            <small class="text-muted d-block mt-1" style="display: inline-block; margin-right: 15px;">
+                                (La comanda no està en estat 'pendent')
+                            </small>
+                          {% endif %}
+                          {# Eliminado el elif anterior basado en puede_finalizar_tras_validacion #}
+
+                          {# --- Botón ORIGINAL: Finalizar Comanda --- #}
+                          <button type="submit" class="btn btn-success"
+                                  formaction="{% url 'finalizar_comanda' comanda.id %}"
+                                  {% comment %} Nueva condición: Deshabilitado si el estado NO es 'listo_para_finalizar' {% endcomment %}
+                                  {% if estado_pedido_actual != 'listo_para_finalizar' %}disabled{% endif %}
+                                  title="{% if estado_pedido_actual == 'listo_para_finalizar' %}Finalitza la comanda i descompta moneders (només actiu si la comanda està 'a punt per finalitzar'){% else %}Botó inactiu (la comanda ha d'estar en estat 'a punt per finalitzar'){% endif %}">
+                            <i class="fas fa-check-circle mr-1"></i> Finalitzar Comanda
+                          </button>
+                          {% if estado_pedido_actual != 'listo_para_finalizar' %}
+                            <small class="text-muted d-block mt-1">
+                                (La comanda no està en estat 'a punt per finalitzar'. Valida totes les propostes pendents si n'hi ha.)
+                            </small>
+                          {% endif %}
+                          {# Eliminadas las condiciones anteriores basadas en propuestas_pendientes y puede_finalizar_tras_validacion #}
+                        {% else %}
+                          <span class="text-muted">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            La comanda no està activa o no ets el gestor.
+                          </span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    <!-- Totales por Producto (Cant.) -->
+                    <tr class="table-info">
+                      <th>Total per Producte (Quant.)</th>
+                      {% for producto_obj in productos_obj_list %}
+                        <th class="text-center">
+                          {{ column_totals_cantidad|get_item:producto_obj.nombre }}
+                        </th>
+                        <th></th>
+                      {% endfor %}
+                      <th class="text-center">{{ grand_total_cantidad }}</th>
+                      <th></th>
+                    </tr>
+                    <!-- Totales por Producto (Precio) -->
+                    <tr class="table-info">
+                      <th>Total per Producte (Preu)</th>
+                      {% for producto_obj in productos_obj_list %}
+                        <th></th>
+                        <th class="text-right">{{ column_totals_precio|get_item:producto_obj.nombre|floatformat:2 }} €</th>
+                      {% endfor %}
+                      <th></th>
+                      <th class="text-right">{{ grand_total_precio|floatformat:2 }} €</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 3: Propuestas de corrección -->
+      <div class="tab-pane fade" id="tab-propuestas" role="tabpanel" aria-labelledby="propuestas-tab">
+        <div class="card">
+          <div class="card-header bg-gradient-warning text-white">
+            <h3 class="card-title"><i class="fas fa-clipboard-check mr-2"></i>Propostes de correcció pendents</h3>
+          </div>
+          <div class="card-body">
+            {% if propuestas_pendientes %}
+              <div class="list-group">
+                {% for propuesta in propuestas_pendientes %}
+                  <div class="list-group-item mb-3 propuesta-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h5 class="mb-1">Proposta #{{ propuesta.id }}</h5>
+                        <p class="mb-1">
+                          <strong><i class="fas fa-shopping-cart mr-1"></i> Comanda:</strong> {{ propuesta.comanda.nombre }}<br>
+                          <strong><i class="fas fa-user mr-1"></i> Proposat per:</strong> {% if propuesta.usuario %}{{ propuesta.usuario.get_full_name|default:propuesta.usuario.username }}{% else %}Usuari desconegut{% endif %}<br>
+                          <strong><i class="fas fa-calendar-alt mr-1"></i> Data:</strong> {{ propuesta.fecha_propuesta|date:"d/m/Y H:i" }}
+                        </p>
+                      </div>
+                      <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#propuesta-{{ propuesta.id }}">
+                        <i class="fas fa-eye mr-1"></i> Veure detalls
+                      </button>
+                    </div>
+                    <div class="collapse mt-3" id="propuesta-{{ propuesta.id }}">
+                      {% with cambios=propuesta.get_cambios_list %}
+                      <div class="table-container">
+                        <table class="table table-sm table-bordered">
+                          <thead class="bg-light">
+                            <tr>
+                              <th>Soci</th>
+                              <th>Producte</th>
+                              <th class="text-center">Canvi</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for cambio in cambios %}
+                              <tr>
+                                <td>
+                                  {% for s in socios %}
+                                    {% if s.id == cambio.socio_id %}
+                                      {{ s.nombre }}
+                                    {% endif %}
+                                  {% endfor %}
+                                </td>
+                                <td>
+                                  {% for p in productos %}
+                                    {% if p.id == cambio.producto_id %}
+                                      {{ p.nombre }}
+                                    {% endif %}
+                                  {% endfor %}
+                                </td>
+                                <td class="text-center">
+                                  {% with key=propuesta.comanda.id|stringformat:"s"|add:","|add:cambio.socio_id|stringformat:"s"|add:","|add:cambio.producto_id|stringformat:"s" %}
+                                    {% with actual=cantidades_actuales|get_item:key %}
+                                      {% if actual is not None %}
+                                        {% with diff=cambio.cantidad|resta:actual %}
+                                          {% if diff > 0 %}
+                                            <span class="badge badge-success">+{{ diff|floatformat:2 }}</span>
+                                          {% elif diff < 0 %}
+                                            <span class="badge badge-danger">{{ diff|floatformat:2 }}</span>
+                                          {% else %}
+                                            <span class="badge badge-secondary">0</span>
+                                          {% endif %}
+                                        {% endwith %}
+                                      {% else %}
+                                        <span class="badge badge-success">+{{ cambio.cantidad|floatformat:2 }}</span>
+                                      {% endif %}
+                                    {% endwith %}
+                                  {% endwith %}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                      {% endwith %}
+                      {% if propuesta.estado == 'pendiente' and user.id == propuesta.comanda.socio_asignado.user.id %}
+                        <form method="post" action="{% url 'validar_propuesta_correccion' propuesta.id %}" style="display:inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check mr-1"></i> Validar proposta
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i>
+                No tens propostes de correcció pendents de validar.
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 4: Historial de Pedidos -->
+      <div class="tab-pane fade" id="tab-historial" role="tabpanel" aria-labelledby="historial-tab">
+        <div class="card">
+          <div class="card-header bg-gradient-secondary text-white">
+            <h3 class="card-title"><i class="fas fa-history mr-2"></i>Historial de Propostes de Correcció</h3>
+          </div>
+          <div class="card-body">
+            {% if historial_propuestas_comanda %}
+            <div class="table-container">
+              <table class="table table-hover table-sm">
+                <thead>
+                  <tr class="bg-light">
+                    <th>ID Proposta</th>
+                    <th>Data Proposta</th>
+                    <th>Proposat per</th>
+                    <th>Estat</th>
+                    <th>Data Validació</th>
+                    <th>Validat per</th>
+                    <th>Detalls</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for propuesta_hist in historial_propuestas_comanda %}
+                    <tr>
+                      <td>#{{ propuesta_hist.id }}</td>
+                      <td>{{ propuesta_hist.fecha_propuesta|date:"d/m/Y H:i" }}</td>
+                      <td>{% if propuesta_hist.usuario %}{{ propuesta_hist.usuario.get_full_name|default:propuesta_hist.usuario.username }}{% else %}Usuari desconegut{% endif %}</td>
+                      <td>
+                        <span class="badge {% if propuesta_hist.estado == 'pendiente' %}badge-warning{% elif propuesta_hist.estado == 'validada' %}badge-success{% elif propuesta_hist.estado == 'rechazada' %}badge-danger{% else %}badge-secondary{% endif %}">
+                          {{ propuesta_hist.get_estado_display }}
+                        </span>
+                      </td>
+                      <td>{{ propuesta_hist.fecha_validacion|date:"d/m/Y H:i"|default:"-" }}</td>
+                      <td>{% if propuesta_hist.usuario_validador %}{{ propuesta_hist.usuario_validador.get_full_name|default:propuesta_hist.usuario_validador.username }}{% else %}-{% endif %}</td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-info" type="button" data-toggle="collapse" data-target="#hist-propuesta-{{ propuesta_hist.id }}">
+                          <i class="fas fa-eye"></i>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr class="collapse" id="hist-propuesta-{{ propuesta_hist.id }}">
+                      <td colspan="7">
+                        <div class="p-2 bg-light border rounded">
+                          <strong>Canvis proposats:</strong>
+                          {% with cambios_hist=propuesta_hist.get_cambios_list %}
+                            {% if cambios_hist %}
+                              <ul>
+                              {% for cambio_hist in cambios_hist %}
+                                <li>
+                                  {% for socio_obj in socios %}
+                                    {% if socio_obj.id == cambio_hist.socio_id %}
+                                      <strong>Soci:</strong> {{ socio_obj.nombre }} {{ socio_obj.apellido }},
+                                    {% endif %}
+                                  {% endfor %}
+                                  {% for producto_obj in productos %}
+                                    {% if producto_obj.id == cambio_hist.producto_id %}
+                                      <strong>Producte:</strong> {{ producto_obj.nombre }},
+                                    {% endif %}
+                                  {% endfor %}
+                                  <strong>Quantitat proposada:</strong> {{ cambio_hist.cantidad|floatformat:2 }}
+                                </li>
+                              {% endfor %}
+                              </ul>
+                            {% else %}
+                              <p class="text-muted">No s'han pogut analitzar els canvis.</p>
+                            {% endif %}
+                          {% endwith %}
+                        </div>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="7" class="text-center text-muted">No hi ha historial de propostes per a aquesta comanda.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {# Paginación para Propuestas #}
+            {% if historial_propuestas_comanda.has_other_pages %}
+              <nav aria-label="Paginació de propostes">
+                <ul class="pagination justify-content-center mt-3">
+                  {% if historial_propuestas_comanda.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?propuestas_page={{ historial_propuestas_comanda.previous_page_number }}{% if request.GET.pedidos_page %}&pedidos_page={{ request.GET.pedidos_page }}{% endif %}#tab-historial">Anterior</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                  {% endif %}
+
+                  {% for i in historial_propuestas_comanda.paginator.page_range %}
+                    {% if historial_propuestas_comanda.number == i %}
+                      <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                      <li class="page-item"><a class="page-link" href="?propuestas_page={{ i }}{% if request.GET.pedidos_page %}&pedidos_page={{ request.GET.pedidos_page }}{% endif %}#tab-historial">{{ i }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if historial_propuestas_comanda.has_next %}
+                    <li class="page-item"><a class="page-link" href="?propuestas_page={{ historial_propuestas_comanda.next_page_number }}{% if request.GET.pedidos_page %}&pedidos_page={{ request.GET.pedidos_page }}{% endif %}#tab-historial">Següent</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">Següent</span></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+            {% else %}
+              <p class="text-center text-muted">No hi ha historial de propostes per a aquesta comanda.</p>
+            {% endif %}
+
+            <hr class="my-4"> {# Separador visual #}
+
+            <h4 class="mb-3"><i class="fas fa-archive mr-2"></i>Historial de Comandes Col·lectives Associades</h4>
+            {% if historial_pedidos_colectivos %}
+            <div class="table-container">
+              <table class="table table-hover table-sm">
+                <thead>
+                  <tr class="bg-light">
+                    <th>ID Comanda</th>
+                    <th>Estat</th>
+                    <th>Data Obertura</th>
+                    <th>Data Tancament</th>
+                    <th>Data Lliurament</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for pedido_hist in historial_pedidos_colectivos %}
+                    <tr>
+                      <td>#{{ pedido_hist.id }}</td>
+                      <td>
+                        <span class="badge {% if pedido_hist.estado == 'abierto' %}badge-success{% elif pedido_hist.estado == 'pendiente' %}badge-warning{% elif pedido_hist.estado == 'listo_para_finalizar' %}badge-info{% elif pedido_hist.estado == 'inactivo' %}badge-secondary{% else %}badge-primary{% endif %}">
+                          {{ pedido_hist.get_estado_display }}
+                        </span>
+                      </td>
+                      <td>{{ pedido_hist.fecha_apertura|date:"d/m/Y H:i" }}</td>
+                      <td>{{ pedido_hist.fecha_cierre|date:"d/m/Y H:i" }}</td>
+                      <td>{{ pedido_hist.fecha_entrega|date:"d/m/Y"|default:"-" }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="5" class="text-center text-muted">No hi ha comandes col·lectives associades a aquesta comanda.</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {# Paginación para Pedidos Colectivos #}
+            {% if historial_pedidos_colectivos.has_other_pages %}
+              <nav aria-label="Paginació de comandes col·lectives">
+                <ul class="pagination justify-content-center mt-3">
+                  {% if historial_pedidos_colectivos.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?pedidos_page={{ historial_pedidos_colectivos.previous_page_number }}{% if request.GET.propuestas_page %}&propuestas_page={{ request.GET.propuestas_page }}{% endif %}#tab-historial">Anterior</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                  {% endif %}
+
+                  {% for i in historial_pedidos_colectivos.paginator.page_range %}
+                    {% if historial_pedidos_colectivos.number == i %}
+                      <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                      <li class="page-item"><a class="page-link" href="?pedidos_page={{ i }}{% if request.GET.propuestas_page %}&propuestas_page={{ request.GET.propuestas_page }}{% endif %}#tab-historial">{{ i }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if historial_pedidos_colectivos.has_next %}
+                    <li class="page-item"><a class="page-link" href="?pedidos_page={{ historial_pedidos_colectivos.next_page_number }}{% if request.GET.propuestas_page %}&propuestas_page={{ request.GET.propuestas_page }}{% endif %}#tab-historial">Següent</a></li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">Següent</span></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+            {% else %}
+              <p class="text-center text-muted">No hi ha comandes col·lectives associades a aquesta comanda.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

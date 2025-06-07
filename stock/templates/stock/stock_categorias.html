@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Stock por Categoría{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Stock por Categoría</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-success">
+      <div class="card-header">
+        <h3 class="card-title">Categorías con Productos en Stock</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for categoria in categorias %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <a href="{% url 'stock:stock_productos_de_categoria' categoria.id %}" class="text-decoration-none text-dark">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ categoria.nombre }}</h5>
+                    <p class="card-text">{{ categoria.descripcion|truncatewords:20 }}</p>
+                    <p class="card-text"><small class="text-muted">Productos en stock: {{ categoria.num_productos_stock }}</small></p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <p>No hay categorías con productos marcados como stock.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

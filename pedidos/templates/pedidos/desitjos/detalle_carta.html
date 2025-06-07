@@ -1,0 +1,138 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Detall Carta de Desig: {{ carta_deseo.titulo }}{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-9">
+        <h1><i class="fas fa-lightbulb mr-2"></i>{{ carta_deseo.titulo }}</h1>
+      </div>
+      <div class="col-sm-3 text-right">
+        <a href="{% url 'listar_cartas_deseo' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left mr-1"></i> Tornar a Llistat
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="card">
+      <div class="card-header {% if carta_deseo.estado == 'minimo_alcanzado' %}bg-success text-white{% elif carta_deseo.estado == 'activa' %}bg-info text-white{% else %}bg-light{% endif %}">
+        <h3 class="card-title">Detalls de la Carta de Desig</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            {% if carta_deseo.imagen_representativa %}
+              <img src="{{ carta_deseo.imagen_representativa.url }}" class="img-fluid rounded mb-3" alt="{{ carta_deseo.titulo }}">
+            {% else %}
+              <div class="img-fluid rounded mb-3 bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                <i class="fas fa-seedling fa-5x text-muted"></i>
+              </div>
+            {% endif %}
+          </div>
+          <div class="col-md-8">
+            <p><strong>Descripció:</strong> {{ carta_deseo.descripcion|linebreaksbr }}</p>
+            <p><strong>Estat:</strong> <span class="badge {% if carta_deseo.estado == 'minimo_alcanzado' %}badge-success{% elif carta_deseo.estado == 'activa' %}badge-info{% else %}badge-secondary{% endif %}">{{ carta_deseo.get_estado_display }}</span></p>
+            {% if carta_deseo.proveedor_sugerido %}
+              <p><strong>Proveïdor Suggerit:</strong> {{ carta_deseo.proveedor_sugerido.nombre }}</p>
+            {% endif %}
+            {% if carta_deseo.fecha_limite_interes %}
+              <p><strong>Data Límit per Expressar Interès:</strong> {{ carta_deseo.fecha_limite_interes|date:"d/m/Y" }}</p>
+            {% else %}
+              <p><strong>Data Límit per Expressar Interès:</strong> Oberta indefinidament</p>
+            {% endif %}
+            
+            {% if carta_deseo.tipo_minimo and carta_deseo.valor_minimo_requerido %}
+              <p class="mt-3"><strong>Objectiu Mínim:</strong> 
+                {{ carta_deseo.valor_minimo_requerido|floatformat:0 }} 
+                {% if carta_deseo.tipo_minimo == 'unidades_producto' %}
+                  unitats de {{ carta_deseo.producto_objetivo_minimo.nombre|default:"producte especificat" }}.
+                {% elif carta_deseo.tipo_minimo == 'socios_producto' %}
+                  socis interessats en {{ carta_deseo.producto_objetivo_minimo.nombre|default:"producte especificat" }}.
+                {% elif carta_deseo.tipo_minimo == 'importe_total' %}
+                  € d'import total acumulat.
+                {% else %}
+                  {{ carta_deseo.get_tipo_minimo_display }}.
+                {% endif %}
+              </p>
+              {# Aquí podríem afegir una barra de progrés si calculem el progrés actual #}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if carta_deseo.estado == 'activa' or carta_deseo.estado == 'minimo_alcanzado' %}
+    <div class="card mt-4">
+      <div class="card-header bg-primary text-white">
+        <h3 class="card-title"><i class="fas fa-pencil-alt mr-2"></i>Registra el Teu Interès</h3>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'registrar_interes_en_carta' carta_deseo.id %}">
+          {% csrf_token %}
+          <p>Indica la quantitat que estaries disposat/da a comprar per a cada producte d'aquesta carta:</p>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Producte</th>
+                  <th class="text-center" style="width: 150px;">Quantitat Desitjada</th>
+                  <th class="text-center">Unitat</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item_form_data in initial_data_formset %}
+                  <tr>
+                    <td>{{ item_form_data.producto_nombre }}</td>
+                    <td class="text-center">
+                      <input type="number"
+                             name="cantidad_producto_{{ item_form_data.producto_id }}"
+                             value="{{ item_form_data.cantidad_deseada|floatformat:"-3" }}" {# Usar floatformat con argumento negativo para forzar punto #}
+                             class="form-control form-control-sm text-right"
+                             min="0"
+                             step="{% if item_form_data.unidad_venta == 'Unitat' or item_form_data.unidad_venta == 'Kilogramo' %}1{% elif item_form_data.unidad_venta == 'Gramo' %}1{% else %}0.01{% endif %}" {# Ajustado el step #}
+                             style="width: 100px; display: inline-block;">
+                    </td>
+                    <td class="text-center">{{ item_form_data.unidad_venta }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <button type="submit" class="btn btn-success mt-3">
+            <i class="fas fa-check mr-1"></i> Guardar el Meu Interès
+          </button>
+        </form>
+      </div>
+    </div>
+    {% elif carta_deseo.estado == 'completada' %}
+    <div class="alert alert-success">
+        <i class="fas fa-check-circle mr-2"></i>Aquesta carta de desig ja ha estat completada. Gràcies per la teva participació!
+    </div>
+    {% else %}
+    <div class="alert alert-secondary">
+        <i class="fas fa-info-circle mr-2"></i>Actualment no es pot registrar interès per a aquesta carta de desig (estat: {{ carta_deseo.get_estado_display }}).
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

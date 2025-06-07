@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Control Mestre de Comandes{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Estilos adicionales si son necesarios para el modal */
+#resumenModal .modal-lg {
+    max-width: 80%; /* Hacer el modal más ancho */
+}
+/* Ocultar tabla de productos de stock inicialmente */
+#tabla-stock-productos {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Control Mestre de Comandes</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Card Pedidos Abiertos -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Comandes Obertes per a Recepció</h3>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 10px">ID</th>
+              <th>Tipus</th>
+              <th>Estat</th>
+              <th>Proveïdor/Categoria</th>
+              <th>Data Tancament</th>
+              <th>Data Lliurament</th>
+              <th style="width: 180px;">Accions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pedido in pedidos_abiertos %}
+            <tr>
+              <td>{{ pedido.id }}</td>
+              <td>{{ pedido.get_tipo_display }}</td>
+              <td>
+                {% if pedido.estado == 'abierto' %}
+                  <span class="badge badge-success">Obert</span>
+                {% elif pedido.estado == 'pendiente' %}
+                  <span class="badge badge-warning">Pendent</span>
+                {% elif pedido.estado == 'inactivo' %}
+                  <span class="badge badge-secondary">Inactiu</span>
+                {% else %}
+                  <span class="badge badge-info">{{ pedido.estado|title }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if pedido.proveedor %}
+                  {{ pedido.proveedor.nombre }}
+                {% elif pedido.categoria %}
+                  {{ pedido.categoria.nombre }}
+                {% else %}
+                  N/D
+                {% endif %}
+              </td>
+              <td>{{ pedido.fecha_cierre|date:"d/m/Y H:i" }}</td>
+              <td>{{ pedido.fecha_entrega|date:"d/m/Y H:i" }}</td>
+              <td>
+                {# Eliminado onclick, añadido clase y data attribute #}
+                <button type="button" class="btn btn-xs btn-info js-mostrar-resumen" data-pedido-id="{{ pedido.id }}">
+                  Resum Socis
+                </button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center">Actualment no hi ha comandes obertes.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NUEVA SECCIÓN: Resumen editable de pedidos colectivos abiertos -->
+    {% for pedido in pedidos_abiertos %}
+      {% if pedido.comanda %}
+        <div class="card card-primary mt-4">
+          <div class="card-header">
+            <h3 class="card-title">
+              Resum editable de Comanda Col·lectiva #{{ pedido.id }} ({{ pedido.get_tipo_display }}) -
+              Estat:
+              {% if pedido.estado == 'abierto' %}
+                <span class="badge badge-success">Obert</span>
+              {% elif pedido.estado == 'pendiente' %}
+                <span class="badge badge-warning">Pendent</span>
+              {% else %}
+                <span class="badge badge-secondary">{{ pedido.estado|title }}</span>
+              {% endif %}
+              {% if pedido.proveedor %} - {{ pedido.proveedor.nombre }}{% elif pedido.categoria %} - {{ pedido.categoria.nombre }}{% endif %}
+            </h3>
+          </div>
+          <div class="card-body">
+            {% with resumen=resumen_por_pedido|get_item:pedido.id %}
+              <form method="post" action="{% url 'corregir_cantidades_socios' pedido.comanda.id %}">
+                {% csrf_token %}
+                <div class="table-responsive">
+                  <table class="table table-hover table-sm">
+                    <thead>
+                      <tr>
+                        <th rowspan="2" class="align-middle">Soci</th>
+                        {% for producto_obj in resumen.productos_obj_list %}
+                          <th colspan="2" class="text-center">{{ producto_obj.nombre }} ({{ producto_obj.get_unidad_venta_display }})</th>
+                        {% endfor %}
+                        <th colspan="2" class="text-center">Total Soci</th>
+                      </tr>
+                      <tr>
+                        {% for producto_obj in resumen.productos_obj_list %}
+                          <th>Quant.</th>
+                          <th>€</th>
+                        {% endfor %}
+                        <th>Quant.</th>
+                        <th>€</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in resumen.pivot_data %}
+                        <tr>
+                          <td>{{ row.socio_nombre }}</td>
+                          {% for producto_obj in resumen.productos_obj_list %}
+                            {% with info=row.productos|get_item:producto_obj.nombre %}
+                              <td>
+                                <input type="number"
+                                       name="cantidad_{{ row.socio_id }}_{{ producto_obj.id }}"
+                                       value="{{ info.cantidad|default:'0' }}"
+                                       min="0"
+                                       step="any"
+                                       class="form-control form-control-sm"
+                                       style="width: 70px; text-align: right;">
+                              </td>
+                              <td>{{ info.precio|floatformat:2|default:"0.00" }}</td>
+                            {% endwith %}
+                          {% endfor %}
+                          <td>{{ row.row_total_cantidad }}</td>
+                          <td>{{ row.row_total_precio|floatformat:2 }}</td>
+                        </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="{{ resumen.colspan_pivot }}">No hi ha dades per mostrar</td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="{{ resumen.colspan_pivot }}">
+                          <button type="submit" class="btn btn-primary btn-sm" {% if pedido.estado != 'pendiente' %}disabled{% endif %}>
+                            Desar correccions
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="table-danger">
+                        <th>Total per Producte (Quant.)</th>
+                        {% for producto_obj in resumen.productos_obj_list %}
+                          <th>
+                            {{ resumen.column_totals_cantidad|get_item:producto_obj.nombre }}
+                          </th>
+                          <th></th>
+                        {% endfor %}
+                        <th>{{ resumen.grand_total_cantidad }}</th>
+                        <th></th>
+                      </tr>
+                      <tr class="table-danger">
+                        <th>Total per Producte (Preu)</th>
+                        {% for producto_obj in resumen.productos_obj_list %}
+                          <th></th>
+                          <th>{{ resumen.column_totals_precio|get_item:producto_obj.nombre|floatformat:2 }}</th>
+                        {% endfor %}
+                        <th></th>
+                        <th>{{ resumen.grand_total_precio|floatformat:2 }}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </form>
+            {% endwith %}
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning mt-4">
+          La comanda col·lectiva #{{ pedido.id }} no té comanda associada i no es pot editar des d'aquí.
+        </div>
+      {% endif %}
+    {% endfor %}
+    <!-- FIN NUEVA SECCIÓN -->
+    <!-- Fin Historial -->
+
+
+  </div> {# Cierre del container-fluid principal #}
+</section> {# Cierre de la section principal #}
+{# --- INICIO: Historial de Propuestas Enviadas --- #}
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-secondary mt-4">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-history mr-2"></i>Historial de Totes les Propostes Enviades</h3>
+      </div>
+      <div class="card-body p-0">
+        {% if mis_propuestas_enviadas %}
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Comanda</th>
+                <th>Proposat Per</th> {# Nueva columna #}
+                <th>Data Enviament</th>
+                <th>Estat</th>
+                <th>Data Validació</th>
+                <th>Validador</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for propuesta in mis_propuestas_enviadas %}
+                <tr>
+                  <td>{{ propuesta.id }}</td>
+                  <td>{{ propuesta.comanda.nombre }}</td>
+                  <td>{{ propuesta.usuario.get_full_name|default:propuesta.usuario.username }}</td> {# Mostrar quién propuso #}
+                  <td>{{ propuesta.fecha_propuesta|date:"d/m/Y H:i" }}</td>
+                  <td>
+                    {% if propuesta.estado == 'validada' %}
+                      <span class="badge badge-success">Validada</span>
+                    {% elif propuesta.estado == 'rechazada' %}
+                      <span class="badge badge-danger">Rebutjada</span>
+                    {% else %}
+                      <span class="badge badge-warning">Pendent</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ propuesta.fecha_validacion|date:"d/m/Y H:i"|default:"-" }}</td>
+                  <td>
+                    {% if propuesta.usuario_validador %}
+                      {{ propuesta.usuario_validador.get_full_name|default:propuesta.usuario_validador.username }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          {# --- INICIO: Controles de Paginación --- #}
+          <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-right">
+              {% if mis_propuestas_enviadas.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ mis_propuestas_enviadas.previous_page_number }}">Anterior</a></li>
+              {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo; Primera</span></li>
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+              {% endif %}
+
+              <li class="page-item disabled"><span class="page-link">Pàgina {{ mis_propuestas_enviadas.number }} de {{ mis_propuestas_enviadas.paginator.num_pages }}</span></li>
+
+              {% if mis_propuestas_enviadas.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ mis_propuestas_enviadas.next_page_number }}">Següent</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ mis_propuestas_enviadas.paginator.num_pages }}">Última &raquo;</a></li>
+              {% else %}
+                <li class="page-item disabled"><span class="page-link">Següent</span></li>
+                <li class="page-item disabled"><span class="page-link">Última &raquo;</span></li>
+              {% endif %}
+            </ul>
+          </div>
+          {# --- FIN: Controles de Paginación --- #}
+
+        {% else %}
+          <p class="text-center text-muted p-3">No has enviat cap proposta de correcció.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{# --- FIN: Historial de Propuestas Enviadas --- #}
+{% endblock %}
+
+
+{% block extra_js %}
+<!-- Modal Structure -->
+<div class="modal fade" id="resumenModal" tabindex="-1" role="dialog" aria-labelledby="resumenModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="resumenModalLabel">Resum de Comanda per Soci</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>ID Comanda:</strong> <span id="modal-pedido-id"></span></p>
+        <p><strong>Proveïdor/Categoria:</strong> <span id="modal-pedido-info"></span></p>
+        <div id="modal-resumen-tabla" class="table-responsive">
+          <!-- La tabla del resumen se insertará aquí -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- Script para el modal de resumen (sin cambios) ---
+function mostrarResumenSocios(pedidoId) {
+  console.log("Fetching resumen for pedido ID:", pedidoId);
+  document.getElementById('modal-resumen-tabla').innerHTML = '<p>Carregant resum...</p>';
+  $('#resumenModal').modal('show');
+  const url = `/pedidos/api/resumen_socios/${pedidoId}/`;
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) { throw new Error(`HTTP error! status: ${response.status}`); }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Data received:", data);
+      document.getElementById('modal-pedido-id').textContent = data.pedido_id;
+      document.getElementById('modal-pedido-info').textContent = data.proveedor || data.categoria || 'N/D';
+      let tablaHtml = '<table class="table table-bordered table-sm">';
+      tablaHtml += '<thead><tr><th rowspan="2">Soci</th>';
+      data.productos_list.forEach(prod => { tablaHtml += `<th colspan="2">${prod}</th>`; });
+      tablaHtml += '<th colspan="2">Total Soci</th></tr>';
+      tablaHtml += '<tr>';
+      data.productos_list.forEach(() => { tablaHtml += '<th>Quant.</th><th>€</th>'; });
+      tablaHtml += '<th>Quant.</th><th>€</th></tr></thead>';
+      tablaHtml += '<tbody>';
+      if (data.resumen_socios && data.resumen_socios.length > 0) {
+        data.resumen_socios.forEach(socio => {
+          tablaHtml += `<tr><td>${socio.socio_nombre}</td>`;
+          data.productos_list.forEach(prod => {
+            const info = socio.productos[prod] || { cantidad: 0, precio: 0 };
+            tablaHtml += `<td>${info.cantidad}</td><td>${info.precio.toFixed(2)}</td>`;
+          });
+          tablaHtml += `<td>${socio.row_total_cantidad}</td><td>${socio.row_total_precio.toFixed(2)}</td></tr>`;
+        });
+      } else {
+         const colspan = (data.productos_list.length * 2) + 3;
+         tablaHtml += `<tr><td colspan="${colspan}">No hi ha seleccions per a aquesta comanda.</td></tr>`;
+      }
+      tablaHtml += '</tbody></table>';
+      document.getElementById('modal-resumen-tabla').innerHTML = tablaHtml;
+    })
+    .catch(error => {
+      console.error('Error fetching resumen:', error);
+      document.getElementById('modal-resumen-tabla').innerHTML = `<p class="text-danger">Error en carregar el resum: ${error.message}</p>`;
+    });
+}
+
+// --- Script para manejar el click en los botones de resumen ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleccionar todos los botones con la clase js-mostrar-resumen
+    const resumenButtons = document.querySelectorAll('.js-mostrar-resumen');
+
+    // Añadir un event listener a cada botón
+    resumenButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Obtener el ID del pedido desde el atributo data-pedido-id
+            const pedidoId = this.getAttribute('data-pedido-id');
+            if (pedidoId) {
+                // Llamar a la función original pasando el ID
+                mostrarResumenSocios(pedidoId);
+            } else {
+                console.error("No se encontró el data-pedido-id en el botón.");
+            }
+        });
+    });
+
+    // --- Script para la sección de anotación de stock (si existe en esta plantilla) ---
+    // Asegurarse de que los IDs existan antes de añadir listeners
+    const selectSocio = document.getElementById('selectSocioStock');
+    const tablaStock = document.getElementById('tabla-stock-productos');
+    const formStock = document.getElementById('form-anotacion-stock');
+    const stockInputs = formStock.querySelectorAll('.stock-input');
+    const saveButton = formStock.querySelector('button[type="submit"]'); // Botón guardar
+
+    selectSocio.addEventListener('change', function() {
+        if (this.value) {
+            // Si se selecciona un socio, mostrar la tabla y actualizar names de inputs
+            tablaStock.style.display = 'block';
+            const socioId = this.value;
+            stockInputs.forEach(input => {
+                const productoId = input.getAttribute('data-producto-id');
+                input.name = `stock_usado_${socioId}_${productoId}`; // ej: stock_usado_5_12
+                // Opcional: Limpiar valores anteriores si cambias de socio
+                input.value = ''; // Limpiar al cambiar de socio
+            });
+            // Habilitar botón de guardar
+             saveButton.disabled = false;
+        } else {
+            // Si no hay socio seleccionado, ocultar tabla y deshabilitar botón
+            tablaStock.style.display = 'none';
+             saveButton.disabled = true;
+             // Quitar names para evitar envíos accidentales
+             stockInputs.forEach(input => { input.name = ''; });
+        }
+    });
+
+    // Opcional: Deshabilitar botón si no hay socio al cargar la página
+    if (!selectSocio.value) {
+        saveButton.disabled = true;
+    }
+
+    // TODO: Añadir lógica para el envío del formulario (formStock.addEventListener('submit', ...))
+    // - (Ya implementado en la vista guardar_anotacion_stock)
+    // - Quizás añadir validación JS o feedback visual aquí
+});
+
+</script>
+{% endblock %}

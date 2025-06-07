@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>{{ titulo }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Detalles del Pedido</h3>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }} {# Renderiza el formulario como párrafos #}
+          <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Crear Pedido</button>
+            <a href="{% url 'pedidos_abiertos' %}" class="btn btn-secondary">Cancelar</a> {# Asume que 'pedidos_abiertos' es la URL correcta para volver #}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

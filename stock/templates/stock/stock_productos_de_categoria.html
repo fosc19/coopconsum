@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Productos en Stock de {{ categoria.nombre }}{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Productos en Stock de {{ categoria.nombre }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Lista de Productos marcados como Stock en {{ categoria.nombre }}</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for producto in productos %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <div class="card h-100">
+                {% if producto.imagen %}
+                  <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                {% else %}
+                  <img class="card-img-top" src="{% static 'img/no-image.png' %}" alt="Sin imagen">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ producto.nombre }}</h5>
+                  <p class="card-text">{{ producto.descripcion|truncatewords:20 }}</p>
+                  <p><strong>Precio:</strong> {{ producto.precio }} € / {{ producto.get_unidad_venta_display }}</p>
+                  <p><strong>Stock Actual:</strong> {{ producto.stock }} {% if producto.unidad_venta != 'ud' %}{{ producto.get_unidad_venta_display }}{% endif %}</p>
+                  <p><small>Categoría: {{ producto.categoria.nombre|default:"N/A" }}</small></p>
+                  <p><small>Proveedor: {{ producto.proveedor.nombre|default:"N/A" }}</small></p>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <p>No hay productos marcados como stock en esta categoría.</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

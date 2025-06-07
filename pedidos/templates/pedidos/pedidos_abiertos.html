@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Comandes Obertes{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Comandes Obertes</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Card principal -->
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Llista de Comandes Obertes</h3>
+      </div>
+      <div class="card-body">
+        <!-- Tabla responsiva -->
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>Comanda</th>
+                <th>Proveïdor</th>
+                <th>Estat</th>
+                <th>Data Obertura</th>
+                <th>Data Tancament</th>
+                <th>Accions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pedido in pedidos %}
+                <tr>
+                  <td>{{ pedido }}</td>
+                  <td>{{ pedido.proveedor.nombre|default:"Sense prov." }}</td>
+                  <td>
+                    {% if pedido.estado == 'abierto' %}
+                      <span class="badge badge-success">Obert</span>
+                    {% elif pedido.estado == 'pendiente' %}
+                      <span class="badge badge-warning">Pendent</span>
+                    {% else %}
+                      <span class="badge badge-secondary">{{ pedido.estado|title }}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ pedido.fecha_apertura|date:"d/m/Y" }}</td>
+                  <td>{{ pedido.fecha_cierre|date:"d/m/Y" }}</td>
+                  <td>
+                    <a href="{% url 'seleccionar_pedido' pedido.id %}"
+                       class="btn btn-sm btn-primary">
+                      Seleccionar Productes
+                    </a>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="6">
+                    No hi ha comandes obertes en aquest moment.
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div> <!-- Fin table-responsive -->
+      </div> <!-- Fin card-body -->
+    </div> <!-- Fin card -->
+  </div> <!-- Fin container-fluid -->
+</section>
+{% endblock %}

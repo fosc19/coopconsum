@@ -1,0 +1,50 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block title %}Galeria | Civada{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/unified-gallery.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container gallery-container">
+  <h1 class="mb-4 text-center">Galeria d'imatges</h1>
+  <form method="get" class="gallery-filter">
+    <div class="input-group">
+      <select name="categoria" class="form-select" onchange="this.form.submit()">
+        <option value="">Totes les categories</option>
+        {% for categoria in categorias %}
+          <option value="{{ categoria.id }}" {% if categoria_seleccionada and categoria.id == categoria_seleccionada.id %}selected{% endif %}>
+            {{ categoria.nombre }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-outline-secondary" type="submit">Filtrar</button>
+    </div>
+  </form>
+  {% if imagenes %}
+    <div class="image-gallery-grid">
+      {% for imagen in imagenes %}
+        <div class="image-gallery-item">
+          <img src="{{ imagen.thumb.url|default:imagen.imagen.url }}"
+               data-full="{{ imagen.imagen.url }}"
+               alt="{{ imagen.titulo|default:'Imatge' }}"
+               class="image-gallery-img" />
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Modal -->
+    <div id="lightbox-modal" class="gallery-modal hidden">
+      <span class="gallery-modal-close" role="button" aria-label="Cerrar">&times;</span>
+      <img id="modal-img" class="gallery-modal-content" alt="Imagen ampliada" />
+    </div>
+  {% else %}
+    <p>No hi ha imatges disponibles.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="{% static 'js/gallery.js' %}"></script>
+{% endblock %}

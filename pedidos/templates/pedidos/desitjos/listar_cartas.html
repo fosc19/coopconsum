@@ -1,0 +1,95 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+
+{% block title %}Cartes de Desitjos{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <h1><i class="fas fa-lightbulb mr-2"></i>Cartes de Desitjos Actives</h1>
+        <p class="text-muted">Aquí pots veure les propostes de productes o comandes especials i expressar el teu interès.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if cartas_deseo %}
+      <div class="row">
+        {% for carta in cartas_deseo %}
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 {% if carta.estado == 'minimo_alcanzado' %}border-success{% endif %}">
+              {% if carta.imagen_representativa %}
+                <img src="{{ carta.imagen_representativa.url }}" class="card-img-top" alt="{{ carta.titulo }}" style="height: 200px; object-fit: cover;">
+              {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                  <i class="fas fa-seedling fa-3x text-muted"></i>
+                </div>
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ carta.titulo }}</h5>
+                <p class="card-text text-muted small">
+                  {% if carta.proveedor_sugerido %}Proveïdor: {{ carta.proveedor_sugerido.nombre }}<br>{% endif %}
+                  {% if carta.fecha_limite_interes %}
+                    Interès fins: {{ carta.fecha_limite_interes|date:"d/m/Y" }}
+                  {% else %}
+                    Interès obert
+                  {% endif %}
+                </p>
+                <p class="card-text flex-grow-1">{{ carta.descripcion|truncatewords:20 }}</p>
+                {% if carta.estado == 'minimo_alcanzado' %}
+                  <p class="text-success font-weight-bold"><i class="fas fa-check-circle mr-1"></i> Mínim assolit!</p>
+                {% endif %}
+                 <a href="{% url 'detalle_carta_deseo' carta.id %}" class="btn btn-primary mt-auto">Veure Detalls i Participar</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if cartas_deseo.has_other_pages %}
+        <nav aria-label="Paginació de cartes de desig">
+          <ul class="pagination justify-content-center">
+            {% if cartas_deseo.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page={{ cartas_deseo.previous_page_number }}">Anterior</a></li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+            {% for i in cartas_deseo.paginator.page_range %}
+              {% if cartas_deseo.number == i %}
+                <li class="page-item active" aria-current="page"><span class="page-link">{{ i }}</span></li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+              {% endif %}
+            {% endfor %}
+            {% if cartas_deseo.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ cartas_deseo.next_page_number }}">Siguiente</a></li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle mr-2"></i>Actualment no hi ha cartes de desitjos actives.
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

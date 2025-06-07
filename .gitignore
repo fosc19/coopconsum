@@ -1,0 +1,47 @@
+# Configuraciones sensibles
+settings.py
+local_settings.py
+.env
+*.env
+
+# Base de datos
+*.sqlite3
+db.sqlite3
+
+# Archivos de medios subidos por usuarios
+media/
+uploads/
+
+# Archivos estáticos compilados
+staticfiles/
+static_root/
+
+# Logs
+*.log
+logs/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.temp

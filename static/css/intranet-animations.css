@@ -1,0 +1,379 @@
+/* ======================================
+   CIVADA - ANIMACIONES PARA LA INTRANET
+   ====================================== */
+
+/* Variables de colores - para mantener coherencia con la web pública */
+:root {
+  --primary: #2e7d32;       /* Verde principal */
+  --primary-light: #60ad5e; /* Verde claro */
+  --primary-dark: #005005;  /* Verde oscuro */
+  --secondary: #ff8f00;     /* Naranja/ámbar - color de acento */
+  --secondary-light: #ffc046;
+  --secondary-dark: #c56000;
+  
+  /* Grises y neutros */
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+}
+
+/* Animaciones básicas */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes bounce {
+  from, 20%, 53%, 80%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -15px, 0);
+  }
+  70% {
+    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: translate3d(0, -7px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Clases de animación */
+.animate__animated {
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+.animate__fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.animate__fadeInDown {
+  animation-name: fadeInDown;
+}
+
+.animate__fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+.animate__fadeInRight {
+  animation-name: fadeInRight;
+}
+
+.animate__pulse {
+  animation-name: pulse;
+}
+
+.animate__bounce {
+  animation-name: bounce;
+  transform-origin: center bottom;
+}
+
+/* Duraciones */
+.animate__faster {
+  animation-duration: 0.5s;
+}
+
+.animate__fast {
+  animation-duration: 0.6s;
+}
+
+.animate__slow {
+  animation-duration: 1s;
+}
+
+.animate__slower {
+  animation-duration: 1.5s;
+}
+
+/* Retrasos */
+.animate__delay-1 {
+  animation-delay: 0.1s;
+}
+
+.animate__delay-2 {
+  animation-delay: 0.2s;
+}
+
+.animate__delay-3 {
+  animation-delay: 0.3s;
+}
+
+.animate__delay-4 {
+  animation-delay: 0.4s;
+}
+
+.animate__delay-5 {
+  animation-delay: 0.5s;
+}
+
+/* Animaciones específicas para componentes */
+
+/* Navbar */
+.main-header {
+  animation: fadeInDown 0.8s;
+}
+
+/* Sidebar */
+.main-sidebar {
+  animation: fadeInLeft 0.8s;
+}
+
+/* Tarjetas */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+/* Small boxes */
+.small-box {
+  transition: all 0.3s ease;
+}
+
+.small-box:hover .icon {
+  animation: pulse 1s infinite;
+}
+
+/* Botones */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Badges */
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Notificaciones */
+.notification-badge {
+  animation: pulse 2s infinite;
+  background-color: var(--secondary) !important;
+}
+
+/* Efectos para tablas */
+.table-hover tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table-hover tbody tr:hover {
+  transform: scale(1.01);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  position: relative;
+  background-color: rgba(46, 125, 50, 0.05) !important; /* Color verde muy suave */
+}
+
+/* Animación para el menú desplegable */
+.nav-treeview {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.menu-open > .nav-treeview {
+  max-height: 500px;
+}
+
+/* Animación para el contenido principal */
+.content-wrapper {
+  animation: fadeIn 0.8s;
+}
+
+/* Animación para el footer */
+.main-footer {
+  animation: fadeInUp 0.8s;
+}
+
+/* Animación para modales */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: translate(0, -50px);
+}
+
+.modal.show .modal-dialog {
+  transform: none;
+}
+
+/* Animación para alertas */
+.alert {
+  animation: fadeInDown 0.8s;
+}
+
+/* Animación para el calendario */
+.fc-view-container {
+  animation: fadeIn 1s;
+}
+
+/* Animación para gráficos */
+.chart-container {
+  animation: fadeIn 1s;
+}
+
+/* Animación para listas */
+.list-group-item {
+  transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+  transform: translateX(5px);
+  background-color: rgba(46, 125, 50, 0.05); /* Color verde muy suave */
+}
+
+/* Animación para inputs */
+.form-control {
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  transform: scale(1.01);
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+
+/* Animación para iconos */
+.nav-icon, .fa, .fas, .far, .fab {
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover .nav-icon,
+.nav-link:hover .fa,
+.nav-link:hover .fas,
+.nav-link:hover .far,
+.nav-link:hover .fab {
+  transform: scale(1.2);
+  color: var(--primary);
+}
+
+/* Animación para el logo */
+.brand-image {
+  transition: all 0.3s ease;
+}
+
+.brand-link:hover .brand-image {
+  transform: rotate(5deg);
+}
+
+/* Animación para el avatar del usuario */
+.user-panel img {
+  transition: all 0.3s ease;
+}
+
+.user-panel:hover img {
+  transform: scale(1.1);
+}
+
+/* Efectos de hover para enlaces en el sidebar */
+.nav-sidebar .nav-link:hover {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: var(--primary);
+}
+
+/* Efectos para elementos activos */
+.nav-sidebar .nav-link.active {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Animación para el botón de toggle del sidebar */
+[data-widget="pushmenu"] {
+  transition: transform 0.3s ease;
+}
+
+[data-widget="pushmenu"]:hover {
+  transform: rotate(180deg);
+}
+
+/* Animación para las tarjetas de información */
+.info-box {
+  transition: all 0.3s ease;
+}
+
+.info-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+}

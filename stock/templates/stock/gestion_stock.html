@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestió d'Estoc i Registres{% endblock %}
+
+{% block extra_css %}
+{{ block.super }} {# Incluir CSS de bloques padre si existe #}
+<style>
+/* Estilos para pestañas (copiados de gestionar_comanda.html) */
+.nav-tabs .nav-link {
+  font-weight: 500;
+  border-radius: 0;
+  border-top: 3px solid transparent;
+  color: #495057; /* Color de texto por defecto */
+}
+.nav-tabs .nav-link.active {
+  border-top: 3px solid #007bff;
+  color: #007bff; /* Color de texto activo */
+  background-color: #fff; /* Fondo blanco para la activa */
+  border-bottom-color: #fff; /* Evitar doble borde inferior */
+}
+.nav-tabs .nav-link:hover:not(.active) {
+  border-top: 3px solid #ccc;
+  border-left-color: #dee2e6; /* Colores de borde estándar */
+  border-right-color: #dee2e6;
+  border-bottom-color: #dee2e6;
+  background-color: #e9ecef; /* Fondo ligero al pasar el ratón */
+}
+.tab-content {
+    border: 1px solid #dee2e6; /* Borde alrededor del contenido */
+    border-top: none; /* Quitar borde superior que ya lo hace la pestaña */
+    padding: 1rem; /* Añadir padding al contenido */
+    background-color: #fff; /* Fondo blanco */
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Gestió d'Estoc i Registres</h1>
+    <hr>
+
+    {% comment %} Mostrar mensajes de feedback (útil para la actualización de stock) {% endcomment %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tancar"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Pestañas de Navegación -->
+    <ul class="nav nav-tabs mb-3" id="stockTabs" role="tablist">
+        <li class="nav-item">
+            {# Cambiado button a 'a' y atributos data-bs-* a data-* y href #}
+            <a class="nav-link" id="gestion-stock-tab" data-toggle="tab" href="#gestion-stock-tab-pane" role="tab" aria-controls="gestion-stock-tab-pane" aria-selected="false"> {# Quitada clase active, aria-selected="false" #}
+              <i class="fas fa-boxes mr-1"></i> {# Icono añadido #}
+              Gestió d'Estoc
+            </a>
+        </li>
+        <li class="nav-item">
+            {# Cambiado button a 'a' y atributos data-bs-* a data-* y href #}
+            <a class="nav-link active" id="registros-compras-tab" data-toggle="tab" href="#registros-compras-tab-pane" role="tab" aria-controls="registros-compras-tab-pane" aria-selected="true"> {# Añadida clase active, aria-selected="true" #}
+              <i class="fas fa-history mr-1"></i> {# Icono añadido #}
+              Últims Registres Compra
+            </a>
+        </li>
+    </ul>
+
+    <!-- Contenido de las Pestañas -->
+    <div class="tab-content" id="stockTabsContent">
+
+        <!-- Pestaña 1: Gestión de Stock -->
+        <div class="tab-pane fade" id="gestion-stock-tab-pane" role="tabpanel" aria-labelledby="gestion-stock-tab"> {# Quitadas clases show active #}
+            <h2>Gestió d'Estoc Actual</h2>
+            <!-- Formulario de Filtros -->
+            <form method="get" action="{% url 'stock:gestion_stock' %}" class="mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="categoria_id" class="form-label">Categoria:</label>
+                        <select name="categoria_id" id="categoria_id" class="form-select">
+                            <option value="">Totes les categories</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat.id }}" {% if cat.id == selected_categoria %}selected{% endif %}>
+                                    {{ cat.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="proveedor_id" class="form-label">Proveïdor:</label>
+                        <select name="proveedor_id" id="proveedor_id" class="form-select">
+                            <option value="">Tots els proveïdors</option>
+                            {% for prov in proveedores %}
+                                <option value="{{ prov.id }}" {% if prov.id == selected_proveedor %}selected{% endif %}>
+                                    {{ prov.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-auto">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a href="{% url 'stock:gestion_stock' %}" class="btn btn-secondary ms-2">Netejar</a>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tabla de Productos -->
+            {% if productos %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Categoria</th>
+                                <th>Proveïdor</th>
+                                <th>Estoc Actual</th>
+                                <th>Unitat</th>
+                                <th style="width: 200px;">Modificar Estoc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto.nombre }}</td>
+                                <td>{{ producto.categoria.nombre }}</td>
+                                <td>{{ producto.proveedor.nombre }}</td>
+                                <td>{{ producto.stock }}</td>
+                                <td>{{ producto.get_unidad_venta_display }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'stock:actualizar_stock' %}" class="d-flex align-items-center">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                                        {% if selected_categoria %}
+                                        <input type="hidden" name="categoria_id" value="{{ selected_categoria }}">
+                                        {% endif %}
+                                        {% if selected_proveedor %}
+                                        <input type="hidden" name="proveedor_id" value="{{ selected_proveedor }}">
+                                        {% endif %}
+                                        <input type="number" name="cantidad_cambio" class="form-control form-control-sm me-2" style="width: 80px;" value="0" step="1" required>
+                                        <button type="submit" class="btn btn-success btn-sm" title="Afegir/Restar Estoc">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No s'han trobat productes d'estoc amb els filtres seleccionats.
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Pestaña 2: Últimos Registros de Compra -->
+        <div class="tab-pane fade show active" id="registros-compras-tab-pane" role="tabpanel" aria-labelledby="registros-compras-tab"> {# Añadidas clases show active #}
+            <h2>Últims Registres de Compra Manual</h2>
+            {% if ultimos_registros_compras %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Soci/a</th>
+                                <th>Producte</th>
+                                <th>Quantitat</th>
+                                <th>Unitat</th>
+                                <th>Preu Unit.</th> {# Nueva columna Precio #}
+                                <th>Notes</th>
+                                <th>Registrat per</th>
+                                <th>Estat</th> {# Nueva columna Estado #}
+                                <th>Acció</th> {# Nueva columna Acción #}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registro in ultimos_registros_compras %}
+                            <tr>
+                                <td>{{ registro.fecha_registro|date:"Y-m-d H:i" }}</td>
+                                <td>{{ registro.socio }}</td>
+                                <td>{{ registro.producto.nombre }}</td>
+                                <td>{{ registro.cantidad|floatformat:2 }}</td> {# Formatear decimales #}
+                                <td>{{ registro.producto.get_unidad_venta_display }}</td>
+                                <td>{{ registro.producto.precio|floatformat:2 }} €</td> {# Mostrar precio del producto #}
+                                <td>{{ registro.notas|default:"-" }}</td>
+                                <td>{{ registro.registrado_por.username|default:"N/D" }}</td>
+                                <td> {# Columna Estado #}
+                                    <span class="badge {% if registro.estado == 'pendiente' %}bg-warning text-dark{% elif registro.estado == 'validado' %}bg-success{% else %}bg-danger{% endif %}">
+                                        {{ registro.get_estado_display }}
+                                    </span>
+                                    {% if registro.estado == 'validado' and registro.costo_total_calculado is not None %}
+                                        <br><small>({{ registro.costo_total_calculado|floatformat:2 }} €)</small>
+                                    {% endif %}
+                                </td>
+                                <td> {# Columna Acción #}
+                                    {% if registro.estado == 'pendiente' %}
+                                        {# El botón solo aparece si está pendiente y el usuario tiene permisos #}
+                                        {# La comprobación de permisos ya la hace la vista, pero podríamos añadirla aquí también si quisiéramos ser redundantes: #}
+                                        {# {% if user.is_superuser or (user.socio and user.socio.gestiona_stock) %} #}
+                                        <form method="post" action="{% url 'stock:validar_registro_compra' registro.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-success" title="Validar i cobrar al soci">
+                                                <i class="fas fa-check-circle"></i> Validar
+                                            </button>
+                                        </form>
+                                        {# {% endif %} #}
+                                    {% elif registro.estado == 'validado' %}
+                                        <span class="text-success">Validat</span>
+                                        {# Opcional: Enlace al movimiento de cuenta si existe #}
+                                        {% if registro.movimiento_cuenta %}
+                                            {# <a href="{% url 'admin:socios_movimientocuenta_change' registro.movimiento_cuenta.id %}" target="_blank" title="Ver movimiento">Mov. #{{ registro.movimiento_cuenta.id }}</a> #}
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>Encara no hi ha registres de compres manuals.</p>
+            {% endif %}
+        </div>
+
+    </div> <!-- Fin de tab-content -->
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }} {# Incluir JS de bloques padre si existe #}
+<script>
+  $(document).ready(function() {
+    // Comprobar si hay un hash en la URL al cargar la página
+    var hash = window.location.hash;
+    if (hash) {
+      // Intentar encontrar un enlace de pestaña que apunte a ese hash
+      var tabLink = $('.nav-tabs a[href="' + hash + '"]');
+      if (tabLink.length) {
+        // Si se encuentra, activar esa pestaña usando la API de Bootstrap 4
+        tabLink.tab('show');
+      }
+    }
+
+    // Opcional: Si quieres que al hacer clic en una pestaña se actualice el hash
+    // (puede ser útil pero también puede interferir si hay otros hashes)
+    // $('.nav-tabs a').on('shown.bs.tab', function (e) {
+    //   if(history.pushState) {
+    //       history.pushState(null, null, e.target.hash);
+    //   } else {
+    //       window.location.hash = e.target.hash; // Fallback para navegadores antiguos
+    //   }
+    // });
+  });
+</script>
+{% endblock %}

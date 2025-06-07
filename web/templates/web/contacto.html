@@ -1,0 +1,45 @@
+{% extends "web/base.html" %}
+{% block title %}Contacte | Civada{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="display-4 fw-bold mb-4 text-center">Contacte</h1>
+      <p class="lead text-center mb-5">Pots posar-te en contacte amb nosaltres per qualsevol dubte, suggeriment o col·laboració.</p>
+      <div class="row text-center mb-4">
+        <div class="col-md-4 mb-3">
+          <i class="fas fa-envelope fa-2x mb-2 text-primary"></i>
+          <div><strong>Email</strong></div>
+          <div>info@civada.cat</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <i class="fas fa-map-marker-alt fa-2x mb-2 text-primary"></i>
+          <div><strong>Adreça</strong></div>
+          <div>Carrer de l'Exemple, 123, 08000 Barcelona</div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <i class="fas fa-phone fa-2x mb-2 text-primary"></i>
+          <div><strong>Telèfon</strong></div>
+          <div>+34 600 000 000</div>
+        </div>
+      </div>
+      <!-- Formulari de contacte (exemple, sense funcionalitat backend) -->
+      <form>
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom</label>
+          <input type="text" class="form-control" id="nom" placeholder="El teu nom">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Correu electrònic</label>
+          <input type="email" class="form-control" id="email" placeholder="El teu email">
+        </div>
+        <div class="mb-3">
+          <label for="missatge" class="form-label">Missatge</label>
+          <textarea class="form-control" id="missatge" rows="4" placeholder="El teu missatge"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

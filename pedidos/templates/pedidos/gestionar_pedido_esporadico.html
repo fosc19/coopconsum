@@ -1,0 +1,299 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Gestión de Pedido Esporádico: #{{ pedido.id }}{% endblock %}
+
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-info" style="font-size:1.1em;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <h1>Gestión de Pedido Esporádico #{{ pedido.id }}</h1>
+        <p><strong>Socio:</strong> {{ pedido.socio.nombre }} {{ pedido.socio.apellido }}</p>
+        <p><strong>Estado:</strong>
+            {% if pedido.estado == 'abierto' %}
+              <span class="badge badge-success">Abierto</span>
+            {% elif pedido.estado == 'pendiente' %}
+              <span class="badge badge-warning">Pendiente</span>
+            {% elif pedido.estado == 'inactivo' %}
+              <span class="badge badge-secondary">Inactivo</span>
+            {% else %}
+              <span class="badge badge-info">{{ pedido.estado|title }}</span>
+            {% endif %}
+        </p>
+        {% if pedido.proveedor %} <p><strong>Proveedor:</strong> {{ pedido.proveedor.nombre }}</p>{% endif %}
+        {% if pedido.categoria %} <p><strong>Categoría:</strong> {{ pedido.categoria.nombre }}</p>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* Estilos para impresión */
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}
+
+/* Estilos generales */
+.print-icon {
+  cursor: pointer;
+  float: right;
+  font-size: 1.2rem;
+  color: #000;
+  margin-left: 10px;
+}
+.print-icon:hover {
+  color: #333;
+}
+
+/* Estilos para tablas */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+.table th {
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.table-sm td, .table-sm th {
+  padding: 0.5rem;
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(0,123,255,0.05);
+}
+
+/* Estilos para inputs */
+.cantidad-input {
+  width: 70px;
+  text-align: right;
+  padding: 0.25rem;
+}
+
+/* Estilos para tarjetas */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  margin-bottom: 1.5rem;
+}
+.card-header {
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.card-header h3 {
+  margin-bottom: 0;
+}
+</style>
+
+<script>
+function printSection(sectionId) {
+  var content = document.getElementById(sectionId).innerHTML;
+  var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+  mywindow.document.write('<html><head><title>Resumen Pedido #{{ pedido.id }}</title>');
+  mywindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+  mywindow.document.write('<style>body{font-family:sans-serif;margin:1cm;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:5px;text-align:center;} h3{text-align:center;} </style>');
+  mywindow.document.write('</head><body>');
+  mywindow.document.write('<h3>Resumen Pedido Esporádico #{{ pedido.id }}</h3>'); // Añadir título al imprimir
+  mywindow.document.write('<p><strong>Socio:</strong> {{ pedido.socio.nombre }} {{ pedido.socio.apellido }}</p>'); // Añadir socio al imprimir
+  mywindow.document.write(content);
+  mywindow.document.write('</body></html>');
+  mywindow.document.close();
+  mywindow.focus();
+  mywindow.print();
+  mywindow.close();
+  return true;
+}
+</script>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Sección 1: Resumen Global del Pedido -->
+    <div class="card" id="resumen-global-pedido">
+      <div class="card-header bg-gradient-info text-white">
+        <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i>Resumen Global del Pedido</h3>
+        <div>
+          <i class="fas fa-print print-icon no-print" title="Imprimir Resumen" onclick="printSection('resumen-global-pedido-tabla')"></i>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-container" id="resumen-global-pedido-tabla">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr class="bg-light">
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-right">Subtotal (€)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in resumen_global_data %}
+                <tr>
+                  <td>{{ row.producto }}</td>
+                  <td class="text-center">{{ row.cantidad }}</td>
+                  <td class="text-right">{{ row.precio|floatformat:2 }} €</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3" class="text-center text-muted">No hay productos seleccionados en este pedido.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr class="table-info">
+                <th>Total General (Cant.)</th>
+                <th class="text-center">{{ resumen_global_total_cantidad }}</th>
+                <th></th>
+              </tr>
+              <tr class="table-info">
+                <th>Total General (Precio)</th>
+                <th></th>
+                <th class="text-right">{{ resumen_global_total_precio|floatformat:2 }} €</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección 2: Detalle Editable del Pedido -->
+    <div class="card" id="detalle-pedido-editable">
+      <div class="card-header bg-gradient-primary text-white">
+        <h3 class="card-title"><i class="fas fa-edit mr-2"></i>Detalle del Pedido (Editable)</h3>
+         <div>
+          <i class="fas fa-print print-icon no-print" title="Imprimir Detalle" onclick="printSection('detalle-pedido-editable-tabla')"></i>
+        </div>
+      </div>
+      <div class="card-body">
+        {# El formulario apuntará a la nueva vista de finalización #}
+        <form method="post" action="{% url 'finalizar_pedido_esporadico' pedido.id %}" id="form-pedido-esporadico">
+          {% csrf_token %}
+          <div class="table-container" id="detalle-pedido-editable-tabla">
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr class="bg-light">
+                  {# Ya no necesitamos la columna Socio #}
+                  {% for producto_obj in productos_obj_list %}
+                    <th colspan="2" class="text-center">
+                      {{ producto_obj.nombre }}
+                      <small class="d-block text-muted">({{ producto_obj.get_unidad_venta_display }})</small>
+                    </th>
+                  {% empty %}
+                     <th>Producto</th> {# Mostrar al menos una cabecera si no hay productos #}
+                  {% endfor %}
+                  <th colspan="2" class="text-center bg-light">Total Pedido</th>
+                </tr>
+                <tr class="bg-light">
+                  {% for producto_obj in productos_obj_list %}
+                    <th class="text-center">Cant.</th>
+                    <th class="text-center">€</th>
+                  {% empty %}
+                     <th></th> {# Celda vacía si no hay productos #}
+                  {% endfor %}
+                  <th class="text-center">Cant.</th>
+                  <th class="text-center">€</th>
+                </tr>
+              </thead>
+              <tbody>
+                {# Solo mostramos la fila del socio asignado #}
+                {% if pivot_data_socio %}
+                <tr>
+                  {% for producto_obj in productos_obj_list %}
+                    {% with info=pivot_data_socio.productos|get_item:producto_obj.nombre %}
+                      <td class="text-center">
+                        <input type="number"
+                              {# El name ahora solo necesita producto_id ya que el socio es implícito #}
+                              name="cantidad_{{ pivot_data_socio.socio_id }}_{{ producto_obj.id }}"
+                              value="{{ info.cantidad|default:'0' }}"
+                              min="0"
+                              step="any"
+                              class="form-control form-control-sm cantidad-input"
+                              {% if pedido.estado != 'pendiente' %}disabled{% endif %}> {# Deshabilitar si no está pendiente #}
+                      </td>
+                      <td class="text-right">{{ info.precio|floatformat:2|default:"0.00" }} €</td>
+                    {% endwith %}
+                  {% empty %}
+                     <td colspan="2" class="text-center text-muted">No hay productos en este pedido.</td>
+                  {% endfor %}
+                  {# Totales de la fila (pedido) #}
+                  <td class="text-center font-weight-bold">{{ pivot_data_socio.row_total_cantidad }}</td>
+                  <td class="text-right font-weight-bold">{{ pivot_data_socio.row_total_precio|floatformat:2 }} €</td>
+                </tr>
+                {% else %}
+                 <tr>
+                    {# Ajustar colspan si no hay productos #}
+                    <td colspan="{% if productos_obj_list %}{{ productos_obj_list|length|multiply:2|add:2 }}{% else %}3{% endif %}" class="text-center text-muted">No hay datos para mostrar.</td>
+                 </tr>
+                {% endif %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  {# Ajustar colspan si no hay productos #}
+                  <td colspan="{% if productos_obj_list %}{{ productos_obj_list|length|multiply:2|add:2 }}{% else %}3{% endif %}" class="text-left pt-3">
+                    {# Condición para habilitar el botón #}
+                    {% if user.socio == pedido.socio and pedido.estado == 'pendiente' %}
+                      {% if recepcion_notificada %}
+                        <button type="submit" class="btn btn-success">
+                          <i class="fas fa-save mr-1"></i> Guardar Cambios y Finalizar Pedido
+                        </button>
+                      {% else %}
+                        <button type="button" class="btn btn-secondary" disabled>
+                          <i class="fas fa-save mr-1"></i> Guardar Cambios y Finalizar Pedido
+                        </button>
+                        <small class="text-muted ml-2"> (Esperando notificación de recepción desde Master Control)</small>
+                      {% endif %}
+                    {% else %}
+                      <span class="text-muted">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        El pedido no está pendiente de finalizar o no eres el socio asignado.
+                      </span>
+                    {% endif %}
+                  </td>
+                </tr>
+                <!-- Totales por Producto (Cant.) -->
+                <tr class="table-info">
+                  {% for producto_obj in productos_obj_list %}
+                    <th class="text-center">
+                      {{ column_totals_cantidad|get_item:producto_obj.nombre }}
+                    </th>
+                    <th></th>
+                  {% empty %}
+                    <th></th> {# Celda vacía si no hay productos #}
+                  {% endfor %}
+                  <th class="text-center">{{ grand_total_cantidad }}</th>
+                  <th></th>
+                </tr>
+                <!-- Totales por Producto (Precio) -->
+                <tr class="table-info">
+                   {% for producto_obj in productos_obj_list %}
+                    <th></th>
+                    <th class="text-right">{{ column_totals_precio|get_item:producto_obj.nombre|floatformat:2 }} €</th>
+                   {% empty %}
+                    <th></th> {# Celda vacía si no hay productos #}
+                   {% endfor %}
+                  <th></th>
+                  <th class="text-right">{{ grand_total_precio|floatformat:2 }} €</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </form> {# Cierre del formulario #}
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

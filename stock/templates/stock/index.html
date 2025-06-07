@@ -1,0 +1,58 @@
+<!-- /stock/templates/stock/index.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestión de Stock{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Gestión de Stock</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Tarjeta principal -->
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">Productos con Stock</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for producto in productos_stock %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <div class="card h-100">
+                {% if producto.imagen %}
+                  <img class="card-img-top" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                {% else %}
+                  <img class="card-img-top" src="{% static 'img/no-image.png' %}" alt="Sin imagen">
+                {% endif %}
+                <div class="card-body">
+                  <!-- Nombre y proveedor en la misma línea con un guión -->
+                  <h5 class="card-title">
+                    {{ producto.nombre }} - {{ producto.proveedor.nombre }}
+                  </h5>
+                  <!-- Separación visual antes de precio y stock -->
+                  <hr>
+                  <p class="card-text">
+                    <strong>Precio:</strong> {{ producto.precio }} €
+                  </p>
+                  <p class="card-text">
+                    <strong>Stock:</strong> {{ producto.stock }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
