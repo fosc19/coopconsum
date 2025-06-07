@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Civada - Cooperativa{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Civada - Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <link href="{% static 'web/css/modern.css' %}" rel="stylesheet">
+    <link href="{% static 'web/css/back-to-top.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="civada-header">
+        <div class="container">
+            <a href="{% url 'web_home' %}">
+                <img src="{% static 'img/logo-civada.png' %}" alt="La Civada" class="img-fluid">
+            </a>
+        </div>
+    </header>
+    <nav class="civada-menu">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <ul class="nav justify-content-center flex-grow-1">
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/' %} active{% endif %}" href="{% url 'web_home' %}">Inici</a></li>
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/qui-som/' %} active{% endif %}" href="{% url 'web_quienes_somos' %}">Qui Som</a></li>
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/com-apuntar-se/' %} active{% endif %}" href="{% url 'web_com_apuntarse' %}">Com apuntar-te</a></li>
+                    <li class="nav-item"><a class="nav-link{% if 'productores' in request.path %} active{% endif %}" href="{% url 'web_productores' %}">Els nostres productors</a></li>
+                    <li class="nav-item"><a class="nav-link{% if 'productos' in request.path %} active{% endif %}" href="{% url 'web_productos' %}">Productes</a></li>
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/imatges/' %} active{% endif %}" href="{% url 'web_galeria' %}">Imatges</a></li>
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/contacte/' %} active{% endif %}" href="{% url 'web_contacto' %}">Contacte</a></li>
+                    <li class="nav-item"><a class="nav-link{% if request.path == '/cooperatives/' %} active{% endif %}" href="{% url 'web_cooperatives' %}">Recursos</a></li>
+                </ul>
+                <div class="ms-auto d-flex align-items-center gap-3 user-icons">
+                    <a href="/accounts/login/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Accés socis">
+                        <i class="fas fa-user-circle fs-4"></i>
+                    </a>
+                    <a href="/admin/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Accés administració">
+                        <i class="fas fa-lock fs-4"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% block civada_banner %}{% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="modern-footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <img src="{% static 'img/logo-civada.png' %}" alt="La Civada" class="footer-logo">
+                    <p>Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
+                    <div class="footer-social mt-3">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 class="footer-title">Enllaços</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'web_home' %}">Inici</a></li>
+                        <li><a href="{% url 'web_quienes_somos' %}">Qui Som</a></li>
+                        <li><a href="{% url 'web_com_apuntarse' %}">Com apuntar-te</a></li>
+                        <li><a href="{% url 'web_productores' %}">Productors</a></li>
+                        <li><a href="{% url 'web_productos' %}">Productes</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4">
+                    <h5 class="footer-title">Més</h5>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'web_galeria' %}">Imatges</a></li>
+                        <li><a href="{% url 'web_contacto' %}">Contacte</a></li>
+                        <li><a href="{% url 'web_cooperatives' %}">Recursos</a></li>
+                        <li><a href="/accounts/login/">Àrea Socis</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-4">
+                    <h5 class="footer-title">Contacte</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Carrer Principal, 123, 08000 Barcelona</p>
+                    <p><i class="fas fa-phone me-2"></i> +34 93 123 45 67</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@civada.org</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ now|date:"Y" }} Civada. Tots els drets reservats.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'web/js/modern.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

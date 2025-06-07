@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Coopconsum{% endblock %}</title>
+  <!-- AdminLTE CSS (incluye Bootstrap 4) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  {% block extra_css %}
+  <style>
+    .card-img-top {
+      width: 100%;
+      height: 200px; /* Ajusta la altura según prefieras */
+      object-fit: cover;
+    }
+  </style>
+  {% endblock %}
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+          <i class="fas fa-bars"></i>
+        </a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="{% url 'dashboard_principal' %}" class="nav-link">Inici</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard/" title="Panell del Soci">
+          <i class="fas fa-user"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/" title="Admin">
+          <i class="fas fa-cog"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link"> {# Cambiado href a "/" para apuntar a la raíz #}
+      <img src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/img/AdminLTELogo.png"
+           alt="La Civada Logo" {# Texto alt actualizado #}
+           class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">La Civada</span> {# Texto cambiado #}
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      {% comment %} <!-- User panel eliminado -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/img/user2-160x160.jpg"
+               class="img-circle elevation-2"
+               alt="User Image">
+        </div>
+        <div class="info">
+          {% if socio %}
+            <a href="#" class="d-block">{{ socio.nombre }} {{ socio.apellido }}</a>
+          {% else %}
+            <a href="#" class="d-block">{{ user.username }}</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endcomment %}
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+          <!-- INICIO NUEVO ORDEN -->
+          <!-- 1. Calendari -->
+          <li class="nav-item">
+            <a href="{% url 'dashboard_principal' %}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i> {# Icono cambiado a calendario #}
+              <p>Calendari</p> {# Texto cambiado #}
+            </a>
+          </li>
+          <!-- 2. Socios -->
+          <li class="nav-item">
+            <a href="{% url 'socios_home' %}" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
+              <p>Socis</p>
+            </a>
+          </li>
+          <!-- 3. Productos (Submenú) -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-box"></i>
+              <p>
+                Productes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                {# Corregido para usar el namespace y el nuevo nombre 'index' #}
+                <a href="{% url 'productos:index' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tots els Productes</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {# Corregido para usar el namespace #}
+                <a href="{% url 'productos:lista_categorias' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Categories</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {# Corregido para usar el namespace #}
+                <a href="{% url 'productos:lista_proveedores' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Proveïdors</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- 4. Stock (Vistas Detalle - Submenú) -->
+          <li class="nav-item has-treeview"> {# Convertir a submenú #}
+            <a href="#" class="nav-link"> {# Enlace principal puede ser # #}
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Estoc {# Texto simplificado #}
+                <i class="right fas fa-angle-left"></i> {# Añadir flecha #}
+              </p>
+            </a>
+            <ul class="nav nav-treeview"> {# Submenú #}
+              {# El enlace de Gestión Stock se ha movido arriba #}
+              <li class="nav-item">
+                 {# Apunta a la vista que lista todos los productos de stock #}
+                <a href="{% url 'stock:stock_todos' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tots</p> {# Simplificado texto #}
+                </a>
+              </li>
+              <li class="nav-item">
+                 {# Apunta a la vista que lista categorías con productos de stock #}
+                <a href="{% url 'stock:stock_categorias' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Categories</p> {# Simplificado texto #}
+                </a>
+              </li>
+              <li class="nav-item">
+                 {# Apunta a la vista que lista proveedores con productos de stock #}
+                <a href="{% url 'stock:stock_proveedores' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Proveïdors</p> {# Simplificado texto #}
+                </a>
+              </li>
+            </ul>
+          </li>
+          <!-- 5. Pedidos -->
+          <li class="nav-item">
+            <a href="{% url 'pedidos_abiertos' %}" class="nav-link">
+              <i class="nav-icon fas fa-clipboard"></i>
+              <p>
+                Comandes
+                {% if pedidos_abiertos_global_count > 0 %}
+                  <span class="badge badge-warning ml-1">{{ pedidos_abiertos_global_count }}</span>
+                {% endif %}
+              </p>
+            </a>
+          </li>
+          <!-- Desitjos -->
+          <li class="nav-item">
+            <a href="{% url 'listar_cartas_deseo' %}" class="nav-link {% if request.resolver_match.url_name == 'listar_cartas_deseo' or request.resolver_match.url_name == 'detalle_carta_deseo' %}active{% endif %}">
+              <i class="nav-icon fas fa-lightbulb"></i>
+              <p>
+                Desitjos
+                {% if cartas_deseo_minimo_alcanzado_count > 0 %}
+                  <span class="badge badge-warning ml-1">{{ cartas_deseo_minimo_alcanzado_count }}</span>
+                {% endif %}
+              </p>
+            </a>
+          </li>
+          <!-- NUEVO: Gestion Productes (Condicional) -->
+          {# Mostrar si es superuser O si es socio autenticado con permiso #}
+          {% if user.is_superuser or user.is_authenticated and user.socio and user.socio.gestiona_productos %}
+            <li class="nav-item">
+              {# Enlaza a la lista de productos, donde se podrán añadir/editar #}
+              <a href="{% url 'productos:index' %}" class="nav-link">
+                <i class="nav-icon fas fa-seedling"></i> {# Icono sugerido #}
+                <p>Gestió Productes</p> {# Mantenemos el texto original #}
+              </a>
+            </li>
+          {% endif %}
+          <!-- 6. Gestion Comanda -->
+            <li class="nav-item">
+              <a href="{% url 'seleccionar_comanda' %}" class="nav-link">
+                <i class="nav-icon fas fa-tasks"></i>
+                <p>
+                  Gestió Comanda
+                  {% if propuestas_pendientes_count > 0 %}
+                    <span class="badge badge-warning ml-1" title="Propuestas pendientes">{{ propuestas_pendientes_count }}</span>
+                  {% endif %}
+                  {% if listos_para_finalizar_count > 0 %}
+                    <span class="badge badge-success ml-1" title="Listos para finalizar">{{ listos_para_finalizar_count }}</span>
+                  {% endif %}
+                </p>
+              </a>
+            </li>
+          <!-- 7. Gestion Stock (Elemento Principal) - Condicional -->
+          {% comment %} Comprobar si el usuario es superuser o el socio gestor {% endcomment %}
+          {% if user.is_superuser or user.socio and user.socio.gestiona_stock %}
+          <li class="nav-item">
+            <a href="{% url 'stock:gestion_stock' %}" class="nav-link">
+              <i class="nav-icon fas fa-tasks"></i>
+              <p>
+                Gestió Estoc
+                {% if registros_compra_pendientes_count > 0 %}
+                  <span class="badge badge-warning ml-1">{{ registros_compra_pendientes_count }}</span>
+                {% endif %}
+              </p>
+            </a>
+          </li>
+          {% endif %}
+          <!-- NUEVO: Gestió Esporadica (Condicional) -->
+          {# Mostrar si el socio tiene permiso para crear comandas esporádicas #}
+          {% if request.user.is_authenticated and request.user.socio and request.user.socio.puede_crear_comandas_esporadicas %}
+          <li class="nav-item">
+            <a href="{% url 'crear_comanda_esporadica_socio' %}" class="nav-link">
+              <i class="nav-icon fas fa-plus-circle"></i> {# Icono sugerido para crear #}
+              <p>Gestió Esporadica</p>
+            </a>
+          </li>
+          {% endif %}
+          <!-- 8. Master Link (Todos los logueados) -->
+          {% if user.is_authenticated %} {# Asegurar que al menos esté logueado #}
+            <li class="nav-item">
+              <a href="{% url 'master_control' %}" class="nav-link"> {# URL Restaurada #}
+                <i class="nav-icon fas fa-cogs"></i>
+                <p>Master</p> {# Texto Restaurado #}
+              </a>
+            </li>
+          {% endif %}
+          <!-- 9. Registrar Compra Socio (Todos los logueados) -->
+          {% if user.is_authenticated %} {# Asegurar que al menos esté logueado #}
+            <li class="nav-item">
+              <a href="{% url 'registrar_compra_socio' %}" class="nav-link">
+                <i class="nav-icon fas fa-edit"></i> {# Icono para registrar #}
+                <p>Registra Compra Soci</p>
+              </a>
+            </li>
+          {% endif %}
+          <!-- 10. Sortir (Logout) -->
+          <li class="nav-item mt-4"> {# Cambiado a mt-4 para más espacio superior #}
+            <a href="{% url 'logout' %}" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Sortir</p>
+            </a>
+          </li>
+          <!-- FIN NUEVO ORDEN -->
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    {% block content %}{% endblock %}
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="float-right d-none d-sm-inline">
+      Versió 1.0
+    </div>
+    <strong>&copy; 2025 La Civada.</strong> Tots els drets reservats.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<!-- Bootstrap 4 (incluido en AdminLTE) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %} {# Asumiendo que usas crispy_forms para renderizar mejor #}
+{% load static %} {# Para cargar JS/CSS si es necesario #}
+
+{% block title %}Registrar Recogida - Sesión {{ sesion.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Registrar Retirada de Productos - Sesión #{{ sesion.id }}</h2>
+    <p><strong>Responsable:</strong> {{ request.user.get_full_name|default:request.user.username }}</p>
+    <p><strong>Fecha Inicio:</strong> {{ sesion.fecha_inicio|date:"d/m/Y H:i" }}</p>
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Selector de Socio -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Paso 1: Seleccionar Socio
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'stock:registrar_retirada_socio' sesion_id=sesion.id %}">
+                {% crispy form_seleccionar_socio %}
+                <button type="submit" class="btn btn-primary mt-2">Cargar Productos del Socio</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulario de Ítems Retirados (si hay socio seleccionado) -->
+    {% if socio_seleccionado %}
+    <div class="card mb-4">
+        <div class="card-header">
+            Paso 2: Registrar Productos Retirados por <strong>{{ socio_seleccionado }}</strong>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'stock:registrar_retirada_socio' sesion_id=sesion.id %}">
+                {% csrf_token %}
+                {{ formset.management_form }}
+                {# Campo oculto para saber a qué socio pertenece este formset al hacer POST #}
+                <input type="hidden" name="socio_id_hidden" value="{{ socio_seleccionado.id }}">
+
+                <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto de Stock</th>
+                            <th>Cantidad Retirada</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in formset %}
+                            <tr class="dynamic-formset-item">
+                                {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+                                <td>{% crispy_field form.producto 'class' 'form-control-sm' %}</td>
+                                <td>{% crispy_field form.cantidad 'class' 'form-control-sm' %}</td>
+                                <td>
+                                    {% if form.instance.pk %}
+                                        {% crispy_field form.DELETE %}
+                                    {% endif %}
+                                </td>
+                                {% if form.errors %}
+                                    <td colspan="3">
+                                        {% for field, errors in form.errors.items %}
+                                            {% for error in errors %}
+                                                <div class="text-danger small">{{ error }}</div>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        {% for error in form.non_field_errors %}
+                                             <div class="text-danger small">{{ error }}</div>
+                                        {% endfor %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-success">Guardar Cambios para {{ socio_seleccionado }}</button>
+                <a href="{% url 'stock:registrar_retirada_socio' sesion_id=sesion.id %}" class="btn btn-secondary">Seleccionar Otro Socio</a>
+            </form>
+            <hr>
+            <p><strong>Coste Total Estimado para {{ socio_seleccionado }}:</strong> {{ retirada.calcular_coste_total|floatformat:2 }} €</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Botón para Cerrar Sesión -->
+    <div class="mt-4 text-end">
+         <form method="post" action="{% url 'stock:cerrar_sesion_recogida' sesion_id=sesion.id %}" onsubmit="return confirm('¿Estás seguro de que quieres cerrar esta sesión y enviarla para validación? No podrás añadir más retiradas después.');">
+             {% csrf_token %}
+             <button type="submit" class="btn btn-warning">Cerrar Sesión y Enviar a Validación</button>
+         </form>
+    </div>
+
+</div>
+
+{# Opcional: Añadir JS para Select2 y manejo dinámico de formsets si es necesario #}
+{% block extra_js %}
+{# <script src="{% static 'path/to/jquery.formset.js' %}"></script> #}
+{# <script>
+    $(document).ready(function() {
+        // Inicializar Select2 si está disponible
+        $('.select2').select2();
+
+        // Inicializar formset dinámico (ejemplo con jquery.formset.js)
+        // $('.dynamic-formset-item').formset({
+        //     prefix: '{{ formset.prefix }}',
+        //     addText: 'Añadir otro producto',
+        //     deleteText: 'Eliminar'
+        // });
+    });
+</script> #}
+{% endblock %}
+
+{% endblock %}

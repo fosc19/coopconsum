@@ -1,0 +1,46 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+
+{% block title %}Selecciona la Gestión de Stock a Validar{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Selecciona la Gestión de Stock a Validar</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <h3>Gestiones de Stock Pendientes de Validación</h3>
+    <div class="row">
+      {% for gestion in gestiones_pendientes %}
+        <div class="col-md-4">
+          <div class="card card-warning"> {# Usamos color warning para pendiente #}
+            <div class="card-header">
+              <h3 class="card-title">Gestión #{{ gestion.id }}</h3>
+            </div>
+            <div class="card-body">
+              <p><strong>Descripción:</strong> {{ gestion.descripcion|default:"Sin descripción" }}</p>
+              <p><strong>Fecha Creación:</strong> {{ gestion.fecha_creacion|date:"d/m/Y H:i" }}</p>
+              <p><strong>Estado:</strong> <span class="badge badge-warning">{{ gestion.get_estado_display }}</span></p>
+              {# Enlace a la futura vista de gestión/validación #}
+              <a href="{% url 'gestionar_stock' gestion.id %}" class="btn btn-sm btn-warning">
+                Validar/Gestionar
+              </a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12">
+          <p>No tienes gestiones de stock pendientes de validar.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

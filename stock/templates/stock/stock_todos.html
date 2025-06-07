@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+  /* Estilos para la galería de productos de stock */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .product-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .product-card:hover .product-image {
+    transform: scale(1.05);
+  }
+  
+  .product-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-meta {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .product-price {
+    font-weight: 600;
+    color: #2c7be5;
+    margin-bottom: 5px;
+  }
+  
+  .stock-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .category-tag, .provider-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid #e9ecef;
+  }
+
+  /* Estilos para los filtros (para consistencia con productos/index.html) */
+  .filters-container { /* Ya se usa en el HTML, pero definimos por si acaso */
+    margin-bottom: 20px;
+  }
+  
+  .filter-card { /* Ya se usa en el HTML */
+    height: 100%;
+    border-radius: 8px; /* Coincide con product-card */
+  }
+  
+  .filter-header { /* Ya se usa en el HTML */
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 15px;
+  }
+  
+  .filter-title { /* Ya se usa en el HTML, aquí definimos el tamaño */
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .filter-body { /* Ya se usa en el HTML */
+    padding: 15px;
+  }
+  
+  .filter-select { /* Ya se usa en el HTML */
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Productes en Estoc{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Tots els Productes en Estoc</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Filtros -->
+    <div class="row filters-container mb-3">
+      <div class="col-md-6">
+        <div class="card filter-card">
+          <div class="card-header filter-header">
+            <h3 class="filter-title">Filtrar per Categoria</h3>
+          </div>
+          <div class="card-body filter-body">
+            <select id="filtroCategoria" class="filter-select form-control" onchange="filtrarStockPor('categoria_id', this.value)">
+              <option value="">-- Totes les categories --</option>
+              {% for cat in categorias %} {# Asumimos que 'categorias' se pasa desde la vista #}
+                <option value="{{ cat.id }}" {% if categoria_seleccionada.id == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card filter-card">
+          <div class="card-header filter-header">
+            <h3 class="filter-title">Filtrar per Proveïdor</h3>
+          </div>
+          <div class="card-body filter-body">
+            <select id="filtroProveedor" class="filter-select form-control" onchange="filtrarStockPor('proveedor_id', this.value)">
+              <option value="">-- Tots els proveïdors --</option>
+              {% for prov in proveedores %} {# Asumimos que 'proveedores' se pasa desde la vista #}
+                <option value="{{ prov.id }}" {% if proveedor_seleccionado.id == prov.id %}selected{% endif %}>{{ prov.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Indicador de Filtro Activo -->
+    {% if categoria_seleccionada or proveedor_seleccionado %}
+      <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+        <span>
+          {% if categoria_seleccionada %}
+            Mostrant productes en estoc de la categoria: <strong>{{ categoria_seleccionada.nombre }}</strong>
+          {% elif proveedor_seleccionado %}
+            Mostrant productes en estoc del proveïdor: <strong>{{ proveedor_seleccionado.nombre }}</strong>
+          {% endif %}
+        </span>
+        <a href="{% url 'stock:stock_todos' %}" class="btn btn-sm btn-outline-info">Treure Filtre</a>
+      </div>
+    {% endif %}
+
+    <!-- Card principal -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Llista de Productes marcats com Estoc</h3>
+      </div>
+      <div class="card-body">
+        {% if productos_stock %}
+          <div class="product-grid">
+            {% for producto in productos_stock %}
+              <div class="product-card">
+                <div class="product-image-container">
+                  {% if producto.imagen %}
+                    <img class="product-image" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                  {% else %}
+                    <img class="product-image" src="{% static 'img/no-image.png' %}" alt="Sense imatge">
+                  {% endif %}
+                </div>
+                <div class="product-content">
+                  <h5 class="product-title">{{ producto.nombre }}</h5>
+                  {% if producto.descripcion %}
+                    <p class="product-description">{{ producto.descripcion|truncatewords:15 }}</p>
+                  {% endif %}
+                  
+                  <div class="product-price">{{ producto.precio }} € / {{ producto.get_unidad_venta_display }}</div>
+                  
+                  <div class="stock-badge">
+                    Estoc: {{ producto.stock }} {% if producto.unidad_venta != 'ud' %}{{ producto.get_unidad_venta_display }}{% endif %}
+                  </div>
+                  
+                  <div class="product-meta">
+                    {% if producto.categoria %}
+                      <span class="category-tag">
+                        <i class="fas fa-tag fa-xs"></i> {{ producto.categoria.nombre|default:"N/A" }}
+                      </span>
+                    {% endif %}
+                    
+                    {% if producto.proveedor %}
+                      <span class="provider-tag">
+                        <i class="fas fa-store fa-xs"></i> {{ producto.proveedor.nombre|default:"N/A" }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-center text-muted">No hi ha productes marcats com estoc.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+function filtrarStockPor(parametro, valor) {
+  const baseUrl = "{% url 'stock:stock_todos' %}";
+  let params = new URLSearchParams(window.location.search);
+
+  if (valor) {
+    params.set(parametro, valor);
+    // Si se filtra por categoría, quitar el filtro de proveedor y viceversa
+    if (parametro === 'categoria_id') {
+      params.delete('proveedor_id');
+    } else if (parametro === 'proveedor_id') {
+      params.delete('categoria_id');
+    }
+  } else {
+    // Si se selecciona "Todos", quitar solo ese parámetro específico
+    params.delete(parametro);
+  }
+  
+  window.location.href = baseUrl + (params.toString() ? '?' + params.toString() : '');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const filtroCategoria = document.getElementById('filtroCategoria');
+  const filtroProveedor = document.getElementById('filtroProveedor');
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.has('categoria_id') && params.get('categoria_id') !== '') {
+    if(filtroProveedor) filtroProveedor.disabled = true;
+  } else if (params.has('proveedor_id') && params.get('proveedor_id') !== '') {
+    if(filtroCategoria) filtroCategoria.disabled = true;
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

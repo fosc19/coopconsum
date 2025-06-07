@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %} {# Para formatear números si es necesario #}
+
+{% block title %}{{ titulo_pagina|default:"Detalle Recogida" }}{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>{{ titulo_pagina }}</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard_principal' %}">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'validar_entregas_semanales' %}">Validar Entregas</a></li>
+          <li class="breadcrumb-item active">Detalle {{ recogida.fecha|date:"d/m/Y" }}</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Entregas Registradas para la Recogida del {{ recogida.fecha|date:"d/m/Y" }}</h3>
+        <div class="card-tools">
+           <a href="{% url 'validar_entregas_semanales' %}" class="btn btn-secondary btn-sm">
+               <i class="fas fa-arrow-left"></i> Volver a la lista
+           </a>
+        </div>
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        {% if entregas %}
+          {% for entrega in entregas %}
+            <div class="card card-outline card-info mb-3">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <strong>Socio:</strong> {{ entrega.socio.nombre }} {{ entrega.socio.apellido }}
+                  <small class="ml-2 text-muted">(Registrado por: {{ entrega.registrado_por.username|default:"N/A" }} el {{ entrega.fecha_registro|date:"d/m/Y H:i" }})</small>
+                </h3>
+              </div>
+              <div class="card-body p-0">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th style="width: 100px; text-align: right;">Cantidad</th>
+                      {# Podríamos añadir precio y total si fuera necesario #}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in entrega.items.all %}
+                    <tr>
+                      <td>{{ item.producto.nombre }}</td>
+                      <td style="text-align: right;">{{ item.cantidad|intcomma }}</td> {# Formatear cantidad #}
+                    </tr>
+                    {% empty %}
+                    <tr>
+                      <td colspan="2" class="text-muted">No hay productos registrados para esta entrega.</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {% endfor %}
+
+          <hr>
+          {# Formulario para confirmar el procesamiento #}
+          <form method="post" action="{% url 'validar_detalle_entrega' recogida.id %}" onsubmit="return confirm('¿Estás seguro de que deseas procesar esta recogida? Esta acción deducirá los saldos y actualizará el stock.');">
+              {% csrf_token %}
+              <input type="hidden" name="recogida_id" value="{{ recogida.id }}">
+              <button type="submit" class="btn btn-success btn-lg">
+                  <i class="fas fa-check-circle"></i> Confirmar y Finalizar Procesamiento Semanal
+              </button>
+              <a href="{% url 'validar_entregas_semanales' %}" class="btn btn-secondary ml-2">Cancelar</a>
+          </form>
+
+        {% else %}
+          <p class="text-info">No hay entregas registradas para esta fecha de recogida.</p>
+           <a href="{% url 'validar_entregas_semanales' %}" class="btn btn-secondary btn-sm">
+               <i class="fas fa-arrow-left"></i> Volver a la lista
+           </a>
+        {% endif %}
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div><!-- /.container-fluid -->
+</section>
+{% endblock %}

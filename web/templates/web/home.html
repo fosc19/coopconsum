@@ -1,0 +1,271 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block title %}Inici | Civada{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'web/css/home-effects.css' %}">
+<link rel="stylesheet" href="{% static 'css/unified-gallery.css' %}">
+{% endblock %}
+
+{% block civada_banner %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero principal -->
+<section class="bg-light-green py-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mx-auto text-center animate-on-scroll">
+        <h2 style="margin-bottom: 1rem;">Benvingut/da a La Civada</h2>
+        <p class="lead">Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Secció Qui som -->
+<section class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-md-6 animate-on-scroll">
+      <h2 class="section-title">Qui som?</h2>
+      <p class="mb-4">Som una cooperativa sense ànim de lucre formada per persones compromeses amb el consum responsable, la sostenibilitat i el suport als productors locals. El nostre objectiu és facilitar l'accés a productes ecològics i de qualitat, fomentant l'economia social i el respecte pel medi ambient.</p>
+      <a href="{% url 'web_quienes_somos' %}" class="btn btn-outline-primary">Coneix-nos més</a>
+    </div>
+    <div class="col-md-6 text-center animate-on-scroll">
+      <img src="/media/galeria/cistella.jpg" alt="Cistella de productes ecològics" class="img-fluid rounded-custom shadow-sm" style="max-height: 350px;">
+    </div>
+  </div>
+</section>
+
+<!-- Características destacadas -->
+<section class="container py-5">
+  <div class="row text-center">
+    <div class="col-12 mb-5">
+      <h2 class="section-title text-center">Per què escollir La Civada?</h2>
+    </div>
+    
+    <div class="col-md-4 mb-4 animate-on-scroll">
+      <div class="feature-icon">
+        <i class="fas fa-leaf"></i>
+      </div>
+      <h3>Productes ecològics</h3>
+      <p>Tots els nostres productes són ecològics, sense químics i amb certificació CCPAE o relació de confiança.</p>
+    </div>
+    
+    <div class="col-md-4 mb-4 animate-on-scroll">
+      <div class="feature-icon">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
+      <h3>Proximitat</h3>
+      <p>Apostem per productes de proximitat per reduir el transport i apropar consumidors i productors.</p>
+    </div>
+    
+    <div class="col-md-4 mb-4 animate-on-scroll">
+      <div class="feature-icon">
+        <i class="fas fa-hands-helping"></i>
+      </div>
+      <h3>Benefici social</h3>
+      <p>Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d'exclusió, etc.</p>
+    </div>
+  </div>
+  
+</section>
+
+<!-- Secció Productors destacats -->
+<section class="bg-light py-5">
+  <div class="container">
+    <h2 class="section-title text-center">Els nostres productors</h2>
+    <div class="row">
+      {% if proveedores_destacados %}
+        {% for proveedor in proveedores_destacados %}
+          <div class="col-lg-4 col-md-6 mb-4 animate-on-scroll">
+            <div class="feature-card">
+              <div class="provider-image-container" style="height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f8f9fa;">
+                {% if proveedor.imagen %}
+                  <img src="{{ proveedor.imagen.url }}" class="provider-image" alt="{{ proveedor.nombre }}" style="max-width: 100%; max-height: 160px; object-fit: contain;">
+                {% else %}
+                  <img src="{% static 'img/no-image.png' %}" class="provider-image" alt="{{ proveedor.nombre }}" style="max-width: 100%; max-height: 160px; object-fit: contain;">
+                {% endif %}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ proveedor.nombre }}</h5>
+                <p class="card-text">{{ proveedor.descripcion_corta }}</p>
+                <a href="{% url 'web_productores' %}" class="btn btn-sm btn-outline-primary">Conèixer més</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <!-- Proveedores de ejemplo cuando no hay proveedores destacados -->
+        <div class="col-lg-4 col-md-6 mb-4 animate-on-scroll">
+          <div class="feature-card">
+            <div class="provider-image-container" style="height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f8f9fa;">
+              <img src="{% static 'img/no-image.png' %}" class="provider-image" alt="Productor 1" style="max-width: 100%; max-height: 160px; object-fit: contain;">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Finca Ecològica La Huerta</h5>
+              <p class="card-text">Verdures i fruites ecològiques de proximitat. Agricultura sostenible i de temporada.</p>
+              <a href="{% url 'web_productores' %}" class="btn btn-sm btn-outline-primary">Conèixer més</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4 animate-on-scroll">
+          <div class="feature-card">
+            <div class="provider-image-container" style="height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f8f9fa;">
+              <img src="{% static 'img/no-image.png' %}" class="provider-image" alt="Productor 2" style="max-width: 100%; max-height: 160px; object-fit: contain;">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Formatgeria Artesanal</h5>
+              <p class="card-text">Formatges artesanals elaborats amb llet de cabra i ovella de pastura ecològica.</p>
+              <a href="{% url 'web_productores' %}" class="btn btn-sm btn-outline-primary">Conèixer més</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4 animate-on-scroll">
+          <div class="feature-card">
+            <div class="provider-image-container" style="height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; background-color: #f8f9fa;">
+              <img src="{% static 'img/no-image.png' %}" class="provider-image" alt="Productor 3" style="max-width: 100%; max-height: 160px; object-fit: contain;">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Forn Tradicional</h5>
+              <p class="card-text">Pa i rebosteria artesanal elaborada amb farines ecològiques i massa mare.</p>
+              <a href="{% url 'web_productores' %}" class="btn btn-sm btn-outline-primary">Conèixer més</a>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="col-12 text-center mt-3">
+        <a href="{% url 'web_productores' %}" class="btn btn-primary">Veure tots els productors</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Secció Productes destacats -->
+<section class="container py-5">
+  <h2 class="section-title text-center">Productes destacats</h2>
+  <div class="row">
+    {% if productos_destacados %}
+      {% for producto in productos_destacados %}
+        <div class="col-lg-3 col-md-6 mb-4 animate-on-scroll">
+          <div class="feature-card">
+            <div class="eco-badge">Eco</div>
+            <div class="gallery-img-container">
+              {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" class="gallery-img" alt="{{ producto.nombre }}">
+              {% else %}
+                <img src="{% static 'img/no-image.png' %}" class="gallery-img" alt="{{ producto.nombre }}">
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ producto.nombre }}</h5>
+              <p class="card-text">{{ producto.descripcion|truncatechars:60 }}</p>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="text-primary fw-bold">{{ producto.precio }} €</span>
+                <a href="{% url 'web_productos' %}" class="btn btn-sm btn-outline-primary">Veure més</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <!-- Productos de ejemplo cuando no hay productos destacados -->
+      <div class="col-lg-3 col-md-6 mb-4 animate-on-scroll">
+        <div class="feature-card">
+          <div class="eco-badge">Eco</div>
+          <div class="gallery-img-container">
+            <img src="{% static 'img/no-image.png' %}" class="gallery-img" alt="Producte 1">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Oli d'oliva verge extra</h5>
+            <p class="card-text">Ampolla 1L. Premsat en fred. Directe del productor.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">12,50 €</span>
+              <a href="{% url 'web_productos' %}" class="btn btn-sm btn-outline-primary">Veure més</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4 animate-on-scroll">
+        <div class="feature-card">
+          <div class="eco-badge">Eco</div>
+          <div class="gallery-img-container">
+            <img src="{% static 'img/no-image.png' %}" class="gallery-img" alt="Producte 2">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Mel de romaní</h5>
+            <p class="card-text">Pot de 500g. Mel crua sense pasteuritzar d'abelles en entorn natural.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">8,75 €</span>
+              <a href="{% url 'web_productos' %}" class="btn btn-sm btn-outline-primary">Veure més</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4 animate-on-scroll">
+        <div class="feature-card">
+          <div class="eco-badge">Eco</div>
+          <div class="gallery-img-container">
+            <img src="{% static 'img/no-image.png' %}" class="gallery-img" alt="Producte 3">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Pa integral de cereals</h5>
+            <p class="card-text">Elaborat amb massa mare i farines ecològiques. Peça de 500g.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">3,80 €</span>
+              <a href="{% url 'web_productos' %}" class="btn btn-sm btn-outline-primary">Veure més</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4 animate-on-scroll">
+        <div class="feature-card">
+          <div class="eco-badge">Eco</div>
+          <div class="gallery-img-container">
+            <img src="{% static 'img/no-image.png' %}" class="gallery-img" alt="Producte 4">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Formatge curat d'ovella</h5>
+            <p class="card-text">Peça de 250g. Elaborat artesanalment amb llet crua d'ovella.</p>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="text-primary fw-bold">7,95 €</span>
+              <a href="{% url 'web_productos' %}" class="btn btn-sm btn-outline-primary">Veure més</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    
+    <div class="col-12 text-center mt-3">
+      <a href="{% url 'web_productos' %}" class="btn btn-primary">Veure tots els productes</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- Call to Action -->
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="bg-success text-white p-5 rounded-custom animate-on-scroll">
+        <div class="row align-items-center">
+          <div class="col-lg-8 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-3">Vols formar part de la nostra cooperativa?</h2>
+            <p class="lead mb-0">Uneix-te a Civada i gaudeix de productes ecològics, locals i de qualitat.</p>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <a href="{% url 'web_com_apuntarse' %}" class="btn btn-light btn-lg">Apunta't ara</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

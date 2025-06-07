@@ -1,0 +1,227 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+{% load dict_extras %} {# Asegúrate de que este templatetag existe y funciona #}
+
+{% block title %}Gestión de Pedidos Esporádicos{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Gestión de Pedidos Esporádicos</h1>
+        <p><small>Asignados a: {{ request.user.socio.nombre }} {{ request.user.socio.apellido }}</small></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
+}
+.print-icon {
+  cursor: pointer;
+  float: right;
+  font-size: 1.2rem;
+  color: #000;
+}
+.print-icon:hover {
+  color: #333;
+}
+</style>
+
+<script>
+function printSection(sectionId) {
+  var content = document.getElementById(sectionId).innerHTML;
+  var mywindow = window.open('', 'PRINT', 'height=600,width=800');
+  mywindow.document.write('<html><head><title>Resumen</title>');
+  mywindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">');
+  mywindow.document.write('<style>body{font-family:sans-serif;margin:1cm;} table{width:100%;border-collapse:collapse;} th,td{border:1px solid #ccc;padding:5px;text-align:center;} h3{text-align:center;} </style>');
+  mywindow.document.write('</head><body>');
+  mywindow.document.write(content);
+  mywindow.document.write('</body></html>');
+  mywindow.document.close();
+  mywindow.focus();
+  mywindow.print();
+  mywindow.close();
+  return true;
+}
+</script>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- (A) Resumen Global (Sin Socios) -->
+    <div class="card card-warning" id="resumen-global">
+      <div class="card-header">
+        <h3 class="card-title">Resumen Global (Sin Socios)</h3>
+        <i class="fas fa-print print-icon no-print" title="Imprimir" onclick="printSection('resumen-global')"></i>
+      </div>
+      <div class="card-body">
+        <p>
+          <strong>Total de Pedidos abiertos asignados:</strong> {{ total_pedidos }}
+        </p>
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Subtotal (€)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in resumen_global_data %}
+                <tr>
+                  <td>{{ row.producto }}</td>
+                  <td>{{ row.cantidad }}</td>
+                  <td>{{ row.precio|floatformat:2 }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3">No hay datos para mostrar</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <!-- Fila total cantidades -->
+              <tr class="table-danger">
+                <th>Total General (Cant.)</th>
+                <th>{{ resumen_global_total_cantidad }}</th>
+                <th></th>
+              </tr>
+              <!-- Fila total precio -->
+              <tr class="table-danger">
+                <th>Total General (Precio)</th>
+                <th></th>
+                <th>{{ resumen_global_total_precio|floatformat:2 }}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- (B) Pivot por Socio -->
+    <div class="card card-primary" id="resumen-socios">
+      <div class="card-header">
+        <h3 class="card-title">Resumen de Pedidos (Por Socio)</h3>
+        <i class="fas fa-print print-icon no-print" title="Imprimir" onclick="printSection('resumen-socios')"></i>
+      </div>
+      <div class="card-body">
+        <p><strong>Total de Pedidos abiertos asignados:</strong> {{ total_pedidos }}</p>
+
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th rowspan="2" class="align-middle">Socio</th>
+                {% for producto_obj in productos_obj_list %}
+                  <th colspan="3" class="text-center">
+                    {{ producto_obj.nombre }} ({{ producto_obj.get_unidad_venta_display }}, {{ producto_obj.precio|floatformat:2 }} €/{{ producto_obj.get_unidad_venta_display }})
+                  </th>
+                {% endfor %}
+                <th colspan="2" class="text-center">Total Socio</th>
+              </tr>
+              <tr>
+                {% for producto_obj in productos_obj_list %} {# Iterar sobre objetos #}
+                  <th>Cant.</th>
+                  <th>€/{{ producto_obj.get_unidad_venta_display }}</th>
+                  <th>€</th>
+                {% endfor %}
+                <th>Cant.</th>
+                <th>€</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in pivot_data %}
+                <tr>
+                  <td>{{ row.socio_nombre }}</td>
+                  {% for producto_obj in productos_obj_list %} {# Iterar sobre objetos #}
+                    {% with info=row.productos|get_item:producto_obj.nombre %} {# Usar nombre como clave #}
+                      <td>{{ info.cantidad|default:"0" }}</td>
+                      <td>{{ producto_obj.precio|floatformat:2 }}</td>
+                      <td>{{ info.precio|floatformat:2|default:"0.00" }}</td>
+                    {% endwith %}
+                  {% endfor %}
+                  <td>{{ row.row_total_cantidad }}</td>
+                  <td>{{ row.row_total_precio|floatformat:2 }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="{{ colspan_pivot }}">No hay datos para mostrar</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <!-- Totales por Producto (Cant.) -->
+              <tr class="table-danger">
+                <th>Total por Producto (Cant.)</th>
+                {% for producto_obj in productos_obj_list %} {# Iterar sobre objetos #}
+                  <th>
+                    {{ column_totals_cantidad|get_item:producto_obj.nombre }} {# Usar nombre como clave #}
+                  </th>
+                  <th></th>  {# la celda de precio la dejamos vacía #}
+                  <th></th>
+                {% endfor %}
+                <th>{{ grand_total_cantidad }}</th>
+                <th></th>
+              </tr>
+              <!-- Totales por Producto (Precio) -->
+              <tr class="table-danger">
+                <th>Total por Producto (Precio)</th>
+                {% for producto_obj in productos_obj_list %} {# Iterar sobre objetos #}
+                  <th></th>
+                  <th></th>
+                  <th>{{ column_totals_precio|get_item:producto_obj.nombre|floatformat:2 }}</th> {# Usar nombre como clave #}
+                {% endfor %}
+                <th></th>
+                <th>{{ grand_total_precio|floatformat:2 }}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- (C) Listado de Pedidos Asociados -->
+    <div class="card card-secondary">
+      <div class="card-header">
+        <h3 class="card-title">Listado de Pedidos Esporádicos Abiertos</h3> {# Título cambiado #}
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm">
+            <thead>
+              <tr>
+                <th>ID Pedido</th>
+                <th>Estado</th>
+                <th>Fecha Apertura</th>
+                <th>Fecha Cierre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for pedido in pedidos %} {# La vista ya filtra por abiertos #}
+                <tr>
+                  <td>{{ pedido.id }}</td>
+                  <td>{{ pedido.estado }}</td>
+                  <td>{{ pedido.fecha_apertura|date:"d/m/Y H:i" }}</td>
+                  <td>{{ pedido.fecha_cierre|date:"d/m/Y H:i" }}</td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="4">No hay pedidos esporádicos abiertos asignados</td> {# Mensaje cambiado #}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

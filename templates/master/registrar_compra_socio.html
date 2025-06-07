@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registrar Compra Manual Soci{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Registrar Compra Manual de Soci</h1>
+    <p>Utilitza aquest formulari per registrar manualment una compra de producte realitzada per un soci.</p>
+    <hr>
+
+    {% comment %} Mostrar mensajes de feedback {% endcomment %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tancar"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card card-primary mb-4">
+        <div class="card-header">
+            <h3 class="card-title">Nou Registre</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.socio.id_for_label }}" class="form-label">{{ form.socio.label }}</label>
+                        {{ form.socio }}
+                        {% if form.socio.errors %}<div class="invalid-feedback d-block">{{ form.socio.errors|join:", " }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.producto.id_for_label }}" class="form-label">{{ form.producto.label }}</label>
+                        {{ form.producto }}
+                        {% if form.producto.errors %}<div class="invalid-feedback d-block">{{ form.producto.errors|join:", " }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label for="{{ form.cantidad.id_for_label }}" class="form-label">{{ form.cantidad.label }}</label>
+                        {{ form.cantidad }}
+                        {% if form.cantidad.help_text %}<div class="form-text">{{ form.cantidad.help_text }}</div>{% endif %}
+                        {% if form.cantidad.errors %}<div class="invalid-feedback d-block">{{ form.cantidad.errors|join:", " }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <label for="{{ form.notas.id_for_label }}" class="form-label">{{ form.notas.label }}</label>
+                        {{ form.notas }}
+                        {% if form.notas.errors %}<div class="invalid-feedback d-block">{{ form.notas.errors|join:", " }}</div>{% endif %}
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Desar Registre</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Últims Registres</h2>
+    {% if ultimos_registros %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Soci/a</th>
+                        <th>Producte</th>
+                        <th>Quantitat</th>
+                        <th>Unitat</th>
+                        <th>Notes</th>
+                        <th>Registrat per</th>
+                        <th>Estat</th> {# Nueva cabecera #}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in ultimos_registros %}
+                    <tr>
+                        <td>{{ registro.fecha_registro|date:"Y-m-d H:i" }}</td>
+                        <td>{{ registro.socio }}</td>
+                        <td>{{ registro.producto.nombre }}</td>
+                        <td>{{ registro.cantidad|floatformat:2 }}</td> {# Formatear decimales #}
+                        <td>{{ registro.producto.get_unidad_venta_display }}</td>
+                        <td>{{ registro.notas|default:"-" }}</td>
+                        <td>{{ registro.registrado_por.username|default:"N/D" }}</td>
+                        <td>
+                            <span class="badge {% if registro.estado == 'pendiente' %}bg-warning text-dark{% elif registro.estado == 'validado' %}bg-success{% elif registro.estado == 'error' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ registro.get_estado_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Encara no hi ha registres de compres manuals.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

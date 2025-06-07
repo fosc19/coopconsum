@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %} {# Asegúrate de cargar static si usas archivos estáticos específicos aquí #}
+{# Eliminado: {% load crispy_forms_tags %} #}
+
+{% block title %}{{ titulo }} - Gestión Productos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ titulo }}</h2>
+    <hr>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {# Renderiza el formulario usando el método estándar de Django (como párrafos) #}
+        {{ form.as_p }}
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            {# Enlace para volver a la lista de productos (ajusta la URL si es necesario) #}
+            <a href="{% url 'productos:index' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+
+    {# Bloque de eliminación eliminado ya que la URL/vista no existe #}
+
+</div>
+{% endblock %}

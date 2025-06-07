@@ -1,0 +1,481 @@
+{% extends "base.html" %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Panell del Soci{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Panell del Soci</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  {% if error_no_socio %}
+    <div class="container-fluid">
+      <div class="alert alert-danger" role="alert">
+        <strong>Error:</strong> L'usuari actual no té un perfil de soci associat. No es pot mostrar el panell del soci.
+      </div>
+    </div>
+  {% else %}
+  {# El contenido original del panel va aquí dentro del else #}
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Columna izquierda: Comandas Recientes + Formulario -->
+      <div class="col-md-6">
+        <!-- Comandas Recientes -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Comandes Recents</h3>
+          </div>
+          <div class="card-body">
+            {% if comandas %}
+              <ul class="list-group">
+                {% for comanda in comandas %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                      <strong>{{ comanda.nombre }}</strong>
+                      <br>
+                      <small>
+                        Estat:
+                        {% if comanda.estado == 'abierto' %}
+                          <span class="badge badge-success">Obert</span>
+                        {% elif comanda.estado == 'pendiente' %}
+                          <span class="badge badge-warning">Pendent</span>
+                        {% else %}
+                          <span class="badge badge-secondary">{{ comanda.estado|title }}</span>
+                        {% endif %}
+                        | Obertura: {{ comanda.fecha_apertura|date:"d/m/Y" }}
+                      </small>
+                    </span>
+                    <span>
+                      <strong>{{ comanda.total_gastado|floatformat:2 }} €</strong>
+                      <button type="button" class="btn btn-xs btn-outline-primary ml-2" data-toggle="modal" data-target="#detalleComanda{{ comanda.id }}">
+                        Veure
+                      </button>
+                      {% if comanda.estado == 'abierto' %}
+                        <a href="{% url 'seleccionar_pedido' comanda.pedido_id %}" class="btn btn-xs btn-outline-secondary ml-2" title="Editar comanda">
+                          <i class="fas fa-pen"></i>
+                        </a>
+                      {% else %}
+                        <button type="button" class="btn btn-xs btn-outline-secondary ml-2 disabled" title="No es pot editar" disabled>
+                          <i class="fas fa-pen"></i>
+                        </button>
+                      {% endif %}
+                    </span>
+                  </li>
+                {% endfor %}
+              </ul>
+              {% for comanda in comandas %}
+                <!-- Modal Detalle Comanda/Pedido -->
+                <div class="modal fade" id="detalleComanda{{ comanda.id }}" tabindex="-1" role="dialog" aria-labelledby="detalleComandaLabel{{ comanda.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="detalleComandaLabel{{ comanda.id }}">Detall de {{ comanda.nombre }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {% with detalles=detalles_comandas|dict_get:comanda.id %}
+                        {% if detalles %}
+                          <table class="table table-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Producte</th>
+                                <th>Quantitat</th>
+                                <th>Unitat</th>
+                                <th>Preu</th>
+                                <th>Subtotal</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for prod in detalles %}
+                                <tr>
+                                  <td>{{ prod.nombre }}</td>
+                                  <td>{{ prod.cantidad }}</td>
+                                  <td>{{ prod.unidad }}</td>
+                                  <td>{{ prod.precio|floatformat:2 }} €</td>
+                                  <td>{{ prod.subtotal|floatformat:2 }} €</td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        {% else %}
+                          <p>No hi ha productes en aquesta comanda.</p>
+                        {% endif %}
+                        {% endwith %}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <p>No tens comandes recents.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Desitjos Actius -->
+        <div class="card card-info mt-4">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-lightbulb mr-2"></i>Desitjos Actius</h3>
+            {# Botón redundante eliminado de card-tools #}
+          </div>
+          <div class="card-body">
+            {% if mis_desitjos %}
+              <ul class="list-group">
+                {% for desig_info in mis_desitjos %}
+                  {# Mostraremos la carta si el socio tiene interés o si simplemente queremos listar todas las cartas activas aquí #}
+                  {# Para este ejemplo, mostraremos solo aquellas donde tiene interés explícito o todas si la lista es corta #}
+                  {% if desig_info.algun_interes_en_carta or not forloop.counter > 3 %} {# Limitar a 3 si no tiene interés para no saturar #}
+                  <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h5 class="mb-1">{{ desig_info.carta.titulo }}</h5> {# Título sin negrita #}
+                        <small>
+                          Estat:
+                          <span class="badge {% if desig_info.carta.estado == 'minimo_alcanzado' %}badge-success{% elif desig_info.carta.estado == 'activa' %}badge-info{% else %}badge-secondary{% endif %}">
+                            {{ desig_info.carta.get_estado_display }}
+                          </span>
+                          {# Aquí irá el resumen del interés del socio #}
+                          {% if desig_info.algun_interes_en_carta %}
+                            {% for prod_interes in desig_info.productos_con_interes %}
+                              {% if prod_interes.tiene_interes %}
+                                | <i class="fas fa-leaf text-success mr-1"></i>
+                                <strong>{{ prod_interes.producto.nombre }}:</strong> {{ prod_interes.cantidad_deseada|floatformat:2 }} {{ prod_interes.producto.get_unidad_venta_display }}
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                             | <span class="text-muted">Sense interès registrat</span>
+                          {% endif %}
+                        </small>
+                      </div>
+                      <a href="{% url 'detalle_carta_deseo' desig_info.carta.id %}" class="btn btn-xs btn-outline-primary ml-2" title="Veure / Editar Interès">
+                        <i class="fas fa-eye"></i> / <i class="fas fa-pen"></i>
+                      </a>
+                    </div>
+                    {# La lista detallada de productos de interés se elimina de aquí, ya que se muestra arriba #}
+                    {# Si no hay interés y se quiere mostrar un mensaje, ya está cubierto arriba #}
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>Actualment no hi ha cartes de desitjos actives o no has expressat interès en cap.</p>
+              <p><a href="{% url 'listar_cartas_deseo' %}" class="btn btn-sm btn-info">Explorar Cartes de Desitjos</a></p>
+            {% endif %}
+          </div>
+        </div>
+        <!-- Fin Desitjos Actius -->
+
+        <!-- Formulario de ingreso -->
+        <div class="card card-secondary mt-4">
+          <div class="card-header">
+            <h3 class="card-title">Enviar Ingrés per a Validar</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" enctype="multipart/form-data" action="{% url 'enviar_ingreso' %}">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="monto">Import (€)</label>
+                <input type="number" step="0.01" min="0" class="form-control" id="monto" name="monto" required>
+              </div>
+              <div class="form-group">
+                <label for="justificante">Justificant (opcional)</label>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="justificante" name="justificante">
+                  <label class="custom-file-label" for="justificante" data-browse="Navega">Seleccionar arxiu...</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="comentario">Comentari</label>
+                <textarea class="form-control" id="comentario" name="comentario" rows="2" required></textarea>
+                <small class="form-text text-muted">Poseu el vostre numero de uf</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Enviar per a validar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- Columna derecha: Últimos Movimientos del Monedero + Saldo total -->
+      <div class="col-md-6">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Moviments del Moneder</h3>
+          </div>
+          <div class="card-body">
+            {% if movimientos %}
+              <ul class="list-group">
+                {% for mov in movimientos %}
+                  <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <span class="text-muted" style="font-size: 0.95rem;">{{ mov.fecha|date:"d/m/Y H:i" }}</span>
+                      </div>
+                      <div>
+                        {% if mov.estado == 'pendiente' %}
+                          <span class="badge badge-warning" style="font-size: 1rem;">+{{ mov.monto|floatformat:2 }} € (Pendent)</span>
+                        {% elif mov.monto > 0 %}
+                          <span class="badge badge-success" style="font-size: 1rem;">+{{ mov.monto|floatformat:2 }} €</span>
+                        {% else %}
+                          <span class="badge badge-danger" style="font-size: 1rem;">{{ mov.monto|floatformat:2 }} €</span>
+                        {% endif %}
+                        <span class="ml-3 text-muted" style="font-size: 0.95rem;">Saldo: {{ mov.saldo|floatformat:2 }} €</span>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>No hi ha moviments recents.</p>
+            {% endif %}
+          </div>
+        </div>
+        <!-- Saldo total del socio -->
+        <div class="card card-secondary mt-4">
+          <div class="card-header">
+            <h3 class="card-title">Saldo Total del Soci</h3>
+          </div>
+          <div class="card-body text-center">
+            <span style="font-size:2.5rem; font-weight:bold;">{{ saldo|floatformat:2 }} €</span>
+          </div>
+        </div>
+
+        <!-- Pedidos Anteriores (Todos) -->
+        <div class="card card-info mt-4" id="pedidos-anteriores-card"> {# Añadido id aquí #}
+          <div class="card-header">
+            <h3 class="card-title">Comandes Anteriors</h3>
+          </div>
+          <div class="card-body">
+            {% if pedidos_pagina %}
+              <ul class="list-group">
+                {% for pedido in pedidos_pagina %} {# Iterar sobre la página actual #}
+                  {% with pedido_detalles=detalles_por_pedido|dict_get:pedido.id %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                      <strong>{{ pedido.categoria.nombre|default:"Comanda Esporàdica" }}</strong>
+                      <br>
+                      <small>
+                        Estat:
+                        {% if pedido.estado == 'abierto' %}
+                          <span class="badge badge-success">Obert</span>
+                        {% elif pedido.estado == 'pendiente' %}
+                          <span class="badge badge-warning">Pendent</span>
+                        {% elif pedido.estado == 'cerrado' %}
+                           <span class="badge badge-secondary">Tancat</span>
+                        {% elif pedido.estado == 'inactivo' %}
+                           <span class="badge badge-dark">Inactiu</span>
+                        {% else %}
+                          <span class="badge badge-light">{{ pedido.estado|title }}</span>
+                        {% endif %}
+                        | Lliurament: {{ pedido.fecha_entrega|date:"d/m/Y" }}
+                      </small>
+                    </span>
+                    <span>
+                      <strong>{{ pedido_detalles.total|default:0|floatformat:2 }} €</strong>
+                      <button type="button" class="btn btn-xs btn-outline-primary ml-2" data-toggle="modal" data-target="#detallePedidoAnterior{{ pedido.id }}">
+                        Veure
+                      </button>
+                    </span>
+                  </li>
+                  {% endwith %}
+                {% endfor %}
+              </ul>
+
+              <!-- Controles de Paginación -->
+              <nav aria-label="Paginació de comandes anteriors" class="mt-3">
+                <ul class="pagination justify-content-center">
+                  {% if pedidos_pagina.has_previous %}
+                    <li class="page-item">
+                      {# Añadido #pedidos-anteriores-card al href #}
+                      <a class="page-link" href="?page={{ pedidos_pagina.previous_page_number }}#pedidos-anteriores-card" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled">
+                      <span class="page-link" aria-hidden="true">&laquo;</span>
+                    </li>
+                  {% endif %}
+
+                  {% for num in pedidos_pagina.paginator.page_range %}
+                    {% if pedidos_pagina.number == num %}
+                      <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > pedidos_pagina.number|add:'-3' and num < pedidos_pagina.number|add:'3' %}
+                       {# Añadido #pedidos-anteriores-card al href #}
+                      <li class="page-item"><a class="page-link" href="?page={{ num }}#pedidos-anteriores-card">{{ num }}</a></li>
+                    {% elif num == 1 or num == pedidos_pagina.paginator.num_pages %}
+                       {# Mostrar puntos suspensivos si hay muchas páginas #}
+                       {% if num == 1 and pedidos_pagina.number > 4 %}
+                          {# Añadido #pedidos-anteriores-card al href #}
+                         <li class="page-item"><a class="page-link" href="?page=1#pedidos-anteriores-card">1</a></li>
+                         <li class="page-item disabled"><span class="page-link">...</span></li>
+                       {% elif num == pedidos_pagina.paginator.num_pages and pedidos_pagina.number < pedidos_pagina.paginator.num_pages|add:'-3' %}
+                         <li class="page-item disabled"><span class="page-link">...</span></li>
+                          {# Añadido #pedidos-anteriores-card al href #}
+                         <li class="page-item"><a class="page-link" href="?page={{ pedidos_pagina.paginator.num_pages }}#pedidos-anteriores-card">{{ pedidos_pagina.paginator.num_pages }}</a></li>
+                       {% endif %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if pedidos_pagina.has_next %}
+                    <li class="page-item">
+                       {# Añadido #pedidos-anteriores-card al href #}
+                      <a class="page-link" href="?page={{ pedidos_pagina.next_page_number }}#pedidos-anteriores-card" aria-label="Següent">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled">
+                      <span class="page-link" aria-hidden="true">&raquo;</span>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+              <!-- Fin Controles de Paginación -->
+
+
+              {% for pedido in pedidos_pagina %} {# Iterar sobre la página actual para los modales también #}
+                {% with pedido_detalles=detalles_por_pedido|dict_get:pedido.id %}
+                <!-- Modal Detalle Pedido Anterior -->
+                <div class="modal fade" id="detallePedidoAnterior{{ pedido.id }}" tabindex="-1" role="dialog" aria-labelledby="detallePedidoAnteriorLabel{{ pedido.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="detallePedidoAnteriorLabel{{ pedido.id }}">Detall de {{ pedido.categoria.nombre|default:"Comanda Esporàdica" }} (Lliurament: {{ pedido.fecha_entrega|date:"d/m/Y" }})</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        {% if pedido_detalles and pedido_detalles.detalles %}
+                          <table class="table table-sm table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Producte</th>
+                                <th>Quantitat</th>
+                                <th>Unitat</th>
+                                <th>Preu (€)</th>
+                                <th>Subtotal (€)</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for detalle in pedido_detalles.detalles %}
+                                <tr>
+                                  <td>{{ detalle.producto.nombre }}</td>
+                                  <td>{{ detalle.cantidad }}</td>
+                                  <td>{{ detalle.producto.get_unidad_venta_display|default:'' }}</td>
+                                  <td>{{ detalle.producto.precio|floatformat:2 }}</td>
+                                  <td>{{ detalle.subtotal|floatformat:2 }}</td> {# Asumiendo que calculas subtotal en la vista o modelo #}
+                                  {# Si no tienes subtotal precalculado: {{ detalle.cantidad|multiply:detalle.producto.precio|floatformat:2 }} #}
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <td colspan="4" class="text-right"><strong>Total Comanda:</strong></td>
+                                <td><strong>{{ pedido_detalles.total|floatformat:2 }} €</strong></td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        {% else %}
+                          <p>No hi ha detalls per a aquesta comanda.</p>
+                        {% endif %}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endwith %}
+              {% endfor %}
+            {% else %}
+              <p>No has participat en cap comanda anterior.</p> {# Mantener este mensaje si no hay pedidos en total #}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% block extra_css %}
+{{ block.super }}
+{# CSS de FullCalendar #}
+<link href="{% static 'admin-lte/plugins/fullcalendar/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }} {# Para incluir cualquier JS del bloque extra_js de base.html si existe #}
+{# JS de FullCalendar y plugins #}
+<script src="{% static 'admin-lte/plugins/moment/moment.min.js' %}"></script> {# FullCalendar v3 requiere Moment.js #}
+<script src="{% static 'admin-lte/plugins/fullcalendar/main.js' %}"></script>
+<script src="{% static 'admin-lte/plugins/fullcalendar-daygrid/main.js' %}"></script>
+<script src="{% static 'admin-lte/plugins/fullcalendar-timegrid/main.js' %}"></script> {# Si usas vista de hora #}
+<script src="{% static 'admin-lte/plugins/fullcalendar-interaction/main.js' %}"></script> {# Para interacciones como clics #}
+{# Archivo de localización para catalán si está disponible #}
+<script src="{% static 'admin-lte/plugins/fullcalendar/locales/es.js' %}"></script> {# Usar español si catalán no está #}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Script para actualizar el label del custom file input de Bootstrap
+  var fileInputs = document.querySelectorAll('.custom-file-input');
+  Array.prototype.forEach.call(fileInputs, function(input) {
+    // Guardar el texto inicial del label
+    var label = input.nextElementSibling;
+    var initialLabelText = label.innerHTML;
+
+    input.addEventListener('change', function (e) {
+      var fileName = '';
+      if (this.files && this.files.length > 0) {
+        if (this.files.length > 1) {
+          fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+        } else {
+          fileName = e.target.value.split('\\').pop();
+        }
+      }
+
+      if (fileName) {
+        label.innerHTML = fileName;
+      } else {
+        label.innerHTML = initialLabelText; // Restaurar el texto inicial si no hay archivo
+      }
+    });
+  });
+
+  // Inicialización de FullCalendar
+  var calendarEl = document.getElementById('calendar');
+  if (calendarEl) {
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'dayGrid', 'interaction' ], // Usar plugins por nombre
+      initialView: 'dayGridMonth', // Vista inicial
+      locale: 'es', // Usar localización en español
+      events: '{{ api_eventos_url }}', // URL de la API de eventos
+      // Opciones adicionales según necesidad (ej. headerToolbar, eventClick)
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      eventClick: function(info) {
+        // Opcional: Mostrar detalles del evento al hacer clic
+        alert('Evento: ' + info.event.title + '\n' + 'Descripción: ' + info.event.extendedProps.description);
+      }
+    });
+    calendar.render();
+  }
+});
+</script>
+{% endblock %}
+</section>
+  {% endif %} {# Cierre del if error_no_socio #}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load pedidos_tags %}
+{% load dict_extras %}
+
+{% block title %}Mis Pedidos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mis Pedidos</h2>
+    <p>Aquí puedes ver el historial de todos los pedidos en los que has participado.</p>
+
+    {% if pedidos_participados %}
+        <div class="accordion" id="accordionPedidos">
+            {% for pedido in pedidos_participados %}
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="heading{{ pedido.id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ pedido.id }}" aria-expanded="false" aria-controls="collapse{{ pedido.id }}">
+                            <strong>Pedido #{{ pedido.id }}</strong> -
+                            {% if pedido.categoria %}{{ pedido.categoria.nombre }}{% endif %}
+                            {% if pedido.proveedor %} / {{ pedido.proveedor.nombre }}{% endif %} -
+                            Entrega: {{ pedido.fecha_entrega|date:"d/m/Y" }} -
+                            <span class="badge ms-2 {% if pedido.estado == 'abierto' %}bg-success{% elif pedido.estado == 'pendiente' %}bg-warning text-dark{% elif pedido.estado == 'cerrado' %}bg-secondary{% elif pedido.estado == 'inactivo' %}bg-dark{% else %}bg-light text-dark{% endif %}">
+                                {{ pedido.get_estado_display }}
+                            </span>
+                        </button>
+                    </h2>
+                    <div id="collapse{{ pedido.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ pedido.id }}" data-bs-parent="#accordionPedidos">
+                        <div class="accordion-body">
+                            {% with pedido_info=detalles_por_pedido|get_item:pedido.id %}
+                                {% if pedido_info and pedido_info.detalles %}
+                                    <h5>Tu Selección:</h5>
+                                    <table class="table table-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Cantidad</th>
+                                                <th>Precio Unitario</th>
+                                                <th>Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for detalle in pedido_info.detalles %}
+                                                <tr>
+                                                    <td>{{ detalle.producto.nombre }}</td>
+                                                    <td>{{ detalle.cantidad|format_cantidad:detalle.producto.unidad_venta }} {{ detalle.producto.get_unidad_venta_display }}</td>
+                                                    <td>{{ detalle.producto.precio|floatformat:2 }} €</td>
+                                                    <td>{{ detalle.cantidad|multiply:detalle.producto.precio|floatformat:2 }} €</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" class="text-end"><strong>Total Pedido:</strong></td>
+                                                <td><strong>{{ pedido_info.total|floatformat:2 }} €</strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                {% else %}
+                                    <p>No se encontraron detalles para tu selección en este pedido.</p>
+                                {% endif %}
+                            {% endwith %}
+                            <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+                            <p><strong>Fecha Apertura:</strong> {{ pedido.fecha_apertura|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Fecha Cierre:</strong> {{ pedido.fecha_cierre|date:"d/m/Y H:i" }}</p>
+                            <p><strong>Fecha Entrega Prevista:</strong> {{ pedido.fecha_entrega|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Aún no has participado en ningún pedido.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'dashboard_principal' %}" class="btn btn-secondary mt-3">Volver al Panel</a>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{# Si necesitas JS específico para esta página #}
+{% endblock %}

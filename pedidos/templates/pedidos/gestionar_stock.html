@@ -1,0 +1,92 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+
+{% block title %}Gestionar Stock #{{ gestion.id }}{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Gestionar Stock #{{ gestion.id }}</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-warning">
+      <div class="card-header">
+        <h3 class="card-title">Detalles de la Gestión</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Descripción:</strong> {{ gestion.descripcion|default:"N/A" }}</p>
+        <p><strong>Fecha Creación:</strong> {{ gestion.fecha_creacion|date:"d/m/Y H:i" }}</p>
+        <p><strong>Estado:</strong> <span class="badge badge-warning">{{ gestion.get_estado_display }}</span></p>
+        <p><strong>Gestor Asignado:</strong> {{ gestion.gestor_asignado.nombre }} {{ gestion.gestor_asignado.apellido }}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Anotaciones Registradas ({{ total_items }} items)</h3>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-sm">
+            <thead class="thead-light">
+              <tr>
+                <th>Socio que consumió</th>
+                <th>Producto</th>
+                <th class="text-right">Cantidad</th>
+                <th>Unidad</th>
+                <th>Anotado por</th>
+                <th>Fecha Anotación</th>
+                <th>Notas/Descripción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for anotacion in anotaciones %}
+              <tr>
+                <td>{{ anotacion.socio.nombre }} {{ anotacion.socio.apellido }}</td>
+                <td>{{ anotacion.producto.nombre }}</td>
+                <td class="text-right">{{ anotacion.cantidad|floatformat:"-3" }}</td> {# Formato con hasta 3 decimales #}
+                <td>{{ anotacion.producto.get_unidad_venta_display }}</td>
+                <td>{{ anotacion.anotado_por.get_full_name|default:anotacion.anotado_por.username }}</td>
+                <td>{{ anotacion.fecha_anotacion|date:"d/m/Y H:i" }}</td>
+                <td>{{ anotacion.notas|default:"" }}</td> {# Muestra la nota/descripción guardada #}
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="text-center text-muted">No hay anotaciones para esta gestión.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% if anotaciones %}
+            <tfoot>
+              <tr class="table-info">
+                <th colspan="2">Total Cantidad General</th>
+                <th class="text-right">{{ total_cantidad_general|floatformat:"-3" }}</th>
+                <th colspan="4"></th>
+              </tr>
+              {# Aquí podríamos añadir el cálculo del total en euros si fuera necesario #}
+            </tfoot>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+      {% if gestion.estado == 'pendiente' %}
+      <div class="card-footer text-right">
+          <form method="post" action="{% url 'finalizar_gestion_stock' gestion.id %}" onsubmit="return confirm('¿Estás seguro de que quieres finalizar esta gestión? Se descontará el importe de los monederos de los socios.');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">
+                  <i class="fas fa-check-circle mr-1"></i> Finalizar Gestión y Descontar Monederos
+              </button>
+          </form>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

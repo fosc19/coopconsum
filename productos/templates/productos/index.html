@@ -1,0 +1,291 @@
+<!-- templates/productos/index.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+  /* Estilos para la galería de productos */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .product-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .product-card:hover .product-image {
+    transform: scale(1.05);
+  }
+  
+  .product-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    flex-grow: 1;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .product-price {
+    font-weight: 600;
+    color: #2c7be5;
+    margin-bottom: 15px;
+  }
+  
+  .product-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .edit-button {
+    width: 100%;
+    padding: 8px 0;
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .edit-button:hover {
+    background-color: #e0a800;
+    color: #212529;
+    text-decoration: none;
+  }
+  
+  /* Estilos para los filtros */
+  .filters-container {
+    margin-bottom: 20px;
+  }
+  
+  .filter-card {
+    height: 100%;
+    border-radius: 8px;
+  }
+  
+  .filter-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 15px;
+  }
+  
+  .filter-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .filter-body {
+    padding: 15px;
+  }
+  
+  .filter-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+  
+  /* Estilos para el botón de añadir */
+  .add-button {
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+</style>
+{% endblock %}
+
+{% block title %}Tots els Productes{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Tots els Productes</h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        {% if user.is_superuser or user.is_authenticated and user.socio and user.socio.gestiona_productos %}
+          <a href="{% url 'productos:crear_producto' %}" class="btn btn-success add-button">
+            <i class="fas fa-plus"></i> Afegir Nou Producte
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Filtros -->
+    <div class="row filters-container">
+      <div class="col-md-6">
+        <div class="card filter-card">
+          <div class="card-header filter-header">
+            <h3 class="filter-title">Filtrar per Categoria</h3>
+          </div>
+          <div class="card-body filter-body">
+            <select id="filtroCategoria" class="filter-select" onchange="filtrarPor('categoria_id', this.value)">
+              <option value="">-- Totes les categories --</option>
+              {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if categoria_seleccionada.id == cat.id %}selected{% endif %}>{{ cat.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card filter-card">
+          <div class="card-header filter-header">
+            <h3 class="filter-title">Filtrar per Proveïdor</h3>
+          </div>
+          <div class="card-body filter-body">
+            <select id="filtroProveedor" class="filter-select" onchange="filtrarPor('proveedor_id', this.value)">
+              <option value="">-- Tots els proveïdors --</option>
+              {% for prov in proveedores %}
+                <option value="{{ prov.id }}" {% if proveedor_seleccionado.id == prov.id %}selected{% endif %}>{{ prov.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Indicador de Filtro Activo -->
+    {% if categoria_seleccionada or proveedor_seleccionado %}
+      <div class="alert alert-info d-flex justify-content-between align-items-center mb-4">
+        <span>
+          {% if categoria_seleccionada %}
+            Mostrant productes de la categoria: <strong>{{ categoria_seleccionada.nombre }}</strong>
+          {% elif proveedor_seleccionado %}
+            Mostrant productes del proveïdor: <strong>{{ proveedor_seleccionado.nombre }}</strong>
+          {% endif %}
+        </span>
+        <a href="{% url 'productos:index' %}" class="btn btn-sm btn-outline-info">Treure Filtre</a>
+      </div>
+    {% endif %}
+
+    <!-- Lista de Productos -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Llista de Productes</h3>
+      </div>
+      <div class="card-body">
+        {% if productos %}
+          <div class="product-grid">
+            {% for producto in productos %}
+              <div class="product-card">
+                <div class="product-image-container">
+                  {% if producto.imagen %}
+                    <img class="product-image" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                  {% else %}
+                    <img class="product-image" src="{% static 'img/no-image.png' %}" alt="Sense imatge">
+                  {% endif %}
+                </div>
+                <div class="product-content">
+                  <h5 class="product-title">{{ producto.nombre }}</h5>
+                  {% if producto.descripcion %}
+                    <p class="product-description">{{ producto.descripcion|truncatewords:15 }}</p>
+                  {% endif %}
+                  {% if producto.precio %}
+                    <div class="product-price">{{ producto.precio }} €</div>
+                  {% endif %}
+                  {% if user.is_superuser or user.is_authenticated and user.socio and user.socio.gestiona_productos %}
+                    <div class="product-footer">
+                      <a href="{% url 'productos:editar_producto' producto.id %}" class="edit-button">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-center text-muted">No s'han trobat productes que coincideixin amb el filtre seleccionat.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% block extra_js %}
+<script>
+function filtrarPor(parametro, valor) {
+  const baseUrl = "{% url 'productos:index' %}";
+  if (valor) {
+    window.location.href = baseUrl + '?' + parametro + '=' + valor;
+  } else {
+    window.location.href = baseUrl;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const filtroCategoria = document.getElementById('filtroCategoria');
+  const filtroProveedor = document.getElementById('filtroProveedor');
+
+  if (filtroCategoria.value !== '') {
+    filtroProveedor.disabled = true;
+  } else if (filtroProveedor.value !== '') {
+    filtroCategoria.disabled = true;
+  }
+});
+</script>
+{% endblock %}
+
+{% endblock %}

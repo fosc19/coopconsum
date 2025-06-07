@@ -1,0 +1,108 @@
+{% extends "panel_principal.html" %}
+{% load static %}
+{% load dict_extras %}
+
+{% block title %}Gestió de Cartes de Desitjos{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <h1><i class="fas fa-cogs mr-2"></i>Gestió de Cartes de Desitjos</h1>
+        <p class="text-muted">Panell per a administradors/gestors per revisar l'interès en les cartes de desitjos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% if resumen_interes_por_carta %}
+      {% for item_carta in resumen_interes_por_carta %}
+        <div class="card mb-4">
+          <div class="card-header {% if item_carta.carta.estado == 'minimo_alcanzado' %}bg-success text-white{% elif item_carta.carta.estado == 'activa' %}bg-info text-white{% else %}bg-light{% endif %}">
+            <h3 class="card-title">
+              {{ item_carta.carta.titulo }} 
+              <span class="badge {% if item_carta.carta.estado == 'minimo_alcanzado' %}badge-light{% elif item_carta.carta.estado == 'activa' %}badge-light{% else %}badge-secondary{% endif %} ml-2">{{ item_carta.carta.get_estado_display }}</span>
+            </h3>
+            <div class="card-tools">
+              <a href="{% url 'admin:pedidos_cartadeseo_change' item_carta.carta.id %}" class="btn btn-sm btn-outline-light" target="_blank" title="Editar Carta en Admin">
+                <i class="fas fa-edit"></i> Editar Carta
+              </a>
+            </div>
+          </div>
+          <div class="card-body">
+            <p><strong>Data Límit:</strong> {{ item_carta.carta.fecha_limite_interes|date:"d/m/Y"|default:"N/A" }} | <strong>Total Socis Interessats en la Carta:</strong> {{ item_carta.num_interesados_total_en_carta }}</p>
+            {% if item_carta.carta.tipo_minimo and item_carta.carta.valor_minimo_requerido %}
+              <p>
+                <strong>Objectiu Mínim:</strong> 
+                {{ item_carta.carta.valor_minimo_requerido|floatformat:0 }} 
+                {% if item_carta.carta.tipo_minimo == 'unidades_producto' %}
+                  unitats de {{ item_carta.carta.producto_objetivo_minimo.nombre|default:"producte especificat" }}.
+                {% elif item_carta.carta.tipo_minimo == 'socios_producto' %}
+                  socis interessats en {{ item_carta.carta.producto_objetivo_minimo.nombre|default:"producte especificat" }}.
+                {% elif item_carta.carta.tipo_minimo == 'importe_total' %}
+                  € d'import total acumulat.
+                {% else %}
+                  {{ item_carta.carta.get_tipo_minimo_display }}.
+                {% endif %}
+              </p>
+            {% endif %}
+
+            <h5 class="mt-3">Resum d'Interès per Producte:</h5>
+            {% if item_carta.productos_info %}
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Producte</th>
+                      <th class="text-right">Quantitat Total Desitjada</th>
+                      <th class="text-center">Nº Socis Interessats</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for prod_info in item_carta.productos_info %}
+                      <tr>
+                        <td>{{ prod_info.producto.nombre }}</td>
+                        <td class="text-right">{{ prod_info.cantidad_total_deseada|floatformat:2 }} {{ prod_info.producto.get_unidad_venta_display }}</td>
+                        <td class="text-center">{{ prod_info.num_socios_interesados }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p class="text-muted">Encara no hi ha interès registrat per als productes d'aquesta carta.</p>
+            {% endif %}
+            
+            {# TODO: Afegir botó per "Crear Comanda Esporàdica" si s'ha assolit el mínim o el gestor ho decideix #}
+            {% if item_carta.carta.estado == 'minimo_alcanzado' or item_carta.carta.estado == 'activa' %}
+              <div class="mt-3">
+                <a href="#" class="btn btn-success disabled"> <i class="fas fa-plus-circle mr-1"></i> Crear Comanda Esporàdica (Properament)</a>
+                <small class="text-muted d-block">Aquesta funcionalitat permetrà crear un PedidoColectivo basat en aquesta carta.</small>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle mr-2"></i>No hi ha cartes de desitjos actives o amb mínim assolit per gestionar.
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

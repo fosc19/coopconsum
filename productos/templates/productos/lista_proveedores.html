@@ -1,0 +1,47 @@
+<!-- templates/productos/lista_proveedores.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Proveedores{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Proveedores</h1>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <!-- Card principal de color "warning" -->
+    <div class="card card-warning">
+      <div class="card-header">
+        <h3 class="card-title">Lista de Proveedores</h3>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for prov in proveedores %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <!-- Envuelve la tarjeta con <a> para que sea clicable -->
+              <a href="{% url 'productos:productos_de_proveedor' prov.id %}" class="text-decoration-none text-dark">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ prov.nombre }}</h5>
+                    <!-- Muestra algo de info, pero sin contacto si no quieres -->
+                    <p class="card-text">{{ prov.direccion|truncatewords:15 }}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

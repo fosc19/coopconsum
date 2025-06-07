@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load stock_tags %} {# Cargar el tag personalizado #}
+
+{% block title %}Detalle Sesión de Recogida #{{ sesion.id }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Detalle Sesión de Recogida #{{ sesion.id }}</h2>
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Detalles de la Sesión -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Información de la Sesión
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>ID Sesión:</strong> {{ sesion.id }}</p>
+                    <p><strong>Inicio:</strong> {{ sesion.fecha_inicio|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Fin:</strong> {{ sesion.fecha_fin|date:"d/m/Y H:i"|default:"-" }}</p>
+                    <p><strong>Responsable Registro:</strong> {{ sesion.responsable_registro.get_full_name|default:sesion.responsable_registro.username }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Estado:</strong>
+                        <span class="badge bg-{% if sesion.estado == 'abierta' %}primary{% elif sesion.estado == 'cerrada' %}warning{% elif sesion.estado == 'validada' %}success{% elif sesion.estado == 'rechazada' %}danger{% else %}secondary{% endif %}">
+                            {{ sesion.get_estado_display }}
+                        </span>
+                    </p>
+                    {% if sesion.estado in 'validada,rechazada' %}
+                        <p><strong>Gestor Validación:</strong> {{ sesion.gestor_validacion.get_full_name|default:sesion.gestor_validacion.username|default:"N/A" }}</p>
+                        <p><strong>Fecha Validación:</strong> {{ sesion.fecha_validacion|date:"d/m/Y H:i"|default:"-" }}</p>
+                        <p><strong>Notas Validación:</strong> {{ sesion.notas_validacion|default:"-" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumen de Retiradas (similar a validar_sesion.html pero solo lectura) -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Resumen de Productos Retirados
+        </div>
+        <div class="card-body">
+            {% with retiradas=sesion.retiradas.all %}
+                {% if retiradas %}
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Socio</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit. (€)</th>
+                                <th>Coste Ítem (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% regroup retiradas by socio as retiradas_por_socio %}
+                        {% for retirada_grupo in retiradas_por_socio %}
+                            {% with retirada_actual=retirada_grupo.list.0 %}
+                                {% for item in retirada_actual.items_retirados.all %}
+                                    <tr>
+                                        {% if forloop.first %}
+                                            <td rowspan="{{ retirada_actual.items_retirados.count }}">
+                                                <strong>{{ retirada_grupo.grouper }}</strong>
+                                            </td>
+                                        {% endif %}
+                                        <td>{{ item.producto.nombre }} ({{ item.producto.get_unidad_venta_display }})</td>
+                                        <td class="text-end">{{ item.cantidad|floatformat:3 }}</td>
+                                        <td class="text-end">{{ item.precio_unitario_momento|floatformat:2 }}</td>
+                                        <td class="text-end">{{ item.calcular_coste|floatformat:2 }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td><strong>{{ retirada_grupo.grouper }}</strong></td>
+                                        <td colspan="4" class="text-center fst-italic">No se registraron ítems para este socio.</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr class="table-group-divider">
+                                    <td colspan="4" class="text-end fw-bold">Total {{ retirada_grupo.grouper }}:</td>
+                                    <td class="text-end fw-bold">{{ retirada_actual.calcular_coste_total|floatformat:2 }} €</td>
+                                </tr>
+                            {% endwith %}
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-dark">
+                                <td colspan="4" class="text-end fw-bold">TOTAL GENERAL SESIÓN:</td>
+                                {# Aquí también, calcular el total general es mejor en la vista #}
+                                <td class="text-end fw-bold"> (Calcular en vista) €</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                {% else %}
+                    <p class="text-center">No se registraron retiradas en esta sesión.</p>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        {# Botón para volver a la lista correspondiente según el rol #}
+        {% if request.user|has_group:"Socio Gestor de Stock" %}
+             <a href="{% url 'stock:lista_sesiones_pendientes' %}" class="btn btn-secondary">
+                 <i class="fas fa-arrow-left"></i> Volver a Lista Pendientes (Gestor)
+             </a>
+        {% elif request.user|has_group:"Socio Responsable de Recogida" %}
+             <a href="{% url 'stock:lista_sesiones_recogida' %}" class="btn btn-secondary">
+                 <i class="fas fa-arrow-left"></i> Volver a Lista Sesiones (Responsable)
+             </a>
+        {% else %}
+             {# Fallback por si acaso #}
+             <a href="#" onclick="window.history.back();" class="btn btn-secondary">
+                 <i class="fas fa-arrow-left"></i> Volver
+             </a>
+        {% endif %}
+
+        {# Si la sesión está pendiente, el gestor puede ir a validarla desde aquí #}
+        {% if sesion.estado == 'cerrada' and request.user|has_group:"Socio Gestor de Stock" %}
+             <a href="{% url 'stock:validar_sesion_recogida' sesion_id=sesion.id %}" class="btn btn-warning ms-2">
+                 <i class="fas fa-check-double"></i> Ir a Validar
+             </a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

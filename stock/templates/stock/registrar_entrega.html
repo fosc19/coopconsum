@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %} {# Asegúrate de cargar static si usas archivos estáticos específicos aquí #}
+{% load crispy_forms_tags %} {# Asumiendo que usas crispy-forms para renderizar mejor los formularios #}
+
+{% block title %}Registrar Entrega Semanal{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>{{ titulo_pagina|default:"Registrar Entrega Semanal" }}</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard_principal' %}">Inicio</a></li>
+          <li class="breadcrumb-item active">Registrar Entrega</li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Detalles de la Entrega</h3>
+      </div>
+      <!-- /.card-header -->
+      <!-- form start -->
+      <form method="post">
+        {% csrf_token %}
+        <div class="card-body">
+
+          {# Mostrar errores generales del formulario si los hay #}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if item_formset.non_form_errors %}
+             <div class="alert alert-danger">
+                 {{ item_formset.non_form_errors }}
+             </div>
+          {% endif %}
+
+
+          <div class="row">
+            <div class="col-md-6">
+              {# Formulario para la fecha de recogida #}
+              {% crispy recogida_form %}
+            </div>
+            <div class="col-md-6">
+              {# Formulario para seleccionar el socio #}
+              {% crispy entrega_socio_form %}
+            </div>
+          </div>
+
+          <hr>
+          <h4>Productos Retirados</h4>
+
+          {# FormSet para los ítems de entrega #}
+          {{ item_formset.management_form }} {# Necesario para el manejo del formset #}
+
+          <table class="table table-bordered table-striped">
+              <thead>
+                  <tr>
+                      <th>Producto</th>
+                      <th>Cantidad</th>
+                      <th>Eliminar</th> {# Columna para el checkbox de eliminar #}
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for form in item_formset %}
+                      <tr class="item-form">
+                          <td>
+                              {% crispy form field='producto' %}
+                              {% if form.producto.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.producto.errors|join:", " }}
+                                </div>
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% crispy form field='cantidad' %}
+                               {% if form.cantidad.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.cantidad.errors|join:", " }}
+                                </div>
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% if form.instance.pk and item_formset.can_delete %}
+                                  {% crispy form field='DELETE' %}
+                              {% endif %}
+                          </td>
+                          {# Campo oculto ID si es necesario para JS o debugging #}
+                          {% for hidden in form.hidden_fields %}
+                              {{ hidden }}
+                          {% endfor %}
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          {# Aquí podríamos añadir un botón con JS para añadir más filas dinámicamente #}
+          {# <button type="button" class="btn btn-secondary btn-sm add-item-row">Añadir otro producto</button> #}
+
+
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+          <button type="submit" class="btn btn-primary">Guardar Registro de Entrega</button>
+          <a href="{% url 'dashboard_principal' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </form>
+    </div>
+    <!-- /.card -->
+  </div><!-- /.container-fluid -->
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+{# Incluir JS para Select2 si lo estás usando #}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Inicializar Select2 en los campos necesarios
+    $('.select2').select2({
+        theme: 'bootstrap4', // O el tema que prefieras
+        placeholder: "Selecciona...",
+        allowClear: true
+    });
+
+    // Podríamos añadir JS aquí para:
+    // 1. Añadir/eliminar filas del formset dinámicamente.
+    // 2. Validar stock disponible con AJAX al cambiar producto/cantidad.
+});
+</script>
+{% endblock %}

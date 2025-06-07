@@ -1,0 +1,25 @@
+<div class="producto-card">
+  <div class="producto-img-wrapper">
+    {% if producto.imagen %}
+      <a href="{{ producto.imagen.url }}" data-lg-size="800-600" data-lg-group="productos" class="producto-img-link">
+        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="width: 100%; height: 200px; object-fit: cover; aspect-ratio: 3/2;">
+      </a>
+    {% else %}
+      <div class="producto-img-placeholder">Sin imagen</div>
+    {% endif %}
+  </div>
+  <div class="producto-info d-flex flex-column h-100 text-center">
+    <div class="mb-auto">
+      <h5 class="producto-titulo" title="{{ producto.nombre }}">{{ producto.nombre }}</h5>
+      <p class="producto-descripcion" title="{{ producto.descripcion }}">{{ producto.descripcion }}</p>
+      {% if producto.precio %}
+        <div class="producto-precio">{{ producto.precio }} €</div>
+      {% else %}
+        <div class="producto-precio producto-precio-placeholder"></div>
+      {% endif %}
+    </div>
+    <div class="mt-auto">
+      <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-primary btn-sm w-100">Ver</a>
+    </div>
+  </div>
+</div>

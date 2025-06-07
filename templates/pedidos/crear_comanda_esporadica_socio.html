@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo_pagina }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ titulo_pagina }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Crear Comanda Esporàdica</button>
+    </form>
+</div>
+{% endblock %}
