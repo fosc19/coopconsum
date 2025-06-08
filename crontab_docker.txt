@@ -1,0 +1,16 @@
+# Cronjobs per Docker - Gestió automàtica de comandes
+# Per instal·lar en un servidor Docker:
+# 1. Copiar aquest fitxer al servidor
+# 2. Executar: crontab crontab_docker.txt
+
+# Generar noves comandes diàriament a les 23:58
+58 23 * * * cd /var/www/coopconsum && docker compose exec -T web python manage.py generar_pedidos >> /var/log/lacivada_docker_cron.log 2>&1
+
+# Tancar comandes diàriament a les 23:59
+59 23 * * * cd /var/www/coopconsum && docker compose exec -T web python manage.py cerrar_pedidos >> /var/log/lacivada_docker_cron.log 2>&1
+
+# Backup diari de la base de dades Docker a les 02:00
+0 2 * * * cd /var/www/coopconsum && docker compose exec -T db pg_dump -U postgres coopconsum_db > ~/backup_docker_auto_$(date +\%Y\%m\%d).sql && find ~/backup_docker_auto_*.sql -mtime +7 -delete
+
+# Neteja de logs setmanal (diumenge a les 03:00)
+0 3 * * 0 find /var/log/lacivada_docker_cron.log -size +10M -exec truncate -s 0 {} \;
