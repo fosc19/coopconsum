@@ -13,10 +13,36 @@
         </div>
     </div>
 
-    <!-- Dos secciones principales -->
+    <!-- Resumen de opciones -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <h4 class="mb-3">Trieu la millor opció per a vosaltres:</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fab fa-github fa-2x text-primary mb-2"></i>
+                        <h6><strong>1. GitHub</strong></h6>
+                        <small>Per a desenvolupadors i experts tècnics</small>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fab fa-docker fa-2x text-success mb-2"></i>
+                        <h6><strong>2. Docker</strong></h6>
+                        <small>Instal·lació fàcil per a principiants</small>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="fas fa-exchange-alt fa-2x text-info mb-2"></i>
+                        <h6><strong>3. API</strong></h6>
+                        <small>Compartir dades entre cooperatives</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tres secciones principales -->
     <div class="row">
         <!-- Sección 1: Código Abierto -->
-        <div class="col-lg-6 mb-5">
+        <div class="col-lg-4 mb-5">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
@@ -57,7 +83,7 @@
                     </div>
 
                     <div class="text-center">
-                        <a href="#" class="btn btn-primary btn-lg mb-3" target="_blank">
+                        <a href="https://github.com/fosc19/coopconsum" class="btn btn-primary btn-lg mb-3" target="_blank">
                             <i class="fab fa-github me-2"></i>Veure a GitHub
                         </a>
                         <br>
@@ -69,8 +95,226 @@
             </div>
         </div>
 
-        <!-- Sección 2: API -->
-        <div class="col-lg-6 mb-5">
+        <!-- Sección 2: Docker -->
+        <div class="col-lg-4 mb-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="fab fa-docker fa-4x text-info mb-3"></i>
+                        <h2 class="h3">🐳 Instal·lació Fàcil amb Docker</h2>
+                        <p class="text-muted">Per a cooperatives sense coneixements tècnics - Guia pas a pas</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Què és Docker?</strong> És com una "caixa màgica" que conté tot el necessari per fer funcionar la plataforma. No necessites saber programar!
+                            </div>
+
+                            <h4>📋 Què necessites?</h4>
+                            <ul class="mb-4">
+                                <li><strong>Un servidor:</strong> Pots llogar-ne un per 5-10€/mes</li>
+                                <li><strong>30 minuts de temps</strong></li>
+                                <li><strong>Seguir aquesta guia pas a pas</strong></li>
+                            </ul>
+
+                            <div class="accordion" id="dockerGuide">
+                                <!-- Paso 1: Comprar servidor -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
+                                            <strong>Pas 1: Comprar un servidor (5 min)</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#dockerGuide">
+                                        <div class="accordion-body">
+                                            <h5>🛒 On comprar?</h5>
+                                            <p>Recomanem aquests proveïdors econòmics:</p>
+                                            <ul>
+                                                <li><strong>OVH:</strong> 3-5€/mes - Proveïdor europeu fiable</li>
+                                                <li><strong>Hetzner:</strong> 4€/mes - Molt fiable</li>
+                                                <li><strong>DigitalOcean:</strong> 6€/mes - Molt fàcil d'usar</li>
+                                                <li><strong>Vultr:</strong> 5€/mes - Bona relació qualitat-preu</li>
+                                            </ul>
+                                            
+                                            <h5>⚙️ Què demanar?</h5>
+                                            <div class="bg-light p-3 rounded">
+                                                <ul class="mb-0">
+                                                    <li><strong>Sistema operatiu:</strong> Ubuntu 22.04 LTS</li>
+                                                    <li><strong>RAM:</strong> Mínim 2GB</li>
+                                                    <li><strong>Disc:</strong> Mínim 20GB</li>
+                                                    <li><strong>CPU:</strong> 1 core és suficient</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="alert alert-warning mt-3">
+                                                <i class="fas fa-key me-2"></i>
+                                                <strong>Important:</strong> Guarda bé les dades d'accés (IP, usuari, contrasenya) que et donin!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Paso 2: Acceder al servidor -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                            <strong>Pas 2: Accedir al servidor (5 min)</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="step2" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                        <div class="accordion-body">
+                                            <h5>💻 Des de Windows:</h5>
+                                            <ol>
+                                                <li>Descarrega <strong>PuTTY</strong> (és gratuït)</li>
+                                                <li>Obre PuTTY i posa la IP del teu servidor</li>
+                                                <li>Clica "Open" i accepta l'avís de seguretat</li>
+                                                <li>Introdueix l'usuari (normalment "root" o "ubuntu")</li>
+                                                <li>Introdueix la contrasenya</li>
+                                            </ol>
+
+                                            <h5>🍎 Des de Mac/Linux:</h5>
+                                            <ol>
+                                                <li>Obre el Terminal</li>
+                                                <li>Escriu: <code>ssh root@LA_TEVA_IP</code></li>
+                                                <li>Introdueix la contrasenya quan te la demani</li>
+                                            </ol>
+
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check me-2"></i>
+                                                Si veus algo com <code>root@servidor:~#</code> ja estàs dins!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Paso 3: Instalación automática -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                            <strong>Pas 3: Instal·lació automàtica (15 min)</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="step3" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                        <div class="accordion-body">
+                                            <h5>🚀 Comandes màgiques</h5>
+                                            <p>Copia i enganxa aquestes comandes una per una (prem Enter després de cada una):</p>
+                                            
+                                            <div class="bg-dark text-light p-3 rounded mb-3">
+                                                <code>
+                                                    # Descarregar el codi<br>
+                                                    git clone https://github.com/fosc19/coopconsum.git<br><br>
+                                                    
+                                                    # Entrar a la carpeta<br>
+                                                    cd coopconsum<br><br>
+                                                    
+                                                    # Instal·lar Docker (pot trigar 5-10 min)<br>
+                                                    bash install_docker.sh<br><br>
+                                                    
+                                                    # Configurar la cooperativa<br>
+                                                    cp .env.example .env<br>
+                                                    nano .env
+                                                </code>
+                                            </div>
+
+                                            <h5>⚙️ Configurar la teva cooperativa</h5>
+                                            <p>Quan s'obri l'editor, canvia aquestes línies:</p>
+                                            <div class="bg-light p-3 rounded">
+                                                <code>
+                                                    COOP_NAME=El nom de la teva cooperativa<br>
+                                                    COOP_EMAIL=email@cooperativa.cat<br>
+                                                    POSTGRES_PASSWORD=una_contrasenya_segura
+                                                </code>
+                                            </div>
+                                            <p><small>Per sortir de l'editor: Ctrl+X, després Y, després Enter</small></p>
+
+                                            <h5>🎉 Llançar la plataforma</h5>
+                                            <div class="bg-dark text-light p-3 rounded">
+                                                <code>
+                                                    # Iniciar tot (pot trigar 5 min la primera vegada)<br>
+                                                    docker compose up -d
+                                                </code>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Paso 4: Acceso y configuración -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
+                                            <strong>Pas 4: Accedir i configurar (5 min)</strong>
+                                        </button>
+                                    </h2>
+                                    <div id="step4" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                        <div class="accordion-body">
+                                            <h5>🌐 Accedir a la plataforma</h5>
+                                            <ol>
+                                                <li>Obre el navegador</li>
+                                                <li>Ves a: <code>http://LA_TEVA_IP</code></li>
+                                                <li>Hauries de veure la pàgina principal!</li>
+                                            </ol>
+
+                                            <h5>🔐 Accedir com a administrador</h5>
+                                            <ol>
+                                                <li>Ves a: <code>http://LA_TEVA_IP/admin/</code></li>
+                                                <li>Usuari: <strong>admin</strong></li>
+                                                <li>Contrasenya: <strong>cooperativa2025</strong></li>
+                                                <li><strong>IMPORTANT:</strong> Canvia la contrasenya immediatament!</li>
+                                            </ol>
+
+                                            <div class="alert alert-danger">
+                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                <strong>Seguretat:</strong> El primer que has de fer és canviar la contrasenya de l'administrador! Ves a la secció "Usuaris" dins del panell d'administració, clica sobre "admin" i canvia la contrasenya.
+                                            </div>
+
+                                            <h5>✅ Verificar que tot funciona</h5>
+                                            <div class="bg-dark text-light p-3 rounded">
+                                                <code>
+                                                    # Veure l'estat dels serveis<br>
+                                                    docker compose ps
+                                                </code>
+                                            </div>
+                                            <p>Tots els serveis han d'aparèixer com "Up" o "healthy"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-4 bg-success text-white rounded">
+                                <h5><i class="fas fa-trophy me-2"></i>Felicitats!</h5>
+                                <p class="mb-0">Ja tens la teva cooperativa funcionant. Ara pots començar a afegir socis, productes i proveedors des del panell d'administració.</p>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>🌐 Pas Extra: Contractar un Domini (Opcional)</h5>
+                                <div class="alert alert-light">
+                                    <p><strong>En lloc d'usar la IP del servidor, pots tenir un domini propi:</strong></p>
+                                    <ul>
+                                        <li><strong>Què és?</strong> En lloc de <code>http://51.75.200.136</code> pots tenir <code>https://latuacooperativa.cat</code></li>
+                                        <li><strong>On comprar?</strong> Namecheap, GoDaddy, o qualsevol registrador de dominis (10-15€/any)</li>
+                                        <li><strong>Com configurar?</strong> Al panell del domini, apunta els DNS cap a la IP del teu servidor</li>
+                                        <li><strong>HTTPS gratuït:</strong> Pots afegir certificat SSL gratuït amb Let's Encrypt</li>
+                                    </ul>
+                                    <small class="text-muted">Això és opcional però dona una imatge més professional a la cooperativa.</small>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h5>🆘 Necessites ajuda?</h5>
+                                <ul>
+                                    <li><strong>Documentació completa:</strong> <a href="https://github.com/fosc19/coopconsum/blob/master/DOCKER_README.md" target="_blank">DOCKER_README.md</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: API -->
+        <div class="col-lg-4 mb-5">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
