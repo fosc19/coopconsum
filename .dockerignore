@@ -1,0 +1,83 @@
+# Git
+.git
+.gitignore
+.gitignore.public
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Fitxers temporals
+*.tmp
+*.bak
+*.swp
+*~
+
+# Documentació i fitxers de desenvolupament (però NO requirements.txt)
+*.md
+*.odt
+*.rar
+*.jpeg
+*.jpg
+*.png
+*.webp
+DEBUG_*
+INSTRUCCIONES_*
+PASOS_*
+PLAN_*
+SOLUCION_*
+WORKFLOW_*
+API_*
+GUIA_*
+*.py.debug
+test_*.py
+verificar_*.py
+diagnostico_*.py
+debug_*.py
+comparar_*.py
+asociar_*.py
+install_*.py
+settings_debug_*.py
+vista_debug_*.py
+resumen_*.py
+salida_*.py
+
+# Directoris de desenvolupament
+node_modules
+.vscode
+.idea
+
+# Backup
+backup-*
+
+# Fitxers Docker de desenvolupament (mantenir els necessaris)
+docker-compose-backup.yml
+.dockerignore
+
+# Variables d'entorn locals
+.env.backup
