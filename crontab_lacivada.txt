@@ -1,0 +1,14 @@
+# Cronjobs per La Civada - Gestió automàtica de comandes
+# Instal·lar amb: crontab crontab_lacivada.txt
+
+# Generar noves comandes diàriament a les 23:58
+58 23 * * * cd /var/www/lacivada && source venv/bin/activate && python manage.py generar_pedidos >> /var/log/lacivada_cron.log 2>&1
+
+# Tancar comandes diàriament a les 23:59
+59 23 * * * cd /var/www/lacivada && source venv/bin/activate && python manage.py cerrar_pedidos >> /var/log/lacivada_cron.log 2>&1
+
+# Backup diari de la base de dades a les 02:00
+0 2 * * * cd /var/www/lacivada && pg_dump lacivada_db > ~/backup_auto_$(date +\%Y\%m\%d).sql && find ~/backup_auto_*.sql -mtime +7 -delete
+
+# Neteja de logs setmanal (diumenge a les 03:00)
+0 3 * * 0 find /var/log/lacivada_cron.log -size +10M -exec truncate -s 0 {} \;
