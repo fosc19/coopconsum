@@ -115,8 +115,8 @@
                             <h4>📋 Què necessites?</h4>
                             <ul class="mb-4">
                                 <li><strong>Un VPS:</strong> Pots llogar-ne un per 5-10€/mes</li>
-                                <li><strong>30 minuts de temps</strong></li>
-                                <li><strong>Seguir aquesta guia pas a pas</strong></li>
+                                <li><strong>15 minuts de temps</strong></li>
+                                <li><strong>Seguir aquesta guia súper senzilla</strong></li>
                             </ul>
 
                             <div class="accordion" id="dockerGuide">
@@ -193,48 +193,46 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
-                                            <strong>Pas 3: Instal·lació automàtica (15 min)</strong>
+                                            <strong>Pas 3: Instal·lació automàtica (10 min)</strong>
                                         </button>
                                     </h2>
                                     <div id="step3" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
                                         <div class="accordion-body">
-                                            <h5>🚀 Comandes màgiques</h5>
-                                            <p>Copia i enganxa aquestes comandes una per una (prem Enter després de cada una):</p>
+                                            <h5>🚀 Una sola comanda ho fa tot!</h5>
+                                            <p>Copia i enganxa aquesta comanda màgica (prem Enter):</p>
                                             
                                             <div class="bg-dark text-light p-3 rounded mb-3">
                                                 <code>
-                                                    # Descarregar el codi<br>
-                                                    git clone https://github.com/fosc19/coopconsum.git<br><br>
-                                                    
-                                                    # Entrar a la carpeta<br>
-                                                    cd coopconsum<br><br>
-                                                    
-                                                    # Instal·lar Docker (pot trigar 5-10 min)<br>
-                                                    bash install_docker.sh<br><br>
-                                                    
-                                                    # Configurar la cooperativa<br>
-                                                    cp .env.example .env<br>
-                                                    nano .env
+                                                    curl -sSL https://github.com/fosc19/coopconsum/raw/master/install_docker.sh | sudo bash
                                                 </code>
                                             </div>
 
-                                            <h5>⚙️ Configurar la teva cooperativa</h5>
-                                            <p>Quan s'obri l'editor, canvia aquestes línies:</p>
+                                            <div class="alert alert-info">
+                                                <i class="fas fa-magic me-2"></i>
+                                                <strong>Què fa aquesta comanda?</strong>
+                                                <ul class="mb-0 mt-2">
+                                                    <li>Instal·la Docker automàticament</li>
+                                                    <li>Descarrega CoopConsum</li>
+                                                    <li>Et demana el nom de la cooperativa i email</li>
+                                                    <li>Configura tot automàticament</li>
+                                                    <li>Llança la plataforma</li>
+                                                    <li>Configura les tasques automàtiques</li>
+                                                </ul>
+                                            </div>
+
+                                            <h5>⚙️ Durant la instal·lació</h5>
+                                            <p>L'script et demanarà:</p>
                                             <div class="bg-light p-3 rounded">
                                                 <code>
-                                                    COOP_NAME=El nom de la teva cooperativa<br>
-                                                    COOP_EMAIL=email@cooperativa.cat<br>
-                                                    POSTGRES_PASSWORD=una_contrasenya_segura
+                                                    Nom de la cooperativa: <strong>La Teva Cooperativa</strong><br>
+                                                    Email de contacte: <strong>email@cooperativa.cat</strong>
                                                 </code>
                                             </div>
-                                            <p><small>Per sortir de l'editor: Ctrl+X, després Y, després Enter</small></p>
+                                            <p><small>Escriu les teves dades i prem Enter</small></p>
 
-                                            <h5>🎉 Llançar la plataforma</h5>
-                                            <div class="bg-dark text-light p-3 rounded">
-                                                <code>
-                                                    # Iniciar tot (pot trigar 5 min la primera vegada)<br>
-                                                    docker compose up -d
-                                                </code>
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-check me-2"></i>
+                                                <strong>Això és tot!</strong> L'script ho configura tot automàticament, incloses les tasques diàries per gestionar comandes.
                                             </div>
                                         </div>
                                     </div>
@@ -244,16 +242,21 @@
                                 <div class="accordion-item">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
-                                            <strong>Pas 4: Accedir i configurar (5 min)</strong>
+                                            <strong>Pas 4: Accedir a la teva cooperativa (2 min)</strong>
                                         </button>
                                     </h2>
                                     <div id="step4" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
                                         <div class="accordion-body">
+                                            <div class="alert alert-success">
+                                                <i class="fas fa-party-horn me-2"></i>
+                                                <strong>Tot està llest!</strong> L'script automàtic ha configurat tot, incloses les tasques diàries per gestionar comandes.
+                                            </div>
+
                                             <h5>🌐 Accedir a la plataforma</h5>
                                             <ol>
                                                 <li>Obre el navegador</li>
                                                 <li>Ves a: <code>http://LA_TEVA_IP</code></li>
-                                                <li>Hauries de veure la pàgina principal!</li>
+                                                <li>Veuràs la pàgina principal de la teva cooperativa!</li>
                                             </ol>
 
                                             <h5>🔐 Accedir com a administrador</h5>
@@ -269,14 +272,14 @@
                                                 <strong>Seguretat:</strong> El primer que has de fer és canviar la contrasenya de l'administrador! Ves a la secció "Usuaris" dins del panell d'administració, clica sobre "admin" i canvia la contrasenya.
                                             </div>
 
-                                            <h5>✅ Verificar que tot funciona</h5>
-                                            <div class="bg-dark text-light p-3 rounded">
-                                                <code>
-                                                    # Veure l'estat dels serveis<br>
-                                                    docker compose ps
-                                                </code>
-                                            </div>
-                                            <p>Tots els serveis han d'aparèixer com "Up" o "healthy"</p>
+                                            <h5>⚙️ Què s'ha configurat automàticament</h5>
+                                            <ul>
+                                                <li><i class="fas fa-check text-success me-2"></i> Docker i tots els serveis</li>
+                                                <li><i class="fas fa-check text-success me-2"></i> Base de dades amb la teva cooperativa</li>
+                                                <li><i class="fas fa-check text-success me-2"></i> Usuari administrador</li>
+                                                <li><i class="fas fa-check text-success me-2"></i> Tasques diàries (comandes, backups)</li>
+                                                <li><i class="fas fa-check text-success me-2"></i> Configuració de seguretat</li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
