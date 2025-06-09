@@ -1,6 +1,34 @@
 #!/bin/bash
 set -e
 
+# Crear settings.py des de settings_base.py amb variables d'entorn
+echo "Creant settings.py amb variables d'entorn..."
+cat > /app/coopconsum/settings.py << EOF
+import os
+from .settings_base import *
+
+# Configuració de seguretat
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-change-me')
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
+
+# Configuració de base de dades
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'coopconsum_db'),
+        'USER': os.environ.get('POSTGRES_USER', 'coopconsum_user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+    }
+}
+
+# Configuració CORS i CSRF
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost').split(',')
+EOF
+
 # Esperar que la base de dades estigui disponible
 echo "Esperant que la base de dades estigui disponible..."
 while ! pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER; do
