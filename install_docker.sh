@@ -135,8 +135,28 @@ echo ""
 print_status "Configuració de la cooperativa"
 echo "=============================="
 
-read -p "Nom de la cooperativa: " COOP_NAME
-read -p "Email de contacte: " COOP_EMAIL
+# Verificar si estem en mode interactiu
+if [[ -t 0 ]]; then
+    # Mode interactiu
+    read -p "Nom de la cooperativa: " COOP_NAME
+    read -p "Email de contacte: " COOP_EMAIL
+else
+    # Mode no interactiu (curl | bash)
+    print_warning "Mode no interactiu detectat. Usant valors per defecte."
+    COOP_NAME="cooperativa"
+    COOP_EMAIL="admin@cooperativa.local"
+    print_status "Nom de cooperativa: $COOP_NAME"
+    print_status "Email de contacte: $COOP_EMAIL"
+fi
+
+# Validar que les variables no estiguin buides
+if [[ -z "$COOP_NAME" ]]; then
+    COOP_NAME="cooperativa"
+fi
+
+if [[ -z "$COOP_EMAIL" ]]; then
+    COOP_EMAIL="admin@cooperativa.local"
+fi
 
 # Generar contrasenya segura per la base de dades
 DB_PASSWORD=$(openssl rand -base64 32)
