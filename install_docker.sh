@@ -143,6 +143,10 @@ DB_PASSWORD=$(openssl rand -base64 32)
 
 # Crear fitxer .env
 print_status "Configurant variables d'entorn..."
+
+# Netejar nom de cooperativa per usar com a nom de base de dades
+CLEAN_COOP_NAME=$(echo "$COOP_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]//g')
+
 cat > .env << EOF
 # Variables d'entorn per Docker Compose - $COOP_NAME
 # Generat automàticament per install_docker.sh
@@ -152,8 +156,8 @@ DJANGO_SECRET_KEY=$(openssl rand -base64 50)
 DEBUG=False
 
 # Base de dades PostgreSQL
-POSTGRES_DB=${COOP_NAME,,}_db
-POSTGRES_USER=${COOP_NAME,,}_user
+POSTGRES_DB=${CLEAN_COOP_NAME}_db
+POSTGRES_USER=${CLEAN_COOP_NAME}_user
 POSTGRES_PASSWORD=$DB_PASSWORD
 POSTGRES_HOST=db
 POSTGRES_PORT=5432
