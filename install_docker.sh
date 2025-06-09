@@ -249,23 +249,7 @@ server {
     
     client_max_body_size 100M;
     
-    # Servir fitxers estàtics directament
-    location /static/ {
-        alias /var/www/coopconsum/staticfiles/;
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-        add_header Vary Accept-Encoding;
-        gzip on;
-        gzip_types text/css application/javascript text/javascript application/json;
-    }
-    
-    location /media/ {
-        alias /var/www/coopconsum/media/;
-        expires 30d;
-        add_header Cache-Control "public";
-    }
-    
-    # Proxy per a l'aplicació Django
+    # Proxy per a tota l'aplicació Django (inclosos estàtics i media)
     location / {
         proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
