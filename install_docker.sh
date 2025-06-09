@@ -99,17 +99,8 @@ else
     exit 1
 fi
 
-# Instal·lar Nginx si no està instal·lat
-if command -v nginx &> /dev/null; then
-    print_success "Nginx ja està instal·lat"
-else
-    print_status "Instal·lant Nginx..."
-    sudo apt-get update
-    sudo apt-get install -y nginx
-    sudo systemctl start nginx
-    sudo systemctl enable nginx
-    print_success "Nginx instal·lat correctament"
-fi
+# No necessitem Nginx - Django servirà directament al port 80
+print_status "Configurant accés directe al port 80..."
 
 # Crear directori de treball
 INSTALL_DIR="/var/www/coopconsum"
@@ -240,42 +231,7 @@ EOF
 print_status "Col·lectant fitxers estàtics..."
 docker compose exec -T web python manage.py collectstatic --noinput
 
-# Configurar Nginx
-print_status "Configurant Nginx..."
-sudo tee /etc/nginx/sites-available/coopconsum > /dev/null << 'NGINX_EOF'
-server {
-    listen 80;
-    server_name _;
-    
-    client_max_body_size 100M;
-    
-    # Proxy per a tota l'aplicació Django (inclosos estàtics i media)
-    location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_connect_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_read_timeout 60s;
-    }
-}
-NGINX_EOF
-
-# Habilitar el lloc
-sudo ln -sf /etc/nginx/sites-available/coopconsum /etc/nginx/sites-enabled/
-
-# Eliminar configuració per defecte si existeix
-sudo rm -f /etc/nginx/sites-enabled/default
-
-# Verificar configuració
-sudo nginx -t
-
-# Reiniciar Nginx
-sudo systemctl restart nginx
-
-print_success "Nginx configurat correctament"
+print_success "Aplicació configurada per servir directament al port 80"
 
 # Configurar cron jobs automàticament
 print_status "Configurant tasques automàtiques (cron jobs)..."
