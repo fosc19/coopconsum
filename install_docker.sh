@@ -96,17 +96,6 @@ else
     exit 1
 fi
 
-# Demanar informació de la cooperativa
-echo ""
-print_status "Configuració de la cooperativa"
-echo "=============================="
-
-read -p "Nom de la cooperativa: " COOP_NAME
-read -p "Email de contacte: " COOP_EMAIL
-
-# Generar contrasenya segura per la base de dades
-DB_PASSWORD=$(openssl rand -base64 32)
-
 # Crear directori de treball
 INSTALL_DIR="/var/www/coopconsum"
 print_status "Creant directori d'instal·lació: $INSTALL_DIR"
@@ -122,6 +111,17 @@ cd "$INSTALL_DIR"
 # Descarregar el projecte
 print_status "Descarregant CoopConsum..."
 git clone https://github.com/fosc19/coopconsum.git .
+
+# Demanar informació de la cooperativa
+echo ""
+print_status "Configuració de la cooperativa"
+echo "=============================="
+
+read -p "Nom de la cooperativa: " COOP_NAME
+read -p "Email de contacte: " COOP_EMAIL
+
+# Generar contrasenya segura per la base de dades
+DB_PASSWORD=$(openssl rand -base64 32)
 
 # Crear fitxer .env
 print_status "Configurant variables d'entorn..."
