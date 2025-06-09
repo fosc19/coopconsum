@@ -33,10 +33,10 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Verificar que s'executa com a root o amb sudo
-if [[ $EUID -ne 0 ]]; then
-   print_error "Aquest script necessita permisos d'administrador"
-   echo "Executa: sudo bash install_docker.sh"
+# Verificar que s'executa amb permisos adequats
+if [[ $EUID -eq 0 ]]; then
+   print_error "Aquest script no s'ha d'executar com a root"
+   print_status "Executa'l com a usuari normal. El script demanarà sudo quan sigui necessari."
    exit 1
 fi
 
@@ -59,31 +59,34 @@ else
     print_status "Instal·lant Docker..."
     
     # Actualitzar paquets
-    apt-get update
+    sudo apt-get update
     
     # Instal·lar dependències
-    apt-get install -y \
+    sudo apt-get install -y \
         ca-certificates \
         curl \
         gnupg \
         lsb-release
     
     # Afegir clau GPG oficial de Docker
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
     
     # Afegir repositori Docker
     echo \
       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     
     # Instal·lar Docker
-    apt-get update
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    sudo apt-get update
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+    
+    # Afegir usuari al grup docker
+    sudo usermod -aG docker $USER
     
     # Iniciar Docker
-    systemctl start docker
-    systemctl enable docker
+    sudo systemctl start docker
+    sudo systemctl enable docker
     
     print_success "Docker instal·lat correctament"
 fi
@@ -96,21 +99,36 @@ else
     exit 1
 fi
 
+# Instal·lar Nginx si no està instal·lat
+if command -v nginx &> /dev/null; then
+    print_success "Nginx ja està instal·lat"
+else
+    print_status "Instal·lant Nginx..."
+    sudo apt-get update
+    sudo apt-get install -y nginx
+    sudo systemctl start nginx
+    sudo systemctl enable nginx
+    print_success "Nginx instal·lat correctament"
+fi
+
 # Crear directori de treball
 INSTALL_DIR="/var/www/coopconsum"
 print_status "Creant directori d'instal·lació: $INSTALL_DIR"
 
 if [[ -d "$INSTALL_DIR" ]]; then
     print_warning "El directori ja existeix. Fent backup..."
-    mv "$INSTALL_DIR" "${INSTALL_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
+    sudo mv "$INSTALL_DIR" "${INSTALL_DIR}_backup_$(date +%Y%m%d_%H%M%S)"
 fi
 
-mkdir -p "$INSTALL_DIR"
+sudo mkdir -p "$INSTALL_DIR"
 cd "$INSTALL_DIR"
 
 # Descarregar el projecte
 print_status "Descarregant CoopConsum..."
-git clone https://github.com/fosc19/coopconsum.git .
+sudo git clone https://github.com/fosc19/coopconsum.git .
+
+# Canviar propietari al usuari actual
+sudo chown -R $USER:$USER .
 
 # Demanar informació de la cooperativa
 echo ""
@@ -173,6 +191,84 @@ else
     exit 1
 fi
 
+# Executar migracions de la base de dades
+print_status "Executant migracions de la base de dades..."
+docker compose exec -T web python manage.py migrate
+
+# Crear superusuari
+print_status "Creant usuari administrador..."
+docker compose exec -T web python manage.py shell << 'EOF'
+from django.contrib.auth.models import User
+import os
+
+username = 'admin'
+email = os.environ.get('COOP_EMAIL', 'admin@cooperativa.local')
+password = 'cooperativa2025'
+
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username, email, password)
+    print(f"Superusuari '{username}' creat correctament")
+else:
+    print(f"Superusuari '{username}' ja existeix")
+EOF
+
+# Col·lectar fitxers estàtics
+print_status "Col·lectant fitxers estàtics..."
+docker compose exec -T web python manage.py collectstatic --noinput
+
+# Configurar Nginx
+print_status "Configurant Nginx..."
+sudo tee /etc/nginx/sites-available/coopconsum > /dev/null << 'NGINX_EOF'
+server {
+    listen 80;
+    server_name _;
+    
+    client_max_body_size 100M;
+    
+    # Servir fitxers estàtics directament
+    location /static/ {
+        alias /var/www/coopconsum/staticfiles/;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header Vary Accept-Encoding;
+        gzip on;
+        gzip_types text/css application/javascript text/javascript application/json;
+    }
+    
+    location /media/ {
+        alias /var/www/coopconsum/media/;
+        expires 30d;
+        add_header Cache-Control "public";
+    }
+    
+    # Proxy per a l'aplicació Django
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+NGINX_EOF
+
+# Habilitar el lloc
+sudo ln -sf /etc/nginx/sites-available/coopconsum /etc/nginx/sites-enabled/
+
+# Eliminar configuració per defecte si existeix
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Verificar configuració
+sudo nginx -t
+
+# Reiniciar Nginx
+sudo systemctl restart nginx
+
+print_success "Nginx configurat correctament"
+
 # Configurar cron jobs automàticament
 print_status "Configurant tasques automàtiques (cron jobs)..."
 
@@ -196,7 +292,7 @@ cat > "$CRON_FILE" << EOF
 EOF
 
 # Instal·lar crontab
-crontab "$CRON_FILE"
+sudo crontab "$CRON_FILE"
 rm "$CRON_FILE"
 
 print_success "Cron jobs configurats correctament"
