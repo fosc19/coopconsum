@@ -45,3 +45,22 @@ Thumbs.db
 # Archivos temporales
 *.tmp
 *.temp
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.orig
+
+# Backups automáticos
+backup_*.sql
+*.backup
+
+# Archivos de oficina temporales
+.~lock.*
+~$*
+
+# Archivos de desarrollo local
+*.local
+*.dev
