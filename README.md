@@ -1,175 +1,175 @@
-# 🤝 CoopConsum - Sistema de Gestión para Cooperativas
+# 🤝 CoopConsum - Sistema de Gestió per Cooperatives
 
-Sistema completo de gestión para cooperativas de consumo responsable, desarrollado con Django. Incluye gestión de socios, pedidos, proveedores, productos y una API pública para compartir información entre cooperativas.
+Sistema complet de gestió per cooperatives de consum responsable, desenvolupat amb Django. Inclou gestió de socis, comandes, proveïdors, productes i una API pública per compartir informació entre cooperatives.
 
-## ✨ Características
+## ✨ Característiques
 
-- 👥 **Gestión de Socios**: Registro, perfiles y administración de miembros
-- 📦 **Sistema de Pedidos**: Comandas colectivas y gestión de pedidos
-- 🏪 **Gestión de Proveedores**: Catálogo de proveedores locales y ecológicos
-- 🛒 **Catálogo de Productos**: Organización por categorías con precios
-- 🌐 **Web Pública**: Sitio web con información y catálogo público
-- 🔗 **API REST**: Intercambio de datos entre cooperativas
-- 📱 **Responsive**: Diseño adaptado a móviles y tablets
+- 👥 **Gestió de Socis**: Registre, perfils i administració de membres
+- 📦 **Sistema de Comandes**: Comandes col·lectives i gestió de pedidos
+- 🏪 **Gestió de Proveïdors**: Catàleg de proveïdors locals i ecològics
+- 🛒 **Catàleg de Productes**: Organització per categories amb preus
+- 🌐 **Web Pública**: Lloc web amb informació i catàleg públic
+- 🔗 **API REST**: Intercanvi de dades entre cooperatives
+- 📱 **Responsive**: Disseny adaptat a mòbils i tauletes
 
-## 🚀 Instalación Rápida
+## 🚀 Instal·lació Ràpida
 
-### Prerrequisitos
+### Prerequisits
 
 - Python 3.8 o superior
-- pip (gestor de paquetes de Python)
+- pip (gestor de paquets de Python)
 - Git
 
-### Pasos de Instalación
+### Passos d'Instal·lació
 
-1. **Clonar el repositorio**
+1. **Clonar el repositori**
 ```bash
 git clone https://github.com/tu-usuario/coopconsum.git
 cd coopconsum
 ```
 
-2. **Crear entorno virtual**
+2. **Crear entorn virtual**
 ```bash
 python -m venv venv
-# En Windows:
+# A Windows:
 venv\Scripts\activate
-# En Linux/Mac:
+# A Linux/Mac:
 source venv/bin/activate
 ```
 
-3. **Instalar dependencias**
+3. **Instal·lar dependències**
 ```bash
 pip install -r requirements.txt
 ```
 
 4. **Configurar settings**
 ```bash
-# Copiar el archivo de configuración de ejemplo
+# Copiar l'arxiu de configuració d'exemple
 cp coopconsum/settings_example.py coopconsum/settings.py
-# Editar settings.py con tus configuraciones específicas
+# Editar settings.py amb les teves configuracions específiques
 ```
 
-5. **Configurar base de datos**
+5. **Configurar base de dades**
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-6. **Crear superusuario**
+6. **Crear superusuari**
 ```bash
 python manage.py createsuperuser
 ```
 
-7. **Ejecutar servidor de desarrollo**
+7. **Executar servidor de desenvolupament**
 ```bash
 python manage.py runserver
 ```
 
-¡Ya puedes acceder a http://localhost:8000!
+Ja pots accedir a http://localhost:8000!
 
-## 📚 Documentación
+## 📚 Documentació
 
-### Estructura del Proyecto
+### Estructura del Projecte
 
 ```
 coopconsum/
-├── socios/          # Gestión de socios y usuarios
-├── pedidos/         # Sistema de pedidos y comandas
-├── web/             # Sitio web público
-├── api/             # API REST para cooperativas
-├── templates/       # Plantillas HTML
-├── static/          # Archivos CSS, JS, imágenes
-├── media/           # Archivos subidos por usuarios
-└── coopconsum/      # Configuración principal
+├── socios/          # Gestió de socis i usuaris
+├── pedidos/         # Sistema de comandes i pedidos
+├── web/             # Lloc web públic
+├── api/             # API REST per cooperatives
+├── templates/       # Plantilles HTML
+├── static/          # Arxius CSS, JS, imatges
+├── media/           # Arxius pujats per usuaris
+└── coopconsum/      # Configuració principal
 ```
 
 ### API Pública
 
-La API permite a otras cooperativas acceder a información pública:
+L'API permet a altres cooperatives accedir a informació pública:
 
-- **Proveedores**: `GET /api/proveedores/`
-- **Productos**: `GET /api/productos/`
-- **Categorías**: `GET /api/categorias/`
+- **Proveïdors**: `GET /api/proveedores/`
+- **Productes**: `GET /api/productos/`
+- **Categories**: `GET /api/categorias/`
 
-Ejemplo de uso:
+Exemple d'ús:
 ```bash
-# Obtener lista de proveedores
+# Obtenir llista de proveïdors
 curl http://localhost:8000/api/proveedores/
 
-# Buscar productos ecológicos
+# Buscar productes ecològics
 curl http://localhost:8000/api/productos/?search=ecològic
 ```
 
-## 🛠️ Configuración
+## 🛠️ Configuració
 
-### Variables de Entorno
+### Variables d'Entorn
 
-Crea un archivo `.env` o configura directamente en `settings.py`:
+Crea un arxiu `.env` o configura directament a `settings.py`:
 
 ```python
-SECRET_KEY = 'tu-clave-secreta-aqui'
-DEBUG = False  # Para producción
-ALLOWED_HOSTS = ['tu-dominio.com']
+SECRET_KEY = 'la-teva-clau-secreta-aqui'
+DEBUG = False  # Per producció
+ALLOWED_HOSTS = ['el-teu-domini.cat']
 
-# Base de datos (ejemplo PostgreSQL)
+# Base de dades (exemple PostgreSQL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'coopconsum_db',
-        'USER': 'tu_usuario',
-        'PASSWORD': 'tu_password',
+        'USER': 'el_teu_usuari',
+        'PASSWORD': 'la_teva_contrasenya',
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 ```
 
-### CORS para API
+### CORS per API
 
-Para permitir acceso desde otros dominios:
+Per permetre accés des d'altres dominis:
 
 ```python
 CORS_ALLOWED_ORIGINS = [
-    "https://tu-cooperativa.com",
-    "https://otra-cooperativa.org",
+    "https://la-teva-cooperativa.cat",
+    "https://altra-cooperativa.org",
 ]
 ```
 
 ## 🤝 Contribuir
 
-¡Las contribuciones son bienvenidas! Por favor:
+Les contribucions són benvingudes! Si us plau:
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Añadir nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
+1. Fes un fork del projecte
+2. Crea una branca per la teva funcionalitat (`git checkout -b feature/nova-funcionalitat`)
+3. Commit els teus canvis (`git commit -am 'Afegir nova funcionalitat'`)
+4. Push a la branca (`git push origin feature/nova-funcionalitat`)
+5. Obre un Pull Request
 
-## 📄 Licencia
+## 📄 Llicència
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+Aquest projecte està sota la Llicència MIT - veure l'arxiu [LICENSE](LICENSE) per més detalls.
 
-## 🌱 Filosofía del Proyecto
+## 🌱 Filosofia del Projecte
 
-Este sistema nace de la necesidad de las cooperativas de consumo de tener herramientas digitales que respeten sus valores:
+Aquest sistema neix de la necessitat de les cooperatives de consum de tenir eines digitals que respectin els seus valors:
 
-- **Código Abierto**: Transparencia total y posibilidad de adaptación
-- **Cooperación**: API para compartir información entre cooperativas
-- **Sostenibilidad**: Enfoque en productos locales y ecológicos
-- **Comunidad**: Desarrollado por y para cooperativas
+- **Codi Obert**: Transparència total i possibilitat d'adaptació
+- **Cooperació**: API per compartir informació entre cooperatives
+- **Sostenibilitat**: Enfocament en productes locals i ecològics
+- **Comunitat**: Desenvolupat per i per cooperatives
 
-## 📞 Soporte
+## 📞 Suport
 
-- **Documentación**: [Wiki del proyecto](https://github.com/tu-usuario/coopconsum/wiki)
-- **Issues**: [Reportar problemas](https://github.com/tu-usuario/coopconsum/issues)
-- **Discusiones**: [Foro de la comunidad](https://github.com/tu-usuario/coopconsum/discussions)
+- **Documentació**: [Wiki del projecte](https://github.com/tu-usuario/coopconsum/wiki)
+- **Issues**: [Reportar problemes](https://github.com/tu-usuario/coopconsum/issues)
+- **Discussions**: [Fòrum de la comunitat](https://github.com/tu-usuario/coopconsum/discussions)
 
-## 🏆 Cooperativas que lo usan
+## 🏆 Cooperatives que l'usen
 
-- La Civada (Barcelona) - Cooperativa pionera en el desarrollo
+- La Civada (Barcelona) - Cooperativa pionera en el desenvolupament
 
-¿Tu cooperativa usa CoopConsum? ¡Añádete a la lista!
+La teva cooperativa usa CoopConsum? Afegeix-te a la llista!
 
 ---
 
-**Desarrollado con ❤️ por la comunidad cooperativa**
+**Desenvolupat amb ❤️ per la comunitat cooperativa**
