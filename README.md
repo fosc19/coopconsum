@@ -67,6 +67,37 @@ python manage.py runserver
 
 Ja pots accedir a http://localhost:8000!
 
+## 🔧 Gestió amb Docker
+
+### Verificar que tot funciona
+```bash
+# Veure l'estat dels contenidors
+docker compose ps
+
+# Veure logs del sistema
+docker compose logs web
+
+# Veure logs dels cron jobs
+docker compose logs cron
+```
+
+### Verificar tasques automàtiques
+```bash
+# ❌ NO facis això (comando incorrecte):
+cron -l  # Això donarà error de permisos
+
+# ✅ SÍ fes això (comandos correctes):
+# Verificar que el contenidor cron està funcionant
+docker compose ps cron
+
+# Veure els logs de les tasques automàtiques
+docker compose logs cron
+
+# Executar tasques manualment per provar
+docker compose exec web python manage.py generar_pedidos
+docker compose exec web python manage.py cerrar_pedidos
+```
+
 ## 📚 Documentació
 
 ### Estructura del Projecte
