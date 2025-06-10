@@ -47,10 +47,50 @@ services:
     ports:
       - "80:8000"
 
+  # Cronjobs per gestió automàtica de comandes
+  cron:
+    build: .
+    restart: unless-stopped
+    command: >
+      sh -c '
+        echo "59 23 * * * cd /app && python manage.py cerrar_pedidos >> /var/log/cron.log 2>&1" > /etc/crontabs/django &&
+        echo "30 0 * * 1 cd /app && python manage.py generar_pedidos >> /var/log/cron.log 2>&1" >> /etc/crontabs/django &&
+        echo "0 2 * * 0 find /var/log/cron.log -size +10M -exec truncate -s 0 {} \;" >> /etc/crontabs/django &&
+        echo "0 2 * * * cd /app && pg_dump -h db -U ${POSTGRES_USER} ${POSTGRES_DB} > /app/backup_$(date +%Y%m%d).sql" >> /etc/crontabs/django &&
+        echo "0 3 * * 0 find /app/backup_*.sql -mtime +7 -delete" >> /etc/crontabs/django &&
+        crond -f -l 2
+      '
+    environment:
+      - DJANGO_SETTINGS_MODULE=coopconsum.settings
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
+      - COOP_NAME=${COOP_NAME}
+      - COOP_EMAIL=${COOP_EMAIL}
+    volumes:
+      - cron_logs:/var/log
+      - backup_volume:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    networks:
+      - coopconsum_network
+
 volumes:
   postgres_data:
   static_volume:
   media_volume:
+  cron_logs:
+  backup_volume:
 
 networks:
   coopconsum_network:

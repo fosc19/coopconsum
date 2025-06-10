@@ -26,6 +26,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third party apps
+    'rest_framework',
+    'corsheaders',
     # Tus apps
     'socios',
     'productos',
@@ -36,12 +39,14 @@ INSTALLED_APPS = [
     'web',
     'desitjos', # Añadir la nueva app desitjos
     'eventos', # Añadir la nueva app eventos
+    'api', # API REST para intercambio entre cooperativas
 
 
 ]
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # Añadir este middleware después de SessionMiddleware
@@ -156,3 +161,27 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/accounts/login/' # Redirigir a la página de login después de logout
+
+# Django REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # API pública para intercambio entre cooperativas
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+# CORS Configuration - Permite intercambio entre cooperativas
+CORS_ALLOW_ALL_ORIGINS = True  # Para desarrollo y cooperativas públicas
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://127.0.0.1",
+]
+CORS_ALLOW_METHODS = [
+    'GET',
+    'HEAD',
+    'OPTIONS',
+]

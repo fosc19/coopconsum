@@ -251,33 +251,8 @@ run_docker_command compose exec -T web python manage.py collectstatic --noinput
 
 print_success "Aplicació configurada per servir directament al port 80"
 
-# Configurar cron jobs automàticament
-print_status "Configurant tasques automàtiques (cron jobs)..."
-
-# Crear fitxer temporal de crontab
-CRON_FILE="/tmp/coopconsum_cron"
-cat > "$CRON_FILE" << EOF
-# Cronjobs per CoopConsum - Gestió automàtica de comandes
-# Instal·lat automàticament per install_docker.sh
-
-# Generar noves comandes diàriament a les 23:58
-58 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py generar_pedidos >> /var/log/coopconsum_cron.log 2>&1
-
-# Tancar comandes diàriament a les 23:59
-59 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py cerrar_pedidos >> /var/log/coopconsum_cron.log 2>&1
-
-# Backup diari de la base de dades a les 02:00
-0 2 * * * cd $INSTALL_DIR && docker compose exec -T db pg_dump -U ${COOP_NAME,,}_user ${COOP_NAME,,}_db > ~/backup_coopconsum_\$(date +\\%Y\\%m\\%d).sql && find ~/backup_coopconsum_*.sql -mtime +7 -delete
-
-# Neteja de logs setmanal (diumenge a les 03:00)
-0 3 * * 0 find /var/log/coopconsum_cron.log -size +10M -exec truncate -s 0 {} \\;
-EOF
-
-# Instal·lar crontab
-sudo crontab "$CRON_FILE"
-rm "$CRON_FILE"
-
-print_success "Cron jobs configurats correctament"
+# Els cron jobs ara es gestionen automàticament dins del contenidor Docker
+print_success "Tasques automàtiques (cron jobs) configurades dins del contenidor Docker"
 
 # Obtenir IP del servidor
 SERVER_IP=$(hostname -I | awk '{print $1}')
@@ -300,10 +275,11 @@ echo "  1. Accedeix a http://$SERVER_IP/admin/"
 echo "  2. Inicia sessió amb les credencials anteriors"
 echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
 echo ""
-print_status "Tasques automàtiques configurades:"
-echo "  ⏰ Generació de comandes: cada dia a les 23:58"
+print_status "Tasques automàtiques configurades (dins del contenidor Docker):"
+echo "  ⏰ Generació de comandes: cada dilluns a les 00:30"
 echo "  🔒 Tancament de comandes: cada dia a les 23:59"
 echo "  💾 Backup automàtic: cada dia a les 02:00"
+echo "  🧹 Neteja de logs: cada diumenge a les 02:00"
 echo ""
 print_status "Comandos útils:"
 echo "  📊 Veure estat: cd $INSTALL_DIR && docker compose ps"
