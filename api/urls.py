@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register(r'proveedores', views.ProveedorViewSet, basename='proveedor')
 router.register(r'productos', views.ProductoViewSet, basename='producto')
 router.register(r'categorias', views.CategoriaViewSet, basename='categoria')
+router.register(r'eventos', views.EventoCalendarioViewSet, basename='evento')
 
 urlpatterns = [
     # Información de la API
