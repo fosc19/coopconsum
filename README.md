@@ -5,7 +5,7 @@ Sistema complet de gestió per cooperatives de consum responsable, desenvolupat 
 ## ✨ Característiques
 
 - 👥 **Gestió de Socis**: Registre, perfils i administració de membres
-- 📦 **Sistema de Comandes**: Comandes col·lectives i gestió de pedidos
+- 📦 **Sistema de Comandes**: Comandes col·lectives
 - 🏪 **Gestió de Proveïdors**: Catàleg de proveïdors locals i ecològics
 - 🛒 **Catàleg de Productes**: Organització per categories amb preus
 - 🌐 **Web Pública**: Lloc web amb informació i catàleg públic
@@ -74,7 +74,7 @@ Ja pots accedir a http://localhost:8000!
 ```
 coopconsum/
 ├── socios/          # Gestió de socis i usuaris
-├── pedidos/         # Sistema de comandes i pedidos
+├── pedidos/         # Sistema de comandes
 ├── web/             # Lloc web públic
 ├── api/             # API REST per cooperatives
 ├── templates/       # Plantilles HTML
