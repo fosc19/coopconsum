@@ -14,22 +14,34 @@ from .serializers import (
 
 @api_view(['GET'])
 def api_info(request):
-    """Información básica de la API"""
+    """Informació bàsica de l'API"""
     return Response({
-        'nombre': 'API Cooperativa La Civada',
-        'version': '1.0',
-        'descripcion': 'API pública para compartir información entre cooperativas',
+        'nom': 'API Cooperatives CoopConsum',
+        'versio': '1.0',
+        'descripcio': 'API pública per compartir informació entre cooperatives de consum',
+        'documentacio': {
+            'completa': '/docs/API_COOPERATIVAS.md',
+            'exemples': '/docs/README_API.md'
+        },
         'endpoints': {
             'proveedores': '/api/proveedores/',
             'productos': '/api/productos/',
             'categorias': '/api/categorias/',
             'eventos': '/api/eventos/',
         },
-        'filtros_disponibles': {
+        'filtres_disponibles': {
             'productos': ['categoria', 'proveedor', 'es_stock', 'destacado_en_inicio'],
             'proveedores': ['visible_en_web', 'visible_en_inicio'],
-            'eventos': ['publico', 'fecha_inicio', 'fecha_fin']
-        }
+            'eventos': ['color', 'fecha_inicio', 'fecha_fin']
+        },
+        'funcionalitats': [
+            'Cerca per text en noms i descripcions',
+            'Filtrat per múltiples camps',
+            'Ordenació per diferents criteris',
+            'Paginació automàtica (20 elements per pàgina)',
+            'Format JSON estàndard',
+            'CORS habilitat per cooperatives'
+        ]
     })
 
 
