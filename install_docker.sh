@@ -16,6 +16,9 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Variable per controlar si Docker s'ha instal·lat en aquesta execució
+DOCKER_JUST_INSTALLED=false
+
 # Funció per mostrar missatges
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
@@ -31,6 +34,17 @@ print_warning() {
 
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Funció per executar comandos Docker amb permisos adequats
+run_docker_command() {
+    if [ "$DOCKER_JUST_INSTALLED" = true ]; then
+        # Si acabem d'instal·lar Docker, usar sudo temporalment
+        sudo docker "$@"
+    else
+        # Docker ja estava instal·lat, usar normalment
+        docker "$@"
+    fi
 }
 
 # Verificar que s'executa amb permisos adequats
@@ -88,11 +102,15 @@ else
     sudo systemctl start docker
     sudo systemctl enable docker
     
+    # Marcar que Docker s'ha instal·lat en aquesta execució
+    DOCKER_JUST_INSTALLED=true
+    
     print_success "Docker instal·lat correctament"
+    print_warning "NOTA: S'està usant sudo per Docker temporalment. Després de la instal·lació, reinicia la sessió per usar Docker sense sudo."
 fi
 
 # Verificar si Docker Compose està disponible
-if command -v docker compose &> /dev/null; then
+if run_docker_command compose version &> /dev/null; then
     print_success "Docker Compose disponible"
 else
     print_error "Docker Compose no està disponible"
@@ -190,29 +208,29 @@ EOF
 
 # Construir i llançar contenidors
 print_status "Construint i llançant contenidors Docker..."
-docker compose build
-docker compose up -d
+run_docker_command compose build
+run_docker_command compose up -d
 
 # Esperar que els serveis estiguin llests
 print_status "Esperant que els serveis estiguin llests..."
 sleep 30
 
 # Verificar que els contenidors estan funcionant
-if docker compose ps | grep -q "Up"; then
+if run_docker_command compose ps | grep -q "Up"; then
     print_success "Contenidors Docker funcionant correctament"
 else
     print_error "Hi ha problemes amb els contenidors Docker"
-    docker compose logs
+    run_docker_command compose logs
     exit 1
 fi
 
 # Executar migracions de la base de dades
 print_status "Executant migracions de la base de dades..."
-docker compose exec -T web python manage.py migrate
+run_docker_command compose exec -T web python manage.py migrate
 
 # Crear superusuari
 print_status "Creant usuari administrador..."
-docker compose exec -T web python manage.py shell << 'EOF'
+run_docker_command compose exec -T web python manage.py shell << 'EOF'
 from django.contrib.auth.models import User
 import os
 
@@ -229,7 +247,7 @@ EOF
 
 # Col·lectar fitxers estàtics
 print_status "Col·lectant fitxers estàtics..."
-docker compose exec -T web python manage.py collectstatic --noinput
+run_docker_command compose exec -T web python manage.py collectstatic --noinput
 
 print_success "Aplicació configurada per servir directament al port 80"
 
@@ -293,4 +311,13 @@ echo "  📝 Veure logs: cd $INSTALL_DIR && docker compose logs -f"
 echo "  🔄 Reiniciar: cd $INSTALL_DIR && docker compose restart"
 echo "  🛑 Aturar: cd $INSTALL_DIR && docker compose down"
 echo ""
+if [ "$DOCKER_JUST_INSTALLED" = true ]; then
+    echo ""
+    print_warning "IMPORTANT: Docker s'ha instal·lat durant aquesta execució."
+    print_status "Per a futures operacions de Docker sense sudo, executa:"
+    echo "  🔄 newgrp docker"
+    echo "  o bé reinicia la sessió SSH"
+    echo ""
+fi
+
 print_success "La teva cooperativa ja està llesta per funcionar! 🚀"
