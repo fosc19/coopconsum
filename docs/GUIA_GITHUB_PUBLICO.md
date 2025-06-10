@@ -1,16 +1,16 @@
-# 📋 Guía para Crear Repositorio Público en GitHub
+# 📋 Guia per Crear Repositori Públic a GitHub
 
-## 🎯 Objetivo
-Crear un repositorio público en GitHub para que otras cooperativas puedan usar nuestro código y contribuir al proyecto.
+## 🎯 Objectiu
+Crear un repositori públic a GitHub perquè altres cooperatives puguin usar el nostre codi i contribuir al projecte.
 
-## 📝 Pasos a Seguir
+## 📝 Passos a Seguir
 
-### 1. **Preparar el Repositorio Local**
+### 1. **Preparar el Repositori Local**
 
-#### Limpiar archivos sensibles
-Antes de hacer público el repositorio, asegúrate de que estos archivos estén en `.gitignore`:
+#### Netejar arxius sensibles
+Abans de fer públic el repositori, assegura't que aquests arxius estiguin a `.gitignore`:
 ```
-# Configuración sensible - NO subir a producción
+# Configuració sensible - NO pujar a producció
 coopconsum/settings.py
 coopconsum/settings_local.py
 coopconsum/settings_production.py
@@ -20,38 +20,38 @@ db.sqlite3
 media/
 ```
 
-#### Crear archivos de documentación
-- [x] `README.md` - Descripción principal del proyecto
-- [x] `API_COOPERATIVAS.md` - Documentación de la API
-- [x] `README_API.md` - Estado y ejemplos de la API
-- [ ] `INSTALL.md` - Guía de instalación paso a paso
-- [ ] `CONTRIBUTING.md` - Cómo contribuir al proyecto
-- [ ] `LICENSE` - Licencia del proyecto (recomendado: MIT)
+#### Crear arxius de documentació
+- [x] `README.md` - Descripció principal del projecte
+- [x] `API_COOPERATIVAS.md` - Documentació de l'API
+- [x] `README_API.md` - Estat i exemples de l'API
+- [ ] `INSTALL.md` - Guia d'instal·lació pas a pas
+- [ ] `CONTRIBUTING.md` - Com contribuir al projecte
+- [ ] `LICENSE` - Llicència del projecte (recomanat: MIT)
 
-### 2. **Crear el Repositorio en GitHub**
+### 2. **Crear el Repositori a GitHub**
 
-#### Opción A: Desde GitHub Web
-1. Ve a [github.com](https://github.com)
-2. Haz clic en "New repository"
+#### Opció A: Des de GitHub Web
+1. Ves a [github.com](https://github.com)
+2. Fes clic a "New repository"
 3. Configura:
    - **Repository name**: `lacivada-cooperativa`
-   - **Description**: `Sistema de gestión para cooperativas de consumo - Código abierto`
+   - **Description**: `Sistema de gestió per cooperatives de consum - Codi obert`
    - **Visibility**: ✅ Public
-   - **Initialize**: ❌ No añadir README (ya lo tienes)
-4. Haz clic en "Create repository"
+   - **Initialize**: ❌ No afegir README (ja el tens)
+4. Fes clic a "Create repository"
 
-#### Opción B: Desde línea de comandos
+#### Opció B: Des de línia de comandos
 ```bash
-# En tu directorio local
+# Al teu directori local
 git remote add origin https://github.com/fosc19/lacivada-cooperativa.git
 git branch -M main
 git push -u origin main
 ```
 
-### 3. **Configurar el Repositorio**
+### 3. **Configurar el Repositori**
 
-#### Añadir topics/etiquetas
-En GitHub, ve a Settings > General > Topics y añade:
+#### Afegir topics/etiquetes
+A GitHub, ves a Settings > General > Topics i afegeix:
 - `cooperativa`
 - `django`
 - `python`
@@ -61,57 +61,57 @@ En GitHub, ve a Settings > General > Topics y añade:
 - `api`
 
 #### Configurar README principal
-Crear un `README.md` atractivo con:
+Crear un `README.md` atractiu amb:
 - Logo de la cooperativa
-- Descripción del proyecto
-- Capturas de pantalla
-- Guía de instalación rápida
-- Enlaces a documentación
-- Información de contacto
+- Descripció del projecte
+- Captures de pantalla
+- Guia d'instal·lació ràpida
+- Enllaços a documentació
+- Informació de contacte
 
-#### Configurar Issues y Discussions
-- Habilitar Issues para reportar bugs
-- Habilitar Discussions para preguntas de la comunidad
-- Crear templates para issues
+#### Configurar Issues i Discussions
+- Habilitar Issues per reportar bugs
+- Habilitar Discussions per preguntes de la comunitat
+- Crear templates per issues
 
-### 4. **Estructura Recomendada del Repositorio Público**
+### 4. **Estructura Recomanada del Repositori Públic**
 
 ```
 lacivada-cooperativa/
-├── README.md                    # Descripción principal
-├── LICENSE                      # Licencia MIT
-├── INSTALL.md                   # Guía de instalación
-├── CONTRIBUTING.md              # Guía para contribuir
-├── requirements.txt             # Dependencias Python
-├── docker-compose.yml           # Configuración Docker (futuro)
-├── .env.example                 # Plantilla de configuración
-├── docs/                        # Documentación adicional
+├── README.md                    # Descripció principal
+├── LICENSE                      # Llicència MIT
+├── INSTALL.md                   # Guia d'instal·lació
+├── CONTRIBUTING.md              # Guia per contribuir
+├── requirements.txt             # Dependències Python
+├── docker-compose.yml           # Configuració Docker (futur)
+├── .env.example                 # Plantilla de configuració
+├── docs/                        # Documentació addicional
 │   ├── API_COOPERATIVAS.md
 │   ├── README_API.md
 │   └── DEPLOYMENT.md
-├── scripts/                     # Scripts de instalación
+├── scripts/                     # Scripts d'instal·lació
 │   ├── install.sh
 │   └── setup_database.py
-└── [resto del código Django]
+└── [resta del codi Django]
 ```
 
-### 5. **Contenido del README.md Principal**
+### 5. **Contingut del README.md Principal**
 
 ```markdown
-# 🌱 La Civada - Sistema de Gestión para Cooperativas
+# 🌱 La Civada - Sistema de Gestió per Cooperatives
 
-> Sistema completo de gestión para cooperativas de consumo responsable
+> Sistema complet de gestió per cooperatives de consum responsable
 
-## ✨ Características
+## ✨ Característiques
 
-- 👥 **Gestión de Socios**: Cuentas, movimientos, saldos
-- 🛒 **Sistema de Pedidos**: Comandas colectivas y esporádicas  
-- 📦 **Gestión de Stock**: Control de inventario
-- 🏪 **Catálogo Web**: Página pública con productos
-- 🤝 **API Pública**: Compartir datos entre cooperativas
-- 📅 **Calendario**: Eventos y actividades
+- 👥 **Gestió de Socis**: Comptes, moviments, saldos
+- 🛒 **Sistema de Comandes**: Comandes col·lectives i esporàdiques  
+- 📦 **Gestió d'Estoc**: Control d'inventari
+- 🏪 **Catàleg Web**: Pàgina pública amb productes
+- 🤝 **API Pública**: Compartir dades entre cooperatives
+- 📅 **Calendari**: Esdeveniments i activitats
 
-## 🚀 Instalación Rápida
+## 🚀 Instal·lació Ràpida
 
 ```bash
 git clone https://github.com/fosc19/lacivada-cooperativa.git
@@ -121,67 +121,67 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## 📖 Documentación
+## 📖 Documentació
 
-- [Guía de Instalación](INSTALL.md)
-- [API para Cooperativas](docs/API_COOPERATIVAS.md)
-- [Cómo Contribuir](CONTRIBUTING.md)
+- [Guia d'Instal·lació](INSTALL.md)
+- [API per Cooperatives](docs/API_COOPERATIVAS.md)
+- [Com Contribuir](CONTRIBUTING.md)
 
 ## 🌐 Demo
 
 - **Web**: https://lacivada.com
 - **API**: https://lacivada.com/api/
 
-## 🤝 Comunidad
+## 🤝 Comunitat
 
-¿Tienes una cooperativa? ¡Únete a la red!
+Tens una cooperativa? Uneix-te a la xarxa!
 - Email: cooperatives@lacivada.com
-- Issues: Para reportar bugs
-- Discussions: Para preguntas y ideas
+- Issues: Per reportar bugs
+- Discussions: Per preguntes i idees
 
-## 📄 Licencia
+## 📄 Llicència
 
-MIT License - Ver [LICENSE](LICENSE)
+MIT License - Veure [LICENSE](LICENSE)
 ```
 
-### 6. **Actualizar la Página Web**
+### 6. **Actualitzar la Pàgina Web**
 
-Una vez creado el repositorio, actualizar el enlace en:
-- `web/templates/web/cooperatives.html` línea con `href="#"`
-- Cambiar por: `href="https://github.com/fosc19/lacivada-cooperativa"`
+Un cop creat el repositori, actualitzar l'enllaç a:
+- `web/templates/web/cooperatives.html` línia amb `href="#"`
+- Canviar per: `href="https://github.com/fosc19/lacivada-cooperativa"`
 
-### 7. **Promoción del Proyecto**
+### 7. **Promoció del Projecte**
 
-#### En redes sociales
-- Anunciar en redes de la cooperativa
-- Compartir en grupos de cooperativas
-- Contactar con otras cooperativas conocidas
+#### A xarxes socials
+- Anunciar a les xarxes de la cooperativa
+- Compartir en grups de cooperatives
+- Contactar amb altres cooperatives conegudes
 
-#### En comunidades técnicas
-- Publicar en foros de Django
-- Compartir en comunidades de código abierto
-- Presentar en eventos de cooperativismo
+#### A comunitats tècniques
+- Publicar en fòrums de Django
+- Compartir en comunitats de codi obert
+- Presentar en esdeveniments de cooperativisme
 
 ## ✅ Checklist Final
 
-- [ ] Repositorio creado en GitHub
-- [ ] Archivos sensibles en `.gitignore`
-- [ ] README.md atractivo creado
-- [ ] Documentación completa
-- [ ] Enlaces actualizados en la web
-- [ ] Topics/etiquetas configuradas
-- [ ] Issues y Discussions habilitadas
-- [ ] Licencia MIT añadida
+- [ ] Repositori creat a GitHub
+- [ ] Arxius sensibles a `.gitignore`
+- [ ] README.md atractiu creat
+- [ ] Documentació completa
+- [ ] Enllaços actualitzats a la web
+- [ ] Topics/etiquetes configurades
+- [ ] Issues i Discussions habilitades
+- [ ] Llicència MIT afegida
 
-## 🎉 ¡Listo!
+## 🎉 Llest!
 
-Una vez completados estos pasos, tu proyecto estará disponible públicamente y otras cooperativas podrán:
-- Descargar y usar el código
-- Contribuir con mejoras
+Un cop completats aquests passos, el teu projecte estarà disponible públicament i altres cooperatives podran:
+- Descarregar i usar el codi
+- Contribuir amb millores
 - Reportar bugs
-- Hacer preguntas
-- Crear una red de cooperativas colaborativas
+- Fer preguntes
+- Crear una xarxa de cooperatives col·laboratives
 
 ---
 
-**¿Necesitas ayuda?** Contacta con el equipo técnico de La Civada.
+**Necessites ajuda?** Contacta amb l'equip tècnic de La Civada.

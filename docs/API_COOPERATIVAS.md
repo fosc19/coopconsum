@@ -1,35 +1,35 @@
-# 🌐 API para Cooperativas - La Civada
+# 🌐 API per Cooperatives - La Civada
 
-## 📋 Descripción
+## 📋 Descripció
 
-API REST pública que permite a otras cooperativas acceder a información sobre nuestros proveedores, productos y eventos. Diseñada para facilitar el intercambio de información entre cooperativas de consumo.
+API REST pública que permet a altres cooperatives accedir a informació sobre els nostres proveïdors, productes i esdeveniments. Dissenyada per facilitar l'intercanvi d'informació entre cooperatives de consum.
 
 ## 🚀 Endpoints Disponibles
 
-### 📊 Información General
+### 📊 Informació General
 ```
 GET /api/
 ```
-Devuelve información básica de la API y lista de endpoints disponibles.
+Retorna informació bàsica de l'API i llista d'endpoints disponibles.
 
-### 🏪 Proveedores
+### 🏪 Proveïdors
 ```
 GET /api/proveedores/
 GET /api/proveedores/{id}/
 ```
-**Filtros disponibles:**
+**Filtres disponibles:**
 - `visible_en_web`: true/false
 - `visible_en_inicio`: true/false
 
-**Búsqueda:**
-- `search`: Busca en nombre y descripción
+**Cerca:**
+- `search`: Cerca en nom i descripció
 
-**Campos devueltos:**
+**Camps retornats:**
 ```json
 {
   "id": 1,
-  "nombre": "Nombre del Proveedor",
-  "descripcion": "Descripción del proveedor",
+  "nombre": "Nom del Proveïdor",
+  "descripcion": "Descripció del proveïdor",
   "contacto": "info@proveedor.com",
   "imagen": "/media/proveedores/imagen.jpg",
   "visible_en_web": true,
@@ -37,26 +37,26 @@ GET /api/proveedores/{id}/
 }
 ```
 
-### 🛒 Productos
+### 🛒 Productes
 ```
 GET /api/productos/
 GET /api/productos/{id}/
 ```
-**Filtros disponibles:**
-- `categoria`: ID de categoría
-- `proveedor`: ID de proveedor
+**Filtres disponibles:**
+- `categoria`: ID de categoria
+- `proveedor`: ID de proveïdor
 - `es_stock`: true/false
 - `destacado_en_inicio`: true/false
 
-**Búsqueda:**
-- `search`: Busca en nombre, descripción y nombre del proveedor
+**Cerca:**
+- `search`: Cerca en nom, descripció i nom del proveïdor
 
-**Campos devueltos:**
+**Camps retornats:**
 ```json
 {
   "id": 1,
-  "nombre": "Nombre del Producto",
-  "descripcion": "Descripción del producto",
+  "nombre": "Nom del Producte",
+  "descripcion": "Descripció del producte",
   "precio": "12.50",
   "unidad_venta": "kg",
   "unidad_venta_display": "Kilogramo",
@@ -67,7 +67,7 @@ GET /api/productos/{id}/
   },
   "proveedor": {
     "id": 1,
-    "nombre": "Proveedor Local"
+    "nombre": "Proveïdor Local"
   },
   "imagen": "/media/productos/imagen.jpg",
   "es_stock": false,
@@ -75,43 +75,43 @@ GET /api/productos/{id}/
 }
 ```
 
-### 📂 Categorías
+### 📂 Categories
 ```
 GET /api/categorias/
 GET /api/categorias/{id}/
 ```
-**Búsqueda:**
-- `search`: Busca en nombre y descripción
+**Cerca:**
+- `search`: Cerca en nom i descripció
 
-**Campos devueltos:**
+**Camps retornats:
 ```json
 {
   "id": 1,
   "nombre": "Verduras",
-  "descripcion": "Verduras frescas de temporada"
+  "descripcion": "Verdures fresques de temporada"
 }
 ```
 
-### 📅 Eventos
+### 📅 Esdeveniments
 ```
 GET /api/eventos/
 GET /api/eventos/{id}/
 ```
-**Filtros disponibles:**
+**Filtres disponibles:**
 - `publico`: true/false
 - `todo_el_dia`: true/false
 - `fecha_inicio`: YYYY-MM-DD
 - `fecha_fin`: YYYY-MM-DD
 
-**Búsqueda:**
-- `search`: Busca en título y descripción
+**Cerca:**
+- `search`: Cerca en títol i descripció
 
-**Campos devueltos:**
+**Camps retornats:
 ```json
 {
   "id": 1,
-  "titulo": "Asamblea General",
-  "descripcion": "Asamblea mensual de la cooperativa",
+  "titulo": "Assemblea General",
+  "descripcion": "Assemblea mensual de la cooperativa",
   "fecha_inicio": "2025-01-15T18:00:00Z",
   "fecha_fin": "2025-01-15T20:00:00Z",
   "todo_el_dia": false,
@@ -120,31 +120,31 @@ GET /api/eventos/{id}/
 }
 ```
 
-## 🔍 Ejemplos de Uso
+## 🔍 Exemples d'Ús
 
-### Obtener todos los proveedores visibles
+### Obtenir tots els proveïdors visibles
 ```bash
 curl "http://lacivada.com/api/proveedores/?visible_en_web=true"
 ```
 
-### Buscar productos de una categoría específica
+### Buscar productes d'una categoria específica
 ```bash
 curl "http://lacivada.com/api/productos/?categoria=1"
 ```
 
-### Buscar productos por texto
+### Buscar productes per text
 ```bash
-curl "http://lacivada.com/api/productos/?search=tomate"
+curl "http://lacivada.com/api/productos/?search=tomàquet"
 ```
 
-### Obtener eventos públicos del próximo mes
+### Obtenir esdeveniments públics del proper mes
 ```bash
 curl "http://lacivada.com/api/eventos/?publico=true&fecha_inicio=2025-01-01"
 ```
 
-## 📄 Paginación
+## 📄 Paginació
 
-Todos los endpoints están paginados con 20 elementos por página:
+Tots els endpoints estan paginats amb 20 elements per pàgina:
 
 ```json
 {
@@ -155,37 +155,37 @@ Todos los endpoints están paginados con 20 elementos por página:
 }
 ```
 
-## 🔒 Autenticación
+## 🔒 Autenticació
 
-La API es **pública** y no requiere autenticación. Solo se muestran datos marcados como públicos/visibles.
+L'API és **pública** i no requereix autenticació. Només es mostren dades marcades com a públiques/visibles.
 
 ## 🌍 CORS
 
-La API permite peticiones desde cualquier origen para facilitar el acceso desde otras cooperativas.
+L'API permet peticions des de qualsevol origen per facilitar l'accés des d'altres cooperatives.
 
-## 📊 Límites de Uso
+## 📊 Límits d'Ús
 
-- **100 peticiones por hora** por IP
-- Solo datos públicos disponibles
-- Sin acceso a información sensible
+- **100 peticions per hora** per IP
+- Només dades públiques disponibles
+- Sense accés a informació sensible
 
-## 🔧 Integración con Otras Cooperativas
+## 🔧 Integració amb Altres Cooperatives
 
-### Ejemplo JavaScript
+### Exemple JavaScript
 ```javascript
-// Obtener proveedores de La Civada
+// Obtenir proveïdors de La Civada
 fetch('http://lacivada.com/api/proveedores/')
   .then(response => response.json())
   .then(data => {
-    console.log('Proveedores disponibles:', data.results);
+    console.log('Proveïdors disponibles:', data.results);
   });
 ```
 
-### Ejemplo Python
+### Exemple Python
 ```python
 import requests
 
-# Obtener productos destacados
+# Obtenir productes destacats
 response = requests.get('http://lacivada.com/api/productos/?destacado_en_inicio=true')
 productos = response.json()
 
@@ -193,16 +193,16 @@ for producto in productos['results']:
     print(f"{producto['nombre']} - {producto['precio']}€")
 ```
 
-## 🚀 Próximas Funcionalidades
+## 🚀 Properes Funcionalitats
 
-- [ ] Webhook para notificaciones de nuevos productos
-- [ ] API de disponibilidad de stock en tiempo real
-- [ ] Integración con sistema de pedidos colaborativos
-- [ ] Red federada de cooperativas
+- [ ] Webhook per notificacions de nous productes
+- [ ] API de disponibilitat d'estoc en temps real
+- [ ] Integració amb sistema de comandes col·laboratives
+- [ ] Xarxa federada de cooperatives
 
-## 📞 Contacto
+## 📞 Contacte
 
-Para más información sobre la API o para añadir tu cooperativa a la red:
+Per més informació sobre l'API o per afegir la teva cooperativa a la xarxa:
 - Email: api@lacivada.com
 - Web: https://lacivada.com
 - GitHub: https://github.com/fosc19/lacivada
