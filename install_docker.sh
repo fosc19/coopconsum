@@ -262,6 +262,9 @@ cat > /tmp/coopconsum_cron << EOF
 
 # Tancar comandes vençudes cada dia a les 23:59
 59 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py cerrar_pedidos >> /var/log/coopconsum_cron.log 2>&1
+
+# Neteja de logs setmanal (diumenges a les 03:00)
+0 3 * * 0 find /var/log/coopconsum_cron.log -size +10M -exec truncate -s 0 {} \; 2>/dev/null
 EOF
 
 # Instal·lar els cron jobs
@@ -307,7 +310,10 @@ echo ""
 print_status "Tasques automàtiques configurades (cron del sistema):"
 echo "  ⏰ Generació de comandes: cada dia a les 00:30"
 echo "  🔒 Tancament de comandes: cada dia a les 23:59"
+echo "  🧹 Neteja de logs: cada diumenge a les 03:00"
 echo "  📝 Logs disponibles a: /var/log/coopconsum_cron.log"
+echo ""
+print_success "💾 Backup automàtic: Configurat al proveïdor VPS (recomanat)"
 echo ""
 print_status "Comandos útils:"
 echo "  📊 Veure estat: cd $INSTALL_DIR && docker compose ps"

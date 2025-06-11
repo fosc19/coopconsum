@@ -130,16 +130,25 @@
                                     <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#dockerGuide">
                                         <div class="accordion-body">
                                             <h5>🛒 On comprar?</h5>
-                                            <p>Recomanem aquests proveïdors econòmics:</p>
+                                            <p><strong>Recomanació principal (més detallada):</strong></p>
+                                            <div class="border border-primary rounded p-3 mb-3">
+                                                <h6><strong>🥇 OVH Cloud (Recomanat)</strong></h6>
+                                                <ul>
+                                                    <li><strong>Preu:</strong> 3-5€/mes + 3,30€/mes backup</li>
+                                                    <li><strong>Avantatges:</strong> Europeu, GDPR, suport en català/espanyol</li>
+                                                    <li><strong>Web:</strong> <a href="https://www.ovhcloud.com" target="_blank">ovhcloud.com</a></li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <p><strong>Alternatives:</strong></p>
                                             <ul>
-                                                <li><strong>OVH:</strong> 3-5€/mes - Proveïdor europeu fiable</li>
-                                                <li><strong>Hetzner:</strong> 4€/mes - Molt fiable</li>
-                                                <li><strong>DigitalOcean:</strong> 6€/mes - Molt fàcil d'usar</li>
-                                                <li><strong>Vultr:</strong> 5€/mes - Bona relació qualitat-preu</li>
+                                                <li><strong>Hetzner:</strong> 4€/mes + 1€/mes backup</li>
+                                                <li><strong>DigitalOcean:</strong> 6€/mes + 1,20€/mes backup</li>
+                                                <li><strong>Vultr:</strong> 5€/mes + 1€/mes backup</li>
                                             </ul>
                                             
-                                            <h5>⚙️ Què demanar?</h5>
-                                            <div class="bg-light p-3 rounded">
+                                            <h5>⚙️ Configuració del Servidor</h5>
+                                            <div class="bg-light p-3 rounded mb-3">
                                                 <ul class="mb-0">
                                                     <li><strong>Sistema operatiu:</strong> Ubuntu 22.04 LTS</li>
                                                     <li><strong>RAM:</strong> Mínim 2GB</li>
@@ -148,7 +157,20 @@
                                                 </ul>
                                             </div>
                                             
-                                            <div class="alert alert-warning mt-3">
+                                            <div class="alert alert-danger">
+                                                <h6><i class="fas fa-shield-alt me-2"></i><strong>OBLIGATORI: Backup Automàtic</strong></h6>
+                                                <p><strong>⚠️ No oblidis contractar el backup automàtic!</strong></p>
+                                                <p><strong>A OVH:</strong></p>
+                                                <ul class="mb-2">
+                                                    <li>✅ Selecciona "Backup automatizado" (+3,30€/mes)</li>
+                                                    <li>📦 Còpies diàries automàtiques</li>
+                                                    <li>🔄 Restauració amb un clic des del panell</li>
+                                                    <li>🛡️ Protecció completa del sistema</li>
+                                                </ul>
+                                                <small><strong>Sense backup automàtic, pots perdre tota la cooperativa!</strong></small>
+                                            </div>
+                                            
+                                            <div class="alert alert-info mt-3">
                                                 <i class="fas fa-key me-2"></i>
                                                 <strong>Important:</strong> Guarda bé les dades d'accés (IP, usuari, contrasenya) que et donin!
                                             </div>
