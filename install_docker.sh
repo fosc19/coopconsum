@@ -168,7 +168,7 @@ if [[ -z "$COOP_EMAIL" ]]; then
 fi
 
 # Generar contrasenya segura per la base de dades
-DB_PASSWORD=$(openssl rand -base64 32)
+DB_PASSWORD=$(openssl rand -hex 16)
 
 # Crear fitxer .env
 print_status "Configurant variables d'entorn..."
