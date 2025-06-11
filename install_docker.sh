@@ -181,7 +181,7 @@ cat > .env << EOF
 # Generat automàticament per install_docker.sh
 
 # Django
-DJANGO_SECRET_KEY=$(openssl rand -base64 50)
+DJANGO_SECRET_KEY=$(openssl rand -hex 25)
 DEBUG=False
 
 # Base de dades PostgreSQL
