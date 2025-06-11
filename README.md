@@ -83,18 +83,14 @@ docker compose logs cron
 
 ### Verificar tasques automàtiques
 ```bash
-# ❌ NO facis això (comando incorrecte):
-cron -l  # Això donarà error de permisos
+# Veure els cron jobs configurats
+crontab -l
 
-# ✅ SÍ fes això (comandos correctes):
-# Verificar que el contenidor cron està funcionant
-docker compose ps cron
-
-# Veure els logs de les tasques automàtiques
-docker compose logs cron
+# Veure logs de les tasques automàtiques
+tail -f /var/log/coopconsum_cron.log
 
 # Executar tasques manualment per provar
-docker compose exec web python manage.py generar_pedidos
+docker compose exec web python manage.py generar_pedidos_test
 docker compose exec web python manage.py cerrar_pedidos
 ```
 

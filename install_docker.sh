@@ -251,8 +251,37 @@ run_docker_command compose exec -T web python manage.py collectstatic --noinput
 
 print_success "Aplicació configurada per servir directament al port 80"
 
-# Els cron jobs ara es gestionen automàticament dins del contenidor Docker
-print_success "Tasques automàtiques (cron jobs) configurades dins del contenidor Docker"
+# Configurar cron jobs del sistema per execució automàtica diària
+print_status "Configurant tasques automàtiques al sistema..."
+
+# Crear arxiu temporal amb els cron jobs
+cat > /tmp/coopconsum_cron << EOF
+# CoopConsum - Tasques automàtiques
+# Generar comandes recurrents cada dia a les 00:30
+30 0 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py generar_pedidos >> /var/log/coopconsum_cron.log 2>&1
+
+# Tancar comandes vençudes cada dia a les 23:59
+59 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py cerrar_pedidos >> /var/log/coopconsum_cron.log 2>&1
+EOF
+
+# Instal·lar els cron jobs
+if crontab -l >/dev/null 2>&1; then
+    # Si ja hi ha crontab, afegir els nous
+    (crontab -l; cat /tmp/coopconsum_cron) | crontab -
+else
+    # Si no hi ha crontab, crear-ne un de nou
+    crontab /tmp/coopconsum_cron
+fi
+
+# Netejar arxiu temporal
+rm -f /tmp/coopconsum_cron
+
+# Crear directori de logs si no existeix
+sudo mkdir -p /var/log
+sudo touch /var/log/coopconsum_cron.log
+sudo chown $USER:$USER /var/log/coopconsum_cron.log
+
+print_success "Tasques automàtiques configurades al sistema"
 
 # Obtenir IP del servidor
 SERVER_IP=$(hostname -I | awk '{print $1}')
@@ -275,11 +304,10 @@ echo "  1. Accedeix a http://$SERVER_IP/admin/"
 echo "  2. Inicia sessió amb les credencials anteriors"
 echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
 echo ""
-print_status "Tasques automàtiques configurades (dins del contenidor Docker):"
-echo "  ⏰ Generació de comandes: cada dilluns a les 00:30"
+print_status "Tasques automàtiques configurades (cron del sistema):"
+echo "  ⏰ Generació de comandes: cada dia a les 00:30"
 echo "  🔒 Tancament de comandes: cada dia a les 23:59"
-echo "  💾 Backup automàtic: cada dia a les 02:00"
-echo "  🧹 Neteja de logs: cada diumenge a les 02:00"
+echo "  📝 Logs disponibles a: /var/log/coopconsum_cron.log"
 echo ""
 print_status "Comandos útils:"
 echo "  📊 Veure estat: cd $INSTALL_DIR && docker compose ps"
@@ -288,10 +316,9 @@ echo "  🔄 Reiniciar: cd $INSTALL_DIR && docker compose restart"
 echo "  🛑 Aturar: cd $INSTALL_DIR && docker compose down"
 echo ""
 print_status "Verificar tasques automàtiques:"
-echo "  ✅ Estat cron: cd $INSTALL_DIR && docker compose ps cron"
-echo "  📋 Logs cron: cd $INSTALL_DIR && docker compose logs cron"
-echo "  ❌ NO executis: cron -l (això dona error de permisos)"
-echo "  ✅ SÍ executa: crontab -l (per veure cron jobs del sistema)"
+echo "  ✅ Veure cron jobs: crontab -l"
+echo "  📋 Veure logs: tail -f /var/log/coopconsum_cron.log"
+echo "  🧪 Provar manualment: cd $INSTALL_DIR && docker compose exec web python manage.py generar_pedidos_test"
 echo ""
 if [ "$DOCKER_JUST_INSTALLED" = true ]; then
     echo ""
