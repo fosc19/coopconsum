@@ -135,7 +135,7 @@
                                                 <h6><strong>🥇 OVH VPS (Recomanat)</strong></h6>
                                                 <ul>
                                                     <li><strong>Preu:</strong> 3-5€/mes + 3,30€/mes backup</li>
-                                                    <li><strong>Avantatges:</strong> Europeu, GDPR, suport en català/espanyol</li>
+                                                    <li><strong>Avantatges:</strong> Europeu, GDPR</li>
                                                     <li><strong>Motiu:</strong> És el que nosaltres utilitzem i el manual més detallat està en aquest format</li>
                                                     <li><strong>Web:</strong> <a href="https://www.ovh.com/es/vps/" target="_blank">ovh.com/es/vps/</a></li>
                                                 </ul>
@@ -236,7 +236,7 @@
                                                 <ul class="mb-0 mt-2">
                                                     <li>Instal·la Docker automàticament</li>
                                                     <li>Descarrega CoopConsum</li>
-                                                    <li>Et demana el nom de la cooperativa i email</li>
+                                                    <li>Usa valors per defecte automàticament</li>
                                                     <li>Configura tot automàticament</li>
                                                     <li>Llança la plataforma</li>
                                                     <li>Configura les tasques automàtiques</li>
@@ -244,14 +244,18 @@
                                             </div>
 
                                             <h5>⚙️ Durant la instal·lació</h5>
-                                            <p>L'script et demanarà:</p>
+                                            <p>L'script funciona automàticament amb valors per defecte. Si vols personalitzar:</p>
                                             <div class="bg-light p-3 rounded">
                                                 <code>
-                                                    Nom de la cooperativa: <strong>La Teva Cooperativa</strong><br>
-                                                    Email de contacte: <strong>email@cooperativa.cat</strong>
+                                                    # Descarrega l'script primer per personalitzar-lo<br>
+                                                    wget https://github.com/fosc19/coopconsum/raw/master/install_docker.sh<br>
+                                                    # Edita les variables COOP_NAME i COOP_EMAIL<br>
+                                                    nano install_docker.sh<br>
+                                                    # Executa l'script<br>
+                                                    bash install_docker.sh
                                                 </code>
                                             </div>
-                                            <p><small>Escriu les teves dades i prem Enter</small></p>
+                                            <p><small>O deixa que funcioni automàticament i canvia el nom després des del panell admin</small></p>
 
                                             <div class="alert alert-success">
                                                 <i class="fas fa-check me-2"></i>
@@ -331,6 +335,7 @@
                                 <h5>🆘 Necessites ajuda?</h5>
                                 <ul>
                                     <li><strong>Documentació completa:</strong> <a href="https://github.com/fosc19/coopconsum/blob/master/docs/DOCKER_README.md" target="_blank">DOCKER_README.md</a></li>
+                                    <li><strong>Contacte per dubtes:</strong> <a href="mailto:lacivada@gmail.com">lacivada@gmail.com</a> (projecte open source)</li>
                                 </ul>
                             </div>
                         </div>
