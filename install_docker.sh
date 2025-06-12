@@ -5,6 +5,18 @@
 
 set -e
 
+# Funció per gestionar errors
+handle_error() {
+    local line_no=$1
+    local error_code=$2
+    echo "ERROR: Script failed at line $line_no with exit code $error_code"
+    echo "DEBUG: Last command that failed: $BASH_COMMAND"
+    exit $error_code
+}
+
+# Configurar trap per capturar errors
+trap 'handle_error ${LINENO} $?' ERR
+
 echo "🤝 Instal·lació automàtica de CoopConsum"
 echo "========================================"
 echo ""
@@ -251,6 +263,12 @@ run_docker_command compose exec -T web python manage.py collectstatic --noinput
 
 print_success "Aplicació configurada per servir directament al port 80"
 
+# Debug: Verificar que arribem aquí
+echo "DEBUG: Script ha arribat després del collectstatic"
+
+# Debug: Verificar que arribem al cron
+echo "DEBUG: Iniciant configuració cron jobs"
+
 # Configurar cron jobs del sistema per execució automàtica diària
 print_status "Configurant tasques automàtiques al sistema..."
 
@@ -285,6 +303,9 @@ sudo touch /var/log/coopconsum_cron.log
 sudo chown $USER:$USER /var/log/coopconsum_cron.log
 
 print_success "Tasques automàtiques configurades al sistema"
+
+# Debug: Confirmar que hem acabat la configuració cron
+echo "DEBUG: Cron jobs configurats correctament"
 
 # Obtenir IP del servidor
 SERVER_IP=$(hostname -I | awk '{print $1}')
