@@ -263,8 +263,8 @@ print_status "Configurant tasques automàtiques al sistema..."
 # Crear arxiu temporal amb els cron jobs
 cat > /tmp/coopconsum_cron << EOF
 # CoopConsum - Tasques automàtiques
-# Generar comandes recurrents cada dia a les 00:30
-30 0 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py generar_pedidos >> /var/log/coopconsum_cron.log 2>&1
+# Generar comandes recurrents cada dia a les 23:58
+58 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py generar_pedidos >> /var/log/coopconsum_cron.log 2>&1
 
 # Tancar comandes vençudes cada dia a les 23:59
 59 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py cerrar_pedidos >> /var/log/coopconsum_cron.log 2>&1
@@ -317,7 +317,7 @@ echo "  2. Inicia sessió amb les credencials anteriors"
 echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
 echo ""
 print_status "Tasques automàtiques configurades (cron del sistema):"
-echo "  ⏰ Generació de comandes: cada dia a les 00:30"
+echo "  ⏰ Generació de comandes: cada dia a les 23:58"
 echo "  🔒 Tancament de comandes: cada dia a les 23:59"
 echo "  🧹 Neteja de logs: cada diumenge a les 03:00"
 echo "  📝 Logs disponibles a: /var/log/coopconsum_cron.log"
