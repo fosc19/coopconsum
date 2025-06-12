@@ -30,7 +30,7 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
     # Logout personalitzat que accepta GET i POST sense CSRF
-    path('accounts/logout/', views.custom_logout, name='logout'),
+    path('sortir/', views.custom_logout, name='logout'),
 
     # Rutas de autenticación de Django (password_change, password_reset, etc. SENSE logout)
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
