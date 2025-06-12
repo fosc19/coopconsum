@@ -225,7 +225,7 @@ run_docker_command compose up -d
 
 # Esperar que els serveis estiguin llests
 print_status "Esperant que els serveis estiguin llests..."
-sleep 30
+sleep 45
 
 # Verificar que els contenidors estan funcionant
 if run_docker_command compose ps | grep -q "Up"; then
@@ -236,35 +236,23 @@ else
     exit 1
 fi
 
-# Executar migracions de la base de dades
-print_status "Executant migracions de la base de dades..."
-run_docker_command compose exec -T web python manage.py migrate
+# Les tasques Django (migracions, superusuari, collectstatic) es fan automàticament
+# dins del contenidor via docker-entrypoint.sh quan s'inicia
+print_status "Les tasques d'inicialització Django es fan automàticament al contenidor..."
 
-# Crear superusuari
-print_status "Creant usuari administrador..."
-run_docker_command compose exec -T web python manage.py shell << 'EOF'
-from django.contrib.auth.models import User
-import os
+# Esperar que el contenidor web finalitzi la seva configuració inicial
+sleep 15
 
-username = 'admin'
-email = os.environ.get('COOP_EMAIL', 'admin@cooperativa.local')
-password = 'cooperativa2025'
-
-if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username, email, password)
-    print(f"Superusuari '{username}' creat correctament")
-else:
-    print(f"Superusuari '{username}' ja existeix")
-EOF
-
-# Col·lectar fitxers estàtics
-print_status "Col·lectant fitxers estàtics..."
-run_docker_command compose exec -T web python manage.py collectstatic --noinput
-
-print_success "Aplicació configurada per servir directament al port 80"
+# Verificar que l'aplicació funciona
+print_status "Verificant que l'aplicació està funcionant..."
+if curl -f http://localhost >/dev/null 2>&1; then
+    print_success "Aplicació web funcionant correctament al port 80"
+else
+    print_warning "L'aplicació encara s'està inicialitzant..."
+fi
 
 # Debug: Verificar que arribem aquí
-echo "DEBUG: Script ha arribat després del collectstatic"
+echo "DEBUG: Script ha arribat després de verificar l'aplicació"
 
 # Debug: Verificar que arribem al cron
 echo "DEBUG: Iniciant configuració cron jobs"
