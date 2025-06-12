@@ -11,9 +11,8 @@ from socios.models import Socio, CuentaSocio, MovimientoCuenta, RegistroCompraSo
 from socios.forms import RegistroCompraSocioForm # Importar el nuevo formulario
 from pedidos.models import PedidoColectivo, SeleccionSocio
 from django.contrib.auth import logout
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
 
 @login_required
 def panel_principal(request):
@@ -136,12 +135,15 @@ def registrar_compra_socio_view(request):
     # Usaremos una nueva plantilla para esta funcionalidad
     return render(request, 'master/registrar_compra_socio.html', context)
 
-@csrf_exempt
-@require_http_methods(["GET", "POST"])
+@csrf_exempt 
 def custom_logout(request):
     """Vista personalizada de logout que accepta GET i POST requests"""
     logout(request)
     return HttpResponseRedirect('/')
+
+def test_logout(request):
+    """Vista simple de test"""
+    return HttpResponse("Test logout works!")
 
 
 # primera versio interesant
