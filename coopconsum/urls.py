@@ -8,6 +8,11 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Logout específic per admin que redirigeix a admin login
+    path('admin/logout/', LogoutView.as_view(
+        template_name='admin/logged_out.html',
+        next_page='/admin/'
+    ), name='admin_logout'),
 
     # Web pública (escaparate/tienda)
     path('', include('web.urls')),
@@ -22,8 +27,11 @@ urlpatterns = [
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
-    # Logout con nombre 'logout' - Usará LOGOUT_REDIRECT_URL de settings.py
-    path('accounts/logout/', LogoutView.as_view(), name='logout'),
+    # Logout con nombre 'logout' - Permitir GET y configurar redirects
+    path('accounts/logout/', LogoutView.as_view(
+        http_method_names=['get', 'post'],  # Permitir GET además de POST
+        next_page='/'  # Redirigir a pàgina principal després de logout
+    ), name='logout'),
 
     # Rutas de autenticación de Django (incluye password_change, password_reset, etc.)
     path('accounts/', include('django.contrib.auth.urls')),
