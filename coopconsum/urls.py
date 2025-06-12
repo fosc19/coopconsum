@@ -29,11 +29,8 @@ urlpatterns = [
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
-    # Logout con nombre 'logout' - Permitir GET y deshabilitar CSRF
-    path('accounts/logout/', method_decorator(csrf_exempt, name='dispatch')(LogoutView).as_view(
-        http_method_names=['get', 'post'],  # Permitir GET además de POST
-        next_page='/'  # Redirigir a pàgina principal després de logout
-    ), name='logout'),
+    # Logout personalitzat que accepta GET i POST sense CSRF
+    path('accounts/logout/', views.custom_logout, name='logout'),
 
     # Rutas de autenticación de Django (incluye password_change, password_reset, etc.)
     path('accounts/', include('django.contrib.auth.urls')),
