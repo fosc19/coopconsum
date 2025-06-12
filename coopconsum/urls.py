@@ -5,6 +5,8 @@ from django.contrib.auth.views import LogoutView  # Importación para logout
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,8 +29,8 @@ urlpatterns = [
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
-    # Logout con nombre 'logout' - Permitir GET y configurar redirects
-    path('accounts/logout/', LogoutView.as_view(
+    # Logout con nombre 'logout' - Permitir GET y deshabilitar CSRF
+    path('accounts/logout/', method_decorator(csrf_exempt, name='dispatch')(LogoutView).as_view(
         http_method_names=['get', 'post'],  # Permitir GET además de POST
         next_page='/'  # Redirigir a pàgina principal després de logout
     ), name='logout'),
