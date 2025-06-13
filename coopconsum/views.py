@@ -7,13 +7,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test # Pa
 from django.urls import reverse
 from django.shortcuts import redirect # Añadir redirect
 from django.contrib import messages # Para mensajes de feedback
-from socios.models import Socio, CuentaSocio, MovimientoCuenta, RegistroCompraSocio # Importar el nuevo modelo
-from socios.forms import RegistroCompraSocioForm # Importar el nuevo formulario
-from pedidos.models import PedidoColectivo, SeleccionSocio
 from django.http import HttpResponseRedirect
 
 @login_required
 def panel_principal(request):
+    from socios.models import Socio, CuentaSocio, MovimientoCuenta
+    from pedidos.models import PedidoColectivo, SeleccionSocio
+    
     try:
         socio = request.user.socio
     except Exception:
@@ -109,6 +109,9 @@ def master_control_view(request):
 @login_required
 # @user_passes_test(lambda u: u.is_superuser) # Eliminado: Ahora accesible para todos los logueados
 def registrar_compra_socio_view(request):
+    from socios.models import RegistroCompraSocio
+    from socios.forms import RegistroCompraSocioForm
+    
     if request.method == 'POST':
         form = RegistroCompraSocioForm(request.POST)
         if form.is_valid():

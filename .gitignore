@@ -64,3 +64,6 @@ backup_*.sql
 # Archivos de desarrollo local
 *.local
 *.dev
+
+# Claude Code documentation - contiene información sensible del servidor
+CLAUDE.md
