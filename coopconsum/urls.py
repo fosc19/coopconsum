@@ -10,6 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
 urlpatterns = [
+    # Logout funcional sense imports problemàtics - PRIMER per prioritat
+    path('sortir/', logout_views.simple_logout, name='logout'),
+    
     path('admin/', admin.site.urls),
     # Logout específic per admin que redirigeix a admin login
     path('admin/logout/', LogoutView.as_view(
@@ -29,9 +32,6 @@ urlpatterns = [
 
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-
-    # Logout funcional sense imports problemàtics
-    path('sortir/', logout_views.simple_logout, name='logout'),
 
     # Rutas de autenticación de Django (password_change, password_reset, etc. SENSE logout)
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
