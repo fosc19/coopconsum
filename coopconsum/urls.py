@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from coopconsum import views # Importar todas las vistas de coopconsum
-from logout_views import simple_logout
+from coopconsum.logout_views import simple_logout
 from django.contrib.auth.views import LogoutView  # Importación para logout
 from django.conf import settings
 from django.conf.urls.static import static
