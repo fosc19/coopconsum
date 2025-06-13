@@ -1,5 +1,4 @@
 # Configuraciones sensibles
-settings.py
 local_settings.py
 .env
 *.env
