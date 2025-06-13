@@ -2,6 +2,8 @@
 .git
 .gitignore
 .gitignore.public
+README*.md
+CLAUDE.md
 
 # Python
 __pycache__
@@ -21,7 +23,6 @@ nosetests.xml
 coverage.xml
 *.cover
 *.log
-.git
 .mypy_cache
 .pytest_cache
 .hypothesis
@@ -31,21 +32,27 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+staticfiles/
+media/
+
+# Variables d'entorn (IMPORTANT: mai copiar .env al contenidor)
+.env
+.env.*
+*.env
 
 # Fitxers temporals
 *.tmp
 *.bak
 *.swp
 *~
+.DS_Store
+Thumbs.db
 
-# Documentació i fitxers de desenvolupament (però NO requirements.txt)
+# Documentació i fitxers de desenvolupament
 *.md
 *.odt
 *.rar
-*.jpeg
-*.jpg
-*.png
-*.webp
+docs/
 DEBUG_*
 INSTRUCCIONES_*
 PASOS_*
@@ -71,13 +78,31 @@ salida_*.py
 node_modules
 .vscode
 .idea
+.pytest_cache
 
-# Backup
+# Backups i logs
 backup-*
+backup_*.sql
+logs/
+*.backup
 
-# Fitxers Docker de desenvolupament (mantenir els necessaris)
+# Fitxers Docker de desenvolupament
 docker-compose-backup.yml
+docker-compose-public.yml
 .dockerignore
 
-# Variables d'entorn locals
-.env.backup
+# Tests i eines de desenvolupament
+coverage.xml
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Imatges i galeria (evitar imatges grans en build)
+galeria/
+img*/
+*.jpeg
+*.jpg
+*.png
+*.webp
+galeria/
+static/img/producers/
