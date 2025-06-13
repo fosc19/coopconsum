@@ -31,7 +31,7 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
     # Logout funcional sense imports problemàtics
-    path('sortir/', logout_views.simple_logout, name='sortir_logout'),
+    path('sortir/', logout_views.simple_logout, name='logout'),
 
     # Rutas de autenticación de Django (password_change, password_reset, etc. SENSE logout)
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
