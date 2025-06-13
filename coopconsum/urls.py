@@ -33,11 +33,11 @@ urlpatterns = [
     # Test logout amb nom diferent
     path('test-logout-final/', simple_logout_view, name='test_logout_final'),
     
-    # Logout específic per admin que redirigeix a admin login - ABANS d'admin/ per prioritat
-    path('admin/logout/', LogoutView.as_view(
+    # Logout específic per admin - ruta custom per evitar conflictes
+    path('admin-logout/', LogoutView.as_view(
         template_name='admin/logged_out.html',
         next_page='/admin/login/'
-    ), name='admin_logout'),
+    ), name='admin_logout_custom'),
     
     path('admin/', admin.site.urls),
 
@@ -72,6 +72,10 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('eventos/', include('eventos.urls')),
 ]
+
+# Configurar Django admin logout redirect
+admin.site.site_url = '/'
+admin.site.logout_redirect_url = '/admin/login/'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
