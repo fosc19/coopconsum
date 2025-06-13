@@ -37,7 +37,7 @@ urlpatterns = [
     # Logout específic per admin que redirigeix a admin login
     path('admin/logout/', LogoutView.as_view(
         template_name='admin/logged_out.html',
-        next_page='/admin/'
+        next_page='/admin/login/'
     ), name='admin_logout'),
 
     # Web pública (escaparate/tienda)
