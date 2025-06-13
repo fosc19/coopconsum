@@ -229,7 +229,7 @@ EOF
 
 # Construir i llançar contenidors
 print_status "Construint i llançant contenidors Docker..."
-run_docker_command compose build
+run_docker_command compose build --no-cache
 run_docker_command compose up -d
 
 # Esperar que els serveis estiguin llests
@@ -318,12 +318,14 @@ echo "  🔧 Panell admin: http://$SERVER_IP/admin/"
 echo ""
 print_success "Credencials d'administrador:"
 echo "  👤 Usuari: admin"
-echo "  🔑 Contrasenya: cooperativa2025"
+echo "  🔑 Contrasenya: GENERADA AUTOMÀTICAMENT"
 echo ""
-print_warning "IMPORTANT: Canvia la contrasenya immediatament!"
-echo "  1. Accedeix a http://$SERVER_IP/admin/"
-echo "  2. Inicia sessió amb les credencials anteriors"
-echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
+print_warning "IMPORTANT: Per obtenir la contrasenya d'administrador:"
+echo "  1. Executa: cd $INSTALL_DIR && docker compose logs web | grep 'Contrasenya generada'"
+echo "  2. Busca la línia que diu 'ATENCIÓ: Contrasenya generada automàticament per l'admin:'"
+echo "  3. Copia la contrasenya mostrada"
+echo "  4. Accedeix a http://$SERVER_IP/admin/ amb usuari 'admin' i aquesta contrasenya"
+echo "  5. Canvia la contrasenya per una de la teva elecció a 'Usuaris' > 'admin'"
 echo ""
 print_status "Tasques automàtiques configurades (cron del sistema):"
 echo "  ⏰ Generació de comandes: cada dia a les 23:58"
