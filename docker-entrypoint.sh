@@ -46,23 +46,13 @@ echo "Creant superusuari..."
 python manage.py shell << EOF
 from django.contrib.auth.models import User
 import os
-import secrets
-import string
 
 username = 'admin'
 email = os.environ.get('COOP_EMAIL', 'admin@cooperativa.local')
-
-# Generar contrasenya segura si no existeix la variable d'entorn
-admin_password = os.environ.get('ADMIN_PASSWORD')
-if not admin_password:
-    # Generar contrasenya aleatòria
-    chars = string.ascii_letters + string.digits + '!@#$%&*'
-    admin_password = ''.join(secrets.choice(chars) for _ in range(16))
-    print(f"ATENCIÓ: Contrasenya generada automàticament per l'admin: {admin_password}")
-    print("Guarda aquesta contrasenya en lloc segur!")
+password = 'cooperativa2025'
 
 if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username, email, admin_password)
+    User.objects.create_superuser(username, email, password)
     print(f"Superusuari '{username}' creat correctament")
 else:
     print(f"Superusuari '{username}' ja existeix")
