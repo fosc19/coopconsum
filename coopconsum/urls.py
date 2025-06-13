@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from coopconsum import views # Importar todas las vistas de coopconsum
 
 # Import directe de la vista de logout
 def simple_logout_view(request):
@@ -8,6 +7,19 @@ def simple_logout_view(request):
     from django.http import HttpResponseRedirect
     logout(request)
     return HttpResponseRedirect('/')
+
+# Funcions wrapper per imports locals de vistes
+def panel_principal_view(request):
+    from coopconsum.views import panel_principal
+    return panel_principal(request)
+
+def master_control_wrapper(request):
+    from coopconsum.views import master_control_view
+    return master_control_view(request)
+
+def registrar_compra_wrapper(request):
+    from coopconsum.views import registrar_compra_socio_view
+    return registrar_compra_socio_view(request)
 from django.contrib.auth.views import LogoutView  # Importación para logout
 from django.conf import settings
 from django.conf.urls.static import static
@@ -32,11 +44,11 @@ urlpatterns = [
     path('', include('web.urls')),
 
     # Dashboard/intranet
-    path('dashboard/', views.panel_principal, name='dashboard_principal'),
+    path('dashboard/', panel_principal_view, name='dashboard_principal'),
 
     # Rutas para la sección Master
-    path('master/', views.master_control_view, name='master_control'), # Vista principal de Master (redirige)
-    path('master/registrar-compra/', views.registrar_compra_socio_view, name='registrar_compra_socio'), # Vista para registrar compra
+    path('master/', master_control_wrapper, name='master_control'), # Vista principal de Master (redirige)
+    path('master/registrar-compra/', registrar_compra_wrapper, name='registrar_compra_socio'), # Vista para registrar compra
 
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
