@@ -12,6 +12,8 @@ from django.utils.decorators import method_decorator
 urlpatterns = [
     # Logout funcional sense imports problemàtics - PRIMER per prioritat
     path('sortir/', logout_views.simple_logout, name='logout'),
+    # Test logout amb nom diferent
+    path('test-logout-final/', logout_views.simple_logout, name='test_logout_final'),
     
     path('admin/', admin.site.urls),
     # Logout específic per admin que redirigeix a admin login
