@@ -1,7 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
 from coopconsum import views # Importar todas las vistas de coopconsum
-from . import logout_views
+
+# Import directe de la vista de logout
+def simple_logout_view(request):
+    from django.contrib.auth import logout
+    from django.http import HttpResponseRedirect
+    logout(request)
+    return HttpResponseRedirect('/')
 from django.contrib.auth.views import LogoutView  # Importación para logout
 from django.conf import settings
 from django.conf.urls.static import static
@@ -11,9 +17,9 @@ from django.utils.decorators import method_decorator
 
 urlpatterns = [
     # Logout funcional sense imports problemàtics - PRIMER per prioritat
-    path('sortir/', logout_views.simple_logout, name='logout'),
+    path('sortir/', simple_logout_view, name='logout'),
     # Test logout amb nom diferent
-    path('test-logout-final/', logout_views.simple_logout, name='test_logout_final'),
+    path('test-logout-final/', simple_logout_view, name='test_logout_final'),
     
     path('admin/', admin.site.urls),
     # Logout específic per admin que redirigeix a admin login
