@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from coopconsum import views # Importar todas las vistas de coopconsum
+from logout_views import simple_logout
 from django.contrib.auth.views import LogoutView  # Importación para logout
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,9 +30,8 @@ urlpatterns = [
     # Login con plantilla personalizada
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
-    # Logout personalitzat que accepta GET i POST sense CSRF
-    path('logout-test/', views.custom_logout, name='logout_test'),
-    path('sortir/', views.custom_logout, name='sortir_logout'),
+    # Logout funcional sense imports problemàtics
+    path('sortir/', simple_logout, name='sortir_logout'),
 
     # Rutas de autenticación de Django (password_change, password_reset, etc. SENSE logout)
     path('accounts/password_change/', auth_views.PasswordChangeView.as_view(), name='password_change'),
