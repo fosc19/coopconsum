@@ -8,6 +8,13 @@ def simple_logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+# Vista logout específica per admin
+def admin_logout_view(request):
+    from django.contrib.auth import logout
+    from django.http import HttpResponseRedirect
+    logout(request)
+    return HttpResponseRedirect('/admin/login/')
+
 # Funcions wrapper per imports locals de vistes
 def panel_principal_view(request):
     from coopconsum.views import panel_principal
@@ -33,11 +40,8 @@ urlpatterns = [
     # Test logout amb nom diferent
     path('test-logout-final/', simple_logout_view, name='test_logout_final'),
     
-    # Logout específic per admin - ruta custom per evitar conflictes
-    path('admin-logout/', LogoutView.as_view(
-        template_name='admin/logged_out.html',
-        next_page='/admin/login/'
-    ), name='admin_logout_custom'),
+    # Logout específic per admin - ABANS d'admin/ per prioritat
+    path('admin/logout/', admin_logout_view, name='admin_logout'),
     
     path('admin/', admin.site.urls),
 
@@ -73,9 +77,8 @@ urlpatterns = [
     path('eventos/', include('eventos.urls')),
 ]
 
-# Configurar Django admin logout redirect
+# Configurar Django admin
 admin.site.site_url = '/'
-admin.site.logout_redirect_url = '/admin/login/'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
