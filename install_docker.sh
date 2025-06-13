@@ -50,12 +50,21 @@ print_error() {
 
 # Funció per executar comandos Docker amb permisos adequats
 run_docker_command() {
-    if [ "$DOCKER_JUST_INSTALLED" = true ]; then
-        # Si acabem d'instal·lar Docker, usar sudo temporalment
-        sudo docker "$@"
-    else
-        # Docker ja estava instal·lat, usar normalment
+    # Verificar si l'usuari té permisos Docker
+    if docker version &> /dev/null; then
+        # L'usuari pot executar Docker sense sudo
         docker "$@"
+    else
+        # L'usuari necessita sudo per Docker
+        print_warning "Usant sudo per Docker (l'usuari no està al grup docker)"
+        sudo docker "$@"
+        
+        # Si Docker funciona amb sudo, afegir usuari al grup docker per al futur
+        if [ "$DOCKER_JUST_INSTALLED" = false ]; then
+            print_status "Afegint usuari $USER al grup docker per evitar sudo en el futur..."
+            sudo usermod -aG docker $USER
+            print_warning "Després de la instal·lació, reinicia la sessió per usar Docker sense sudo"
+        fi
     fi
 }
 
