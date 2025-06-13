@@ -33,12 +33,13 @@ urlpatterns = [
     # Test logout amb nom diferent
     path('test-logout-final/', simple_logout_view, name='test_logout_final'),
     
-    path('admin/', admin.site.urls),
-    # Logout específic per admin que redirigeix a admin login
+    # Logout específic per admin que redirigeix a admin login - ABANS d'admin/ per prioritat
     path('admin/logout/', LogoutView.as_view(
         template_name='admin/logged_out.html',
         next_page='/admin/login/'
     ), name='admin_logout'),
+    
+    path('admin/', admin.site.urls),
 
     # Web pública (escaparate/tienda)
     path('', include('web.urls')),
