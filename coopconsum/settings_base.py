@@ -160,7 +160,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGOUT_REDIRECT_URL = '/accounts/login/' # Redirigir a la página de login después de logout
+LOGOUT_REDIRECT_URL = '/' # Redirigir a la web pública després del logout
 
 # Django REST Framework Configuration
 REST_FRAMEWORK = {
