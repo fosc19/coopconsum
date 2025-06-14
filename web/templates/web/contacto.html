@@ -1,26 +1,26 @@
 {% extends "web/base.html" %}
-{% block title %}Contacte | Civada{% endblock %}
+{% block title %}{{ config.pagina_contacte_titol }} | {{ config.nom_cooperativa }}{% endblock %}
 {% block content %}
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <h1 class="display-4 fw-bold mb-4 text-center">Contacte</h1>
-      <p class="lead text-center mb-5">Pots posar-te en contacte amb nosaltres per qualsevol dubte, suggeriment o col·laboració.</p>
+      <h1 class="display-4 fw-bold mb-4 text-center">{{ config.pagina_contacte_titol }}</h1>
+      <p class="lead text-center mb-5">{{ config.pagina_contacte_subtitol }}</p>
       <div class="row text-center mb-4">
         <div class="col-md-4 mb-3">
           <i class="fas fa-envelope fa-2x mb-2 text-primary"></i>
           <div><strong>Email</strong></div>
-          <div>info@civada.cat</div>
+          <div>{{ config.contacte_email }}</div>
         </div>
         <div class="col-md-4 mb-3">
           <i class="fas fa-map-marker-alt fa-2x mb-2 text-primary"></i>
           <div><strong>Adreça</strong></div>
-          <div>Carrer de l'Exemple, 123, 08000 Barcelona</div>
+          <div>{{ config.contacte_adreca }}</div>
         </div>
         <div class="col-md-4 mb-3">
           <i class="fas fa-phone fa-2x mb-2 text-primary"></i>
           <div><strong>Telèfon</strong></div>
-          <div>+34 600 000 000</div>
+          <div>{{ config.contacte_telefon }}</div>
         </div>
       </div>
       <!-- Formulari de contacte (exemple, sense funcionalitat backend) -->

@@ -1,53 +1,66 @@
 {% extends "web/base.html" %}
 {% load static %}
-{% block title %}Com apuntar-te | Civada{% endblock %}
+{% block title %}{{ config.pagina_apuntarse_titol }} | {{ config.nom_cooperativa }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-10">
 
-      <h1 class="display-5 fw-bold mb-4 text-center">Com apuntar-te</h1>
+      <h1 class="display-5 fw-bold mb-4 text-center">{{ config.pagina_apuntarse_titol }}</h1>
 
       <div class="card shadow-sm border-0 bg-light mb-4">
         <div class="card-body">
           <p class="lead mb-0">
-            La Civada és una cooperativa autogestionada, i funciona gràcies a la implicació de tothom. Per tant, has de tenir present que formar-ne part equival a adquirir un compromís, que es tradueix en:
+            {{ config.pagina_apuntarse_introducció }}
           </p>
         </div>
       </div>
 
       <div class="card shadow-sm mb-4">
         <div class="card-body">
-          <h2 class="fw-bold mb-3"><i class="fas fa-seedling text-success me-2"></i>Compromís</h2> {# Icono cambiado a seedling #}
-          <ul>
-            <li>Participar en l’entrega de les cistelles de manera rotativa.</li>
-            <li>Assistir a l’assemblea que es realitza periòdicament (cada dos mesos aproximadament).</li>
-            <li>Formar part d’alguna de les comissions:</li>
-          </ul>
+          <h2 class="fw-bold mb-3"><i class="fas fa-seedling text-success me-2"></i>{{ config.apuntarse_titol_compromis }}</h2>
+          {% with config.apuntarse_text_compromis|linebreaksbr as text_formatted %}
+            {% for punt in text_formatted|split:"<br /><br />" %}
+              {% if punt.strip %}
+                {% if ":" in punt %}
+                  <p>{{ punt|safe }}</p>
+                {% else %}
+                  <ul><li>{{ punt|safe }}</li></ul>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endwith %}
         </div>
       </div>
 
       <div class="card shadow-sm mb-4">
           <div class="card-body">
-              <h3 class="fw-bold mb-3"><i class="fas fa-users-cog text-primary me-2"></i>Comissions</h3>
+              <h3 class="fw-bold mb-3"><i class="fas fa-users-cog text-primary me-2"></i>{{ config.apuntarse_titol_comissions }}</h3>
               <ul class="list-unstyled">
-                  <li class="mb-2"><strong>Comissió d’Economia:</strong> portar els comptes de la cooperativa.</li>
-                  <li class="mb-2"><strong>Comissió de Benvinguda:</strong> informar i rebre els nous membres, gestionar les altes i baixes, controlar les quotes d’alta, lloguer i dipòsit.</li>
-                  <li class="mb-2"><strong>Comissió de Compres:</strong> gestionar les comandes amb els proveïdors, mantenir l’estoc amb productes i passar factures a la comissió d’economia.</li>
-                  <li class="mb-2"><strong>Comissió de Permanència (màsters):</strong> de manera rotativa, gestionar l’entrega de les cistelles.</li>
-                  <li class="mb-2"><strong>Comissió de Difusió:</strong> gestionar la web i la presència de La Civada en les xarxes socials.</li>
+                {% with config.apuntarse_text_comissions|linebreaksbr as text_formatted %}
+                  {% for comissio in text_formatted|split:"<br /><br />" %}
+                    {% if comissio.strip %}
+                      <li class="mb-2">{{ comissio|safe }}</li>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
               </ul>
           </div>
       </div>
 
       <div class="card shadow-sm mb-4">
         <div class="card-body">
-          <h2 class="fw-bold mb-3"><i class="fas fa-file-signature text-info me-2"></i>Formalitzar l'ingrés</h2>
-          <p>Per formalitzar el teu ingrés a La Civada, necessites:</p>
+          <h2 class="fw-bold mb-3"><i class="fas fa-file-signature text-info me-2"></i>{{ config.apuntarse_titol_formalitzacio }}</h2>
+          <p>{{ config.apuntarse_text_formalitzacio }}</p>
           <ul>
-            <li>Pagar un dipòsit de 50 euros (al cap de 2 mesos), que et serà retornat en cas de baixa.</li>
-            <li>Pagar 18 euros mensuals per unitat familiar en concepte de lloguer del local i col·laboració amb Cal Temerari (aquest preu varia en funció de les famílies sòcies, quant més famílies més baix serà).</li>
+            {% with config.apuntarse_requisits|linebreaksbr as text_formatted %}
+              {% for requisit in text_formatted|split:"<br /><br />" %}
+                {% if requisit.strip %}
+                  <li>{{ requisit|safe }}</li>
+                {% endif %}
+              {% endfor %}
+            {% endwith %}
           </ul>
         </div>
       </div>
@@ -55,7 +68,7 @@
       <div class="text-center mt-5">
           <p class="lead">Vols més informació?</p>
           <a href="{% url 'web_contacto' %}" class="btn btn-success btn-lg">
-              <i class="fas fa-envelope me-2"></i>Posa’t en contacte!
+              <i class="fas fa-envelope me-2"></i>Posa't en contacte!
           </a>
       </div>
 
