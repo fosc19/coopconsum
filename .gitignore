@@ -78,3 +78,8 @@ pre-push-check.sh
 deploy-*.sh
 *-vps.sh
 *-check.sh
+
+# Auditories de seguretat (no pujar mai informació sensible!)
+AUDITORIA_*.md
+*_AUDITORIA.md
+security_audit*.md
