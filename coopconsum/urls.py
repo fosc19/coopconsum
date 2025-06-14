@@ -82,4 +82,11 @@ admin.site.site_url = '/'
 
 # Servir fitxers media tant en desenvolupament com en producció
 # Necessari per imatges pujades via admin (productes, configuració web, etc.)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+from django.views.static import serve
+from django.urls import re_path
+import os
+
+# Afegir ruta per servir fitxers media
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
