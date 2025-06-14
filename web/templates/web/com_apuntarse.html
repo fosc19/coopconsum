@@ -20,32 +20,18 @@
       <div class="card shadow-sm mb-4">
         <div class="card-body">
           <h2 class="fw-bold mb-3"><i class="fas fa-seedling text-success me-2"></i>{{ config.apuntarse_titol_compromis }}</h2>
-          {% with config.apuntarse_text_compromis|linebreaksbr as text_formatted %}
-            {% for punt in text_formatted|split:"<br /><br />" %}
-              {% if punt.strip %}
-                {% if ":" in punt %}
-                  <p>{{ punt|safe }}</p>
-                {% else %}
-                  <ul><li>{{ punt|safe }}</li></ul>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% endwith %}
+          <div>
+            {{ config.apuntarse_text_compromis|linebreaksbr }}
+          </div>
         </div>
       </div>
 
       <div class="card shadow-sm mb-4">
           <div class="card-body">
               <h3 class="fw-bold mb-3"><i class="fas fa-users-cog text-primary me-2"></i>{{ config.apuntarse_titol_comissions }}</h3>
-              <ul class="list-unstyled">
-                {% with config.apuntarse_text_comissions|linebreaksbr as text_formatted %}
-                  {% for comissio in text_formatted|split:"<br /><br />" %}
-                    {% if comissio.strip %}
-                      <li class="mb-2">{{ comissio|safe }}</li>
-                    {% endif %}
-                  {% endfor %}
-                {% endwith %}
-              </ul>
+              <div>
+                {{ config.apuntarse_text_comissions|linebreaksbr }}
+              </div>
           </div>
       </div>
 
@@ -53,15 +39,9 @@
         <div class="card-body">
           <h2 class="fw-bold mb-3"><i class="fas fa-file-signature text-info me-2"></i>{{ config.apuntarse_titol_formalitzacio }}</h2>
           <p>{{ config.apuntarse_text_formalitzacio }}</p>
-          <ul>
-            {% with config.apuntarse_requisits|linebreaksbr as text_formatted %}
-              {% for requisit in text_formatted|split:"<br /><br />" %}
-                {% if requisit.strip %}
-                  <li>{{ requisit|safe }}</li>
-                {% endif %}
-              {% endfor %}
-            {% endwith %}
-          </ul>
+          <div>
+            {{ config.apuntarse_requisits|linebreaksbr }}
+          </div>
         </div>
       </div>
 
