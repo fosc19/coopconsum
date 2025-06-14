@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'pedidos.context_processors.pedidos_info_processor', # Actualizado para incluir más información de pedidos
                 'stock.context_processors.registros_compra_pendientes_processor', # Añadido para registros de compra pendientes
+                'web.context_processors.configuracio_web', # Configuració web dinàmica
             ],
         },
     },

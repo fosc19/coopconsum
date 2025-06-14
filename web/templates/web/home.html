@@ -33,7 +33,12 @@
       <a href="{% url 'web_quienes_somos' %}" class="btn btn-outline-primary">Coneix-nos més</a>
     </div>
     <div class="col-md-6 text-center animate-on-scroll">
-      <img src="/media/galeria/cistella.jpg" alt="Cistella de productes ecològics" class="img-fluid rounded-custom shadow-sm" style="max-height: 350px;">
+      {% if configuracio_web.imatge_principal_home %}
+        <img src="{{ configuracio_web.imatge_principal_home.url }}" alt="Cistella de productes ecològics" class="img-fluid rounded-custom shadow-sm" style="max-height: 350px;">
+      {% else %}
+        <!-- Imatge per defecte si no n'hi ha cap configurada -->
+        <img src="/media/galeria/cistella.jpg" alt="Cistella de productes ecològics" class="img-fluid rounded-custom shadow-sm" style="max-height: 350px;">
+      {% endif %}
     </div>
   </div>
 </section>
