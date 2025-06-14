@@ -27,7 +27,7 @@ class ConfiguracioWebAdmin(admin.ModelAdmin):
                 ('titol_caracteristica_3', 'icona_caracteristica_3'),
                 'text_caracteristica_3',
             ),
-            'description': 'Les tres característiques principals que destaquen els valors de la cooperativa. Per icones usa classes Font Awesome (ex: fas fa-leaf)'
+            'description': 'Les tres característiques principals que destaquen els valors de la cooperativa. Selecciona icones dels desplegables'
         }),
         ('🏠 PÀGINA D\'INICI - Call to Action Final', {
             'fields': ('titol_cta', 'text_cta', 'text_boto_cta'),
