@@ -67,6 +67,32 @@ python manage.py runserver
 
 Ja pots accedir a http://localhost:8000!
 
+## 🚀 DEPLOYMENT AUTOMÀTIC AL VPS
+
+### Scripts d'automatització disponibles
+
+- **`./quick-deploy.sh`** - Deploy automàtic complet al VPS
+- **`./diagnose-vps.sh`** - Diagnòstic complet de problemes
+
+### Usage ràpid:
+
+```bash
+# Deploy automàtic (fa tot el procés: git push + docker rebuild + migrations)
+./quick-deploy.sh
+
+# Diagnòstic si hi ha problemes
+./diagnose-vps.sh
+
+# Connexió manual SSH al VPS
+ssh -i /tmp/claude_new_key ubuntu@57.129.134.84
+```
+
+### Documentació de troubleshooting
+
+Consulta aquests fitxers per problemes específics:
+- **`../TROUBLESHOOTING_DOCKER_SSH.md`** - Problemes Docker i SSH detallats
+- **`../CLAUDE.md`** - Workflow complet i configuració VPS
+
 ## 🔧 Gestió amb Docker
 
 ### Verificar que tot funciona
@@ -92,6 +118,25 @@ tail -f /var/log/coopconsum_cron.log
 # Executar tasques manualment per provar
 docker compose exec web python manage.py generar_pedidos_test
 docker compose exec web python manage.py cerrar_pedidos
+```
+
+### Comandos útiles para desarrollo
+
+```bash
+# Entorno de desarrollo
+python manage.py runserver
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+
+# Docker local
+docker-compose up -d
+docker-compose logs
+docker-compose down
+
+# VPS production (usa els scripts automatitzats de dalt)
+./quick-deploy.sh  # Deploy complet
+./diagnose-vps.sh  # Diagnòstic
 ```
 
 ## 📚 Documentació

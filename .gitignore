@@ -70,3 +70,11 @@ CLAUDE.md
 # Documentació interna de planificació (no pujar a repositori públic)
 BACKUP_STRATEGY_TODO.md
 *_TODO.md
+
+# Scripts d'automatització (contenen informació sensible: IPs, SSH, etc.)
+quick-deploy.sh
+diagnose-vps.sh
+pre-push-check.sh
+deploy-*.sh
+*-vps.sh
+*-check.sh

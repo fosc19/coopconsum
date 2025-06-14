@@ -1,6 +1,6 @@
 {% extends "web/base.html" %}
 {% load static %}
-{% block title %}Inici | Civada{% endblock %}
+{% block title %}Inici | {% if configuracio_web %}{{ configuracio_web.nom_cooperativa }}{% else %}Civada{% endif %}{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'web/css/home-effects.css' %}">
@@ -16,8 +16,20 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-lg-8 mx-auto text-center animate-on-scroll">
-        <h2 style="margin-bottom: 1rem;">Benvingut/da a La Civada</h2>
-        <p class="lead">Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
+        <h2 style="margin-bottom: 1rem;">
+          {% if configuracio_web %}
+            {{ configuracio_web.get_titol_hero_formatted }}
+          {% else %}
+            Benvingut/da a La Civada
+          {% endif %}
+        </h2>
+        <p class="lead">
+          {% if configuracio_web %}
+            {{ configuracio_web.subtitol_hero }}
+          {% else %}
+            Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.
+          {% endif %}
+        </p>
       </div>
     </div>
   </div>
@@ -28,8 +40,20 @@
 <section class="container py-5">
   <div class="row align-items-center">
     <div class="col-md-6 animate-on-scroll">
-      <h2 class="section-title">Qui som?</h2>
-      <p class="mb-4">Som una cooperativa sense ànim de lucre formada per persones compromeses amb el consum responsable, la sostenibilitat i el suport als productors locals. El nostre objectiu és facilitar l'accés a productes ecològics i de qualitat, fomentant l'economia social i el respecte pel medi ambient.</p>
+      <h2 class="section-title">
+        {% if configuracio_web %}
+          {{ configuracio_web.titol_qui_som }}
+        {% else %}
+          Qui som?
+        {% endif %}
+      </h2>
+      <p class="mb-4">
+        {% if configuracio_web %}
+          {{ configuracio_web.text_qui_som }}
+        {% else %}
+          Som una cooperativa sense ànim de lucre formada per persones compromeses amb el consum responsable, la sostenibilitat i el suport als productors locals. El nostre objectiu és facilitar l'accés a productes ecològics i de qualitat, fomentant l'economia social i el respecte pel medi ambient.
+        {% endif %}
+      </p>
       <a href="{% url 'web_quienes_somos' %}" class="btn btn-outline-primary">Coneix-nos més</a>
     </div>
     <div class="col-md-6 text-center animate-on-scroll">
@@ -47,31 +71,73 @@
 <section class="container py-5">
   <div class="row text-center">
     <div class="col-12 mb-5">
-      <h2 class="section-title text-center">Per què escollir La Civada?</h2>
+      <h2 class="section-title text-center">
+        {% if configuracio_web %}
+          {{ configuracio_web.get_titol_caracteristiques_formatted }}
+        {% else %}
+          Per què escollir La Civada?
+        {% endif %}
+      </h2>
     </div>
     
     <div class="col-md-4 mb-4 animate-on-scroll">
       <div class="feature-icon">
-        <i class="fas fa-leaf"></i>
+        <i class="{% if configuracio_web %}{{ configuracio_web.icona_caracteristica_1 }}{% else %}fas fa-leaf{% endif %}"></i>
       </div>
-      <h3>Productes ecològics</h3>
-      <p>Tots els nostres productes són ecològics, sense químics i amb certificació CCPAE o relació de confiança.</p>
+      <h3>
+        {% if configuracio_web %}
+          {{ configuracio_web.titol_caracteristica_1 }}
+        {% else %}
+          Productes ecològics
+        {% endif %}
+      </h3>
+      <p>
+        {% if configuracio_web %}
+          {{ configuracio_web.text_caracteristica_1 }}
+        {% else %}
+          Tots els nostres productes són ecològics, sense químics i amb certificació CCPAE o relació de confiança.
+        {% endif %}
+      </p>
     </div>
     
     <div class="col-md-4 mb-4 animate-on-scroll">
       <div class="feature-icon">
-        <i class="fas fa-map-marker-alt"></i>
+        <i class="{% if configuracio_web %}{{ configuracio_web.icona_caracteristica_2 }}{% else %}fas fa-map-marker-alt{% endif %}"></i>
       </div>
-      <h3>Proximitat</h3>
-      <p>Apostem per productes de proximitat per reduir el transport i apropar consumidors i productors.</p>
+      <h3>
+        {% if configuracio_web %}
+          {{ configuracio_web.titol_caracteristica_2 }}
+        {% else %}
+          Proximitat
+        {% endif %}
+      </h3>
+      <p>
+        {% if configuracio_web %}
+          {{ configuracio_web.text_caracteristica_2 }}
+        {% else %}
+          Apostem per productes de proximitat per reduir el transport i apropar consumidors i productors.
+        {% endif %}
+      </p>
     </div>
     
     <div class="col-md-4 mb-4 animate-on-scroll">
       <div class="feature-icon">
-        <i class="fas fa-hands-helping"></i>
+        <i class="{% if configuracio_web %}{{ configuracio_web.icona_caracteristica_3 }}{% else %}fas fa-hands-helping{% endif %}"></i>
       </div>
-      <h3>Benefici social</h3>
-      <p>Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d'exclusió, etc.</p>
+      <h3>
+        {% if configuracio_web %}
+          {{ configuracio_web.titol_caracteristica_3 }}
+        {% else %}
+          Benefici social
+        {% endif %}
+      </h3>
+      <p>
+        {% if configuracio_web %}
+          {{ configuracio_web.text_caracteristica_3 }}
+        {% else %}
+          Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d'exclusió, etc.
+        {% endif %}
+      </p>
     </div>
   </div>
   
@@ -262,11 +328,29 @@
       <div class="bg-success text-white p-5 rounded-custom animate-on-scroll">
         <div class="row align-items-center">
           <div class="col-lg-8 mb-4 mb-lg-0">
-            <h2 class="fw-bold mb-3">Vols formar part de la nostra cooperativa?</h2>
-            <p class="lead mb-0">Uneix-te a Civada i gaudeix de productes ecològics, locals i de qualitat.</p>
+            <h2 class="fw-bold mb-3">
+              {% if configuracio_web %}
+                {{ configuracio_web.titol_cta }}
+              {% else %}
+                Vols formar part de la nostra cooperativa?
+              {% endif %}
+            </h2>
+            <p class="lead mb-0">
+              {% if configuracio_web %}
+                {{ configuracio_web.get_text_cta_formatted }}
+              {% else %}
+                Uneix-te a Civada i gaudeix de productes ecològics, locals i de qualitat.
+              {% endif %}
+            </p>
           </div>
           <div class="col-lg-4 text-lg-end">
-            <a href="{% url 'web_com_apuntarse' %}" class="btn btn-light btn-lg">Apunta't ara</a>
+            <a href="{% url 'web_com_apuntarse' %}" class="btn btn-light btn-lg">
+              {% if configuracio_web %}
+                {{ configuracio_web.text_boto_cta }}
+              {% else %}
+                Apunta't ara
+              {% endif %}
+            </a>
           </div>
         </div>
       </div>
