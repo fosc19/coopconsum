@@ -66,3 +66,7 @@ backup_*.sql
 
 # Claude Code documentation - contiene información sensible del servidor
 CLAUDE.md
+
+# Documentació interna de planificació (no pujar a repositori públic)
+BACKUP_STRATEGY_TODO.md
+*_TODO.md
