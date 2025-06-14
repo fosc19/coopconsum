@@ -2,6 +2,24 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class ConfiguracioWeb(models.Model):
+    # Choices per a les icones FontAwesome
+    ICONA_CHOICES = [
+        ('fas fa-leaf', '🌱 Ecològic'),
+        ('fas fa-heart', '❤️ Compromís social'),
+        ('fas fa-map-marker-alt', '📍 Proximitat'),
+        ('fas fa-users', '👥 Comunitat'),
+        ('fas fa-handshake', '🤝 Col·laboració'),
+        ('fas fa-shopping-basket', '🧺 Productes frescos'),
+        ('fas fa-seedling', '🌱 Sostenibilitat'),
+        ('fas fa-truck', '🚚 Transport responsable'),
+        ('fas fa-recycle', '♻️ Economia circular'),
+        ('fas fa-globe-europe', '🌍 Local'),
+        ('fas fa-hands-helping', '🙏 Ajuda mútua'),
+        ('fas fa-apple-alt', '🍎 Alimentació saludable'),
+        ('fas fa-balance-scale', '⚖️ Comerç just'),
+        ('fas fa-sun', '☀️ Natural'),
+        ('fas fa-home', '🏠 Familiar'),
+    ]
     # Informació bàsica de la cooperativa
     nom_cooperativa = models.CharField(
         max_length=100, 
@@ -57,9 +75,10 @@ class ConfiguracioWeb(models.Model):
         help_text="Descripció de la primera característica"
     )
     icona_caracteristica_1 = models.CharField(
-        max_length=50, 
+        max_length=50,
+        choices=ICONA_CHOICES,
         default="fas fa-leaf",
-        help_text="Classe CSS de l'icona (Font Awesome). Ex: fas fa-leaf, fas fa-heart, etc."
+        help_text="Selecciona la icona que millor representi aquesta característica"
     )
     
     # Característica 2
@@ -73,9 +92,10 @@ class ConfiguracioWeb(models.Model):
         help_text="Descripció de la segona característica"
     )
     icona_caracteristica_2 = models.CharField(
-        max_length=50, 
+        max_length=50,
+        choices=ICONA_CHOICES,
         default="fas fa-map-marker-alt",
-        help_text="Classe CSS de l'icona (Font Awesome)"
+        help_text="Selecciona la icona que millor representi aquesta característica"
     )
     
     # Característica 3
@@ -89,9 +109,10 @@ class ConfiguracioWeb(models.Model):
         help_text="Descripció de la tercera característica"
     )
     icona_caracteristica_3 = models.CharField(
-        max_length=50, 
+        max_length=50,
+        choices=ICONA_CHOICES,
         default="fas fa-hands-helping",
-        help_text="Classe CSS de l'icona (Font Awesome)"
+        help_text="Selecciona la icona que millor representi aquesta característica"
     )
     
     # Call to Action final
