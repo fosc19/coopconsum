@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
-    # Apps por defecto de Django...
+    # Apps por defecto de Django (Autenticación y autorización apareix primer)
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,19 +29,25 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'corsheaders',
-    # Tus apps
-    'socios',
-    'productos',
-    'pedidos',
-    'stock',
     'adminlte3',
     'adminlte3_theme',
+    # Apps cooperativa en l'ordre desitjat:
+    # 1. Socios (després d'Autenticación y autorización)
+    'socios',
+    # 2. Web
     'web',
-    'desitjos', # Añadir la nueva app desitjos
-    'eventos', # Añadir la nueva app eventos
-    'api', # API REST para intercambio entre cooperativas
-
-
+    # 3. Comandes (pedidos)
+    'pedidos',
+    # 4. Productes
+    'productos',
+    # 5. Estoc (stock)
+    'stock',
+    # 6. Desitjos
+    'desitjos',
+    # 7. Gestio Esdeveniments (eventos)
+    'eventos',
+    # 8. API (al final)
+    'api',
 ]
 
 
