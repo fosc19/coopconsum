@@ -158,6 +158,7 @@ docker exec coopconsum-web-1 ls -la /app/media/
 1. ✅ **SEMPRE** verificar què està al repositori abans que el VPS descarregui
 2. ✅ **COMMIT + PUSH immediatament** després de fer canvis
 3. ✅ **VERIFICAR al repositori** que els canvis són visibles abans de testar al VPS
+4. ✅ **DOCKER REBUILD COMPLET OBLIGATORI** després de git pull si hi ha canvis de codi
 
 ### Workflow recomanat: Local → Git → VPS
 ```bash
@@ -180,9 +181,10 @@ cd /var/www/coopconsum
 git reset --hard origin/master  # Descartar canvis locals VPS
 git pull origin master
 
-# ⚠️ OBLIGATORI DESPRÉS DE GIT PULL:
+# ⚠️ OBLIGATORI DESPRÉS DE GIT PULL - DOCKER REBUILD COMPLET:
+# IMPORTANT: Mai fer només restart! Sempre down + build + up si hi ha canvis de codi
 docker compose down
-docker compose build --no-cache  # Rebuild si hi ha canvis de codi
+docker compose build --no-cache  # SEMPRE --no-cache per canvis de Python/Django
 docker compose up -d
 
 # ⚠️ VERIFICAR MIGRACIONS DESPRÉS DE REBUILD:
@@ -196,6 +198,20 @@ curl -I http://57.129.134.84/admin/  # Ha de retornar 302 Found
 docker exec coopconsum-web-1 python manage.py shell -c "from web.models import ConfiguracioWeb; print('DB OK:', ConfiguracioWeb.objects.first().nom_cooperativa)"
 ```
 
+### ⚠️ ERROR COMÚ: OBLIDAR DOCKER REBUILD
+
+**PROBLEMA FREQÜENT**: Fer `git pull` i després només `docker compose restart` no aplica els canvis de codi Python/Django.
+
+**SOLUCIÓ**: SEMPRE fer workflow complet:
+```bash
+git pull origin master
+docker compose down           # ⚠️ OBLIGATORI
+docker compose build --no-cache  # ⚠️ OBLIGATORI per canvis de codi
+docker compose up -d          # ⚠️ OBLIGATORI
+```
+
+**REGLA D'OR**: Si hi ha canvis de codi (Python, settings, apps.py, etc.) → SEMPRE rebuild complet!
+
 ### CHECKLIST ABANS DE TESTING AL VPS:
 - [ ] Commits locals fets
 - [ ] Push executat sense errors  
@@ -204,8 +220,10 @@ docker exec coopconsum-web-1 python manage.py shell -c "from web.models import C
 
 ### CHECKLIST DESPRÉS D'ACTUALITZAR VPS:
 - [ ] `git pull` executat correctament
-- [ ] `docker compose build --no-cache` completat
-- [ ] `docker compose up -d` executat
+- [ ] ⚠️ **DOCKER REBUILD COMPLET OBLIGATORI** ⚠️
+  - [ ] `docker compose down` executat
+  - [ ] `docker compose build --no-cache` completat  
+  - [ ] `docker compose up -d` executat
 - [ ] **CRÍTIC**: Migracions verificades i aplicades
 - [ ] **CRÍTIC**: Test web principal retorna 200 OK
 - [ ] **CRÍTIC**: Test admin retorna 302 Found  
