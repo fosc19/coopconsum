@@ -26,6 +26,12 @@ class ConfiguracioWeb(models.Model):
         default="La Civada",
         help_text="Nom de la cooperativa que apareixerà arreu de la web"
     )
+    logo_principal = models.ImageField(
+        upload_to='logos/',
+        blank=True,
+        null=True,
+        help_text="Logo principal de la cooperativa. Format recomanat: PNG amb fons transparent, mida màxima 200x80px"
+    )
     
     # Secció Hero (banner principal)
     titol_hero = models.CharField(
