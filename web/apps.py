@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class SociosConfig(AppConfig):
+class WebConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'socios'
-    verbose_name = "1. Socios"
+    name = 'web'
+    verbose_name = "2. Web"
