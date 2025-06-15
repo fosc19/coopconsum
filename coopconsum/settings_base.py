@@ -19,9 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
-    # Apps por defecto de Django (Autenticación y autorización apareix primer)
+    # Apps por defecto de Django amb ordre personalitzat
     'django.contrib.admin',
-    'django.contrib.auth',
+    'coopconsum.django_apps.CustomAuthConfig',  # Auth amb prefix per ordre
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
