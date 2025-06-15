@@ -5,7 +5,7 @@ from .models import ConfiguracioWeb, GaleriaCategoria, GaleriaImagen
 class ConfiguracioWebAdmin(admin.ModelAdmin):
     fieldsets = (
         ('🏢 Informació General', {
-            'fields': ('nom_cooperativa',),
+            'fields': ('nom_cooperativa', 'logo_principal'),
             'description': 'Dades bàsiques de la cooperativa que s\'utilitzaran a tota la web'
         }),
         

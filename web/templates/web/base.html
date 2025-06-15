@@ -25,7 +25,11 @@
     <header class="civada-header">
         <div class="container">
             <a href="{% url 'web_home' %}">
-                <img src="{% static 'img/logo-civada.png' %}" alt="La Civada" class="img-fluid">
+                {% if config.logo_principal %}
+                    <img src="{{ config.logo_principal.url }}" alt="{{ config.nom_cooperativa }}" class="img-fluid">
+                {% else %}
+                    <img src="{% static 'img/logo-civada.png' %}" alt="{{ config.nom_cooperativa }}" class="img-fluid">
+                {% endif %}
             </a>
         </div>
     </header>
@@ -62,7 +66,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4">
-                    <img src="{% static 'img/logo-civada.png' %}" alt="La Civada" class="footer-logo">
+                    {% if config.logo_principal %}
+                        <img src="{{ config.logo_principal.url }}" alt="{{ config.nom_cooperativa }}" class="footer-logo">
+                    {% else %}
+                        <img src="{% static 'img/logo-civada.png' %}" alt="{{ config.nom_cooperativa }}" class="footer-logo">
+                    {% endif %}
                     <p>Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
                     <div class="footer-social mt-3">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
