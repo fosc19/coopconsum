@@ -31,23 +31,15 @@ INSTALLED_APPS = [
     'corsheaders',
     'adminlte3',
     'adminlte3_theme',
-    # Apps cooperativa en l'ordre desitjat:
-    # 1. Socios (després d'Autenticación y autorización)
-    'socios',
-    # 2. Web
-    'web',
-    # 3. Comandes (pedidos)
-    'pedidos',
-    # 4. Productes
-    'productos',
-    # 5. Estoc (stock)
-    'stock',
-    # 6. Desitjos
-    'desitjos',
-    # 7. Gestio Esdeveniments (eventos)
-    'eventos',
-    # 8. API (al final)
-    'api',
+    # Apps cooperativa amb verbose_name numerat per ordre:
+    'socios.apps.SociosConfig',
+    'web.apps.WebConfig',
+    'pedidos.apps.PedidosConfig',
+    'productos.apps.ProductosConfig',
+    'stock.apps.StockConfig',
+    'desitjos.apps.DesitjosConfig',
+    'eventos.apps.EventosConfig',
+    'api.apps.ApiConfig',
 ]
 
 
