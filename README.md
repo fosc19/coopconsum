@@ -1,6 +1,35 @@
 # 🤝 CoopConsum - Sistema de Gestió per Cooperatives
 
+![Django Tests](https://github.com/fosc19/coopconsum/workflows/Django%20Tests%20&%20Coverage/badge.svg)
+![Python Version](https://img.shields.io/badge/python-3.12-blue)
+![Django Version](https://img.shields.io/badge/django-5.1.6-green)
+![License](https://img.shields.io/badge/license-MIT-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)
+
 Sistema complet de gestió per cooperatives de consum responsable, desenvolupat amb Django. Inclou gestió de socis, comandes, proveïdors, productes i una API pública per compartir informació entre cooperatives.
+
+## 🧪 Testing & Quality
+
+✅ **133 tests unitaris** cobreixen tota la funcionalitat core:
+- 15 tests models socis (Socio, CuentaSocio, MovimientoCuenta)
+- 33 tests workflow pedidos (PedidoColectivo, ComandaRecurrente, SeleccionSocio)  
+- 33 tests catàleg productos (Categoria, Proveedor, Producto)
+- 36 tests API REST (endpoints públics, seguretat, filtres)
+- 16 tests esdeveniments (EventoCalendario, compartició API)
+
+**Executar tests**:
+```bash
+# Tots els tests
+python manage.py test --verbosity=2
+
+# Per app específica
+python manage.py test socios --verbosity=2
+python manage.py test api --verbosity=2
+
+# Amb coverage
+coverage run --source='.' manage.py test
+coverage report -m
+```
 
 ## ✨ Característiques
 

@@ -1,0 +1,193 @@
+name: Django Tests & Coverage
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_USER: test_user
+          POSTGRES_DB: test_coopconsum_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client libpq-dev gettext
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install coverage codecov
+    
+    - name: Create test settings
+      run: |
+        cat > coopconsum/settings_test.py << 'EOF'
+        from .settings_base import *
+        
+        # Test database configuration
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'test_coopconsum_db',
+                'USER': 'test_user',
+                'PASSWORD': 'test_password',
+                'HOST': 'localhost',
+                'PORT': '5432',
+            }
+        }
+        
+        # Disable debug mode for tests
+        DEBUG = False
+        
+        # Use in-memory cache for tests
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            }
+        }
+        
+        # Disable migrations for faster tests
+        class DisableMigrations:
+            def __contains__(self, item):
+                return True
+            def __getitem__(self, item):
+                return None
+        
+        # MIGRATION_MODULES = DisableMigrations()
+        
+        # Test-specific settings
+        PASSWORD_HASHERS = [
+            'django.contrib.auth.hashers.MD5PasswordHasher',
+        ]
+        
+        SECRET_KEY = 'test-secret-key-for-ci-only'
+        ALLOWED_HOSTS = ['*']
+        EOF
+    
+    - name: Set Django settings module
+      run: echo "DJANGO_SETTINGS_MODULE=coopconsum.settings_test" >> $GITHUB_ENV
+    
+    - name: Run migrations
+      run: |
+        python manage.py migrate --verbosity=0
+    
+    - name: Run tests with coverage
+      run: |
+        coverage run --source='.' manage.py test --verbosity=2
+        coverage report -m --skip-covered
+        coverage xml
+    
+    - name: Generate coverage summary
+      run: |
+        COVERAGE=$(coverage report --format=total)
+        echo "COVERAGE_PERCENT=$COVERAGE" >> $GITHUB_ENV
+        echo "Coverage: $COVERAGE%"
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+    
+    - name: Create coverage badge
+      run: |
+        COVERAGE=$(coverage report --format=total)
+        if [ $COVERAGE -ge 90 ]; then
+          COLOR="brightgreen"
+        elif [ $COVERAGE -ge 80 ]; then
+          COLOR="green"
+        elif [ $COVERAGE -ge 70 ]; then
+          COLOR="yellow"
+        elif [ $COVERAGE -ge 60 ]; then
+          COLOR="orange"
+        else
+          COLOR="red"
+        fi
+        echo "Coverage badge: $COVERAGE% - $COLOR"
+    
+    - name: Test specific apps separately (for debugging)
+      run: |
+        echo "Testing individual apps..."
+        python manage.py test socios --verbosity=1
+        python manage.py test productos --verbosity=1  
+        python manage.py test pedidos --verbosity=1
+        python manage.py test api --verbosity=1
+        python manage.py test eventos --verbosity=1
+    
+    - name: Collect static files (production simulation)
+      run: |
+        python manage.py collectstatic --noinput --verbosity=0
+    
+    - name: Check Django deployment checklist
+      run: |
+        python manage.py check --deploy --verbosity=0
+      continue-on-error: true
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install linting dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black isort
+    
+    - name: Run linting checks
+      run: |
+        # Check Python syntax and style
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Check for complexity issues (optional - might show many warnings)
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Check import sorting
+      run: |
+        isort . --check-only --diff
+      continue-on-error: true
+    
+    - name: Check code formatting
+      run: |
+        black . --check --diff
+      continue-on-error: true
