@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import date, timedelta
 
-from .models import EventoCalendario
+from eventos.models import EventoCalendario
 
 
 class EventoCalendarioModelTest(TestCase):
