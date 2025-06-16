@@ -14,16 +14,21 @@ class APIInfoViewTest(APITestCase):
     """Tests per a la vista d'informació de l'API"""
 
     def setUp(self):
-        # Crear configuració web per test amb camps mínims
-        try:
-            self.config = ConfiguracioWeb.objects.create(
-                nom_cooperativa='Test Cooperativa'
-            )
-        except Exception:
-            # Si falla per columnes addicionals, crear amb get_or_create
-            self.config, _ = ConfiguracioWeb.objects.get_or_create(
-                defaults={'nom_cooperativa': 'Test Cooperativa'}
-            )
+        # Crear configuració web per test
+        # Usar only() per evitar camps que podrien no existir en BD test
+        existing = ConfiguracioWeb.objects.first()
+        if existing:
+            self.config = existing
+        else:
+            # Crear amb només el camp essencial
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO web_configuracioweb (nom_cooperativa) VALUES (%s) RETURNING id",
+                    ['Test Cooperativa']
+                )
+                config_id = cursor.fetchone()[0]
+            self.config = ConfiguracioWeb.objects.get(id=config_id)
 
     def test_api_info_endpoint(self):
         """Test endpoint informació bàsica API"""
