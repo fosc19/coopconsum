@@ -133,13 +133,13 @@ class MovimientoCuentaModelTest(TestCase):
         movimiento = MovimientoCuenta.objects.create(
             cuenta=self.cuenta,
             tipo_movimiento='egreso',
-            monto=Decimal('-15.00'),
+            monto=Decimal('15.00'),  # Import positiu, el tipus indica que és egrés
             descripcion='Compra productes',
             estado='pendiente'
         )
         
         self.assertEqual(movimiento.tipo_movimiento, 'egreso')
-        self.assertEqual(movimiento.monto, Decimal('-15.00'))
+        self.assertEqual(movimiento.monto, Decimal('15.00'))
         self.assertEqual(movimiento.estado, 'pendiente')
     
     def test_str_movimiento(self):
@@ -153,7 +153,7 @@ class MovimientoCuentaModelTest(TestCase):
         
         # El __str__ del model ha de mostrar informació útil
         str_repr = str(movimiento)
-        self.assertIn('Carlos', str_repr)  # Nom del socio
+        self.assertIn('ingreso', str_repr)  # Tipus de moviment
         self.assertIn('10.00', str_repr)   # Import
     
     def test_multiple_movimientos(self):
@@ -163,18 +163,21 @@ class MovimientoCuentaModelTest(TestCase):
             cuenta=self.cuenta,
             tipo_movimiento='ingreso',
             monto=Decimal('50.00'),
+            descripcion='Ingrés inicial',
             estado='validado'
         )
         MovimientoCuenta.objects.create(
             cuenta=self.cuenta,
             tipo_movimiento='egreso', 
-            monto=Decimal('-20.00'),
+            monto=Decimal('20.00'),  # Import positiu
+            descripcion='Compra productes',
             estado='validado'
         )
         MovimientoCuenta.objects.create(
             cuenta=self.cuenta,
             tipo_movimiento='egreso',
-            monto=Decimal('-5.00'),
+            monto=Decimal('5.00'),  # Import positiu
+            descripcion='Compra petita',
             estado='pendiente'  # Aquest no compta
         )
         

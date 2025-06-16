@@ -252,18 +252,18 @@ class SeleccionSocioModelTest(TestCase):
         """Test creació selecció de socio"""
         seleccion = SeleccionSocio.objects.create(
             socio=self.socio,
-            pedido_colectivo=self.pedido
+            pedido=self.pedido
         )
         
         self.assertEqual(seleccion.socio, self.socio)
-        self.assertEqual(seleccion.pedido_colectivo, self.pedido)
+        self.assertEqual(seleccion.pedido, self.pedido)
         self.assertIsNotNone(seleccion.fecha_seleccion)
     
     def test_crear_detalle_seleccion(self):
         """Test creació detall de selecció amb producte"""
         seleccion = SeleccionSocio.objects.create(
             socio=self.socio,
-            pedido_colectivo=self.pedido
+            pedido=self.pedido
         )
         
         detalle = DetalleSeleccion.objects.create(
@@ -290,7 +290,7 @@ class SeleccionSocioModelTest(TestCase):
         # Crear selecció
         seleccion = SeleccionSocio.objects.create(
             socio=self.socio,
-            pedido_colectivo=self.pedido
+            pedido=self.pedido
         )
         
         # Afegir múltiples productes
