@@ -94,7 +94,7 @@ class ProveedorModelTest(TestCase):
         self.assertEqual(proveedor.contacto, '')
         self.assertEqual(proveedor.email, '')
         self.assertEqual(proveedor.direccion, '')
-        self.assertIsNone(proveedor.imagen)
+        self.assertFalse(proveedor.imagen)  # Empty ImageField
 
 
 class ProductoModelTest(TestCase):
@@ -200,7 +200,7 @@ class ProductoModelTest(TestCase):
         self.assertFalse(producto.es_stock)  # Default False
         self.assertFalse(producto.destacado_en_inicio)  # Default False
         self.assertEqual(producto.descripcion, '')  # Blank=True
-        self.assertIsNone(producto.imagen)  # Null=True
+        self.assertFalse(producto.imagen)  # Empty ImageField
     
     def test_producto_amb_configuracio_avançada(self):
         """Test producte amb configuració avançada"""
