@@ -62,7 +62,7 @@ class ProveedorViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProveedorSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['visible_en_web', 'visible_en_inicio']
-    search_fields = ['nombre', 'descripcion']
+    search_fields = ['nombre', 'descripcion_corta']
     ordering_fields = ['nombre']
     ordering = ['nombre']
     
@@ -91,7 +91,7 @@ class ProductoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductoSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['categoria', 'proveedor', 'es_stock', 'destacado_en_inicio']
-    search_fields = ['nombre', 'descripcion', 'proveedor__nombre']
+    search_fields = ['nombre', 'descripcion', 'proveedor__nombre', 'proveedor__descripcion_corta']
     ordering_fields = ['nombre', 'precio']
     ordering = ['nombre']
     
