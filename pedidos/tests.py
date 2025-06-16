@@ -320,7 +320,7 @@ class SeleccionSocioModelTest(TestCase):
         # Crear primera selecció
         seleccion1 = SeleccionSocio.objects.create(
             socio=self.socio,
-            pedido_colectivo=self.pedido
+            pedido=self.pedido
         )
         
         # Verificar que existeix
@@ -330,6 +330,6 @@ class SeleccionSocioModelTest(TestCase):
         # (Això hauria de ser controlat per la lògica de negoci)
         seleccions = SeleccionSocio.objects.filter(
             socio=self.socio,
-            pedido_colectivo=self.pedido
+            pedido=self.pedido
         )
         self.assertEqual(seleccions.count(), 1)
