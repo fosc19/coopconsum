@@ -12,10 +12,10 @@ class PedidoColectivoAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('tipo', 'estado', 'comanda', 'socio')
         }),
-        ('Fechas Importantes', {
+        ('Dates Importants', {
             'fields': ('fecha_apertura', 'fecha_inicio_pedidos', 'fecha_cierre', 'fecha_entrega')
         }),
-        ('Filtros de Productos (Opcional)', {
+        ('Filtres de Productes (Opcional)', {
             'fields': ('categoria', 'proveedor'),
             'classes': ('collapse',), # Para que aparezca colapsado por defecto
         }),
@@ -65,4 +65,4 @@ class PropuestaCorreccionComandaAdmin(admin.ModelAdmin):
         count = queryset.count()
         queryset.delete()
         self.message_user(request, f"Se han eliminado {count} propuestas de corrección seleccionadas.")
-    eliminar_propuestas_seleccionadas.short_description = "Eliminar propuestas seleccionadas"
+    eliminar_propuestas_seleccionadas.short_description = "Eliminar propostes seleccionades"

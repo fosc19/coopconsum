@@ -13,15 +13,15 @@ class Socio(models.Model):
     # Nuevo campo para indicar si el socio gestiona el stock
     gestiona_stock = models.BooleanField(
         default=False,
-        help_text="Marcar si este socio es el responsable de gestionar el stock."
+        help_text="Marcar si aquest soci és el responsable de gestionar l'estoc."
     )
     gestiona_productos = models.BooleanField(
         default=False,
-        help_text="Marcar si este socio puede gestionar productos (añadir, editar, etc.)."
+        help_text="Marcar si aquest soci pot gestionar productes (afegir, editar, etc.)."
     )
     puede_crear_comandas_esporadicas = models.BooleanField(
         default=False,
-        help_text="Marcar si este socio puede crear comandas recurrentes de tipo esporádico."
+        help_text="Marcar si aquest soci pot crear comandes recurrents de tipus esporàdic."
     )
 
     def __str__(self):

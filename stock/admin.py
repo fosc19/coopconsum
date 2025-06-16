@@ -26,7 +26,7 @@ class RegistroCompraStockProxyAdmin(admin.ModelAdmin): # Cambiar nombre de la cl
             link = reverse("admin:socios_movimientocuenta_change", args=[obj.movimiento_cuenta.id])
             return format_html('<a href="{}">Mov. #{}</a>', link, obj.movimiento_cuenta.id)
         return "-"
-    movimiento_cuenta_link.short_description = 'Movimiento Cuenta'
+    movimiento_cuenta_link.short_description = 'Moviment Compte'
 
     def has_add_permission(self, request):
         return False

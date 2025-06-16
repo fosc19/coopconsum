@@ -134,6 +134,11 @@ USE_TZ = True
 
 FIRST_DAY_OF_WEEK = 1 # Lunes como primer día de la semana
 
+# Locale paths for translations
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
