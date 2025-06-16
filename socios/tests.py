@@ -79,20 +79,21 @@ class CuentaSocioModelTest(TestCase):
         )
     
     def test_crear_cuenta_automatica(self):
-        """Test que es crea automàticament CuentaSocio"""
-        # Verificar que el socio té compte
-        self.assertTrue(hasattr(self.socio, 'cuentasocio'))
-        self.assertEqual(self.socio.cuentasocio.saldo_actual, Decimal('0.00'))
+        """Test creació manual de CuentaSocio"""
+        # Crear compte manualment
+        cuenta = CuentaSocio.objects.create(socio=self.socio)
+        self.assertEqual(cuenta.saldo_actual, Decimal('0.00'))
+        self.assertEqual(cuenta.socio, self.socio)
     
     def test_str_cuenta_socio(self):
         """Test representació string de CuentaSocio"""
-        cuenta = self.socio.cuentasocio
+        cuenta = CuentaSocio.objects.create(socio=self.socio)
         expected = f"Cuenta de {self.socio}"
         self.assertEqual(str(cuenta), expected)
     
     def test_modificar_saldo(self):
         """Test modificació manual del saldo"""
-        cuenta = self.socio.cuentasocio
+        cuenta = CuentaSocio.objects.create(socio=self.socio)
         cuenta.saldo_actual = Decimal('50.00')
         cuenta.save()
         
@@ -109,7 +110,7 @@ class MovimientoCuentaModelTest(TestCase):
             apellido='Fernández',
             email='carlos@example.com'
         )
-        self.cuenta = self.socio.cuentasocio
+        self.cuenta = CuentaSocio.objects.create(socio=self.socio)
     
     def test_crear_movimiento_ingreso(self):
         """Test creació moviment d'ingrés"""

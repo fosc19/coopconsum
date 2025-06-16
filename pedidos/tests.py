@@ -66,6 +66,7 @@ class PedidoColectivoModelTest(TestCase):
             fecha_apertura=timezone.now(),
             fecha_inicio_pedidos=timezone.now(),
             fecha_cierre=timezone.now() + timedelta(days=5),
+            fecha_entrega=timezone.now() + timedelta(days=7),
             comanda=self.comanda_recurrente,
             socio=self.socio
         )
@@ -105,6 +106,7 @@ class PedidoColectivoModelTest(TestCase):
             fecha_apertura=timezone.now(),
             fecha_inicio_pedidos=timezone.now(),
             fecha_cierre=timezone.now() + timedelta(days=3),
+            fecha_entrega=timezone.now() + timedelta(days=5),
             comanda=self.comanda_recurrente,
             socio=self.socio,
             categoria=self.categoria,
@@ -182,7 +184,11 @@ class ComandaRecurrenteModelTest(TestCase):
         )
         
         str_repr = str(comanda)
-        self.assertIn('Test Comanda', str_repr)
+        # El __str__ mostra "Sin categoría - Sin proveedor - [nom socio] - (comanda Semanal)"
+        self.assertIn('Sin categoría', str_repr)
+        self.assertIn('Sin proveedor', str_repr)
+        self.assertIn('Responsable', str_repr)  # nom del socio en setUp
+        self.assertIn('comanda Semanal', str_repr)
 
 
 class SeleccionSocioModelTest(TestCase):
@@ -218,6 +224,7 @@ class SeleccionSocioModelTest(TestCase):
             fecha_apertura=timezone.now(),
             fecha_inicio_pedidos=timezone.now(),
             fecha_cierre=timezone.now() + timedelta(days=5),
+            fecha_entrega=timezone.now() + timedelta(days=7),
             comanda=self.comanda,
             socio=self.gestor
         )
