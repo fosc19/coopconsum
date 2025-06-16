@@ -4,6 +4,26 @@
 {% block title %}Recursos per a Cooperatives - Civada{% endblock %}
 
 {% block content %}
+<style>
+    /* Evitar scroll automàtic en l'acordió */
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+    
+    .accordion-button[aria-expanded="true"] {
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+    
+    /* Millor comportament de l'scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    .accordion-collapse.collapsing {
+        transition: none !important;
+    }
+</style>
+
 <div class="container my-5">
     <!-- Hero Section -->
     <div class="row mb-5">
@@ -34,7 +54,7 @@
                                 <ul class="list-unstyled mb-4">
                                     <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de consum</strong> que fan comandes col·lectives setmanals/quinzenals</li>
                                     <li><i class="fas fa-check text-success me-2"></i> <strong>Grups de consum</strong> que volen digitalitzar-se i automatitzar processos</li>
-                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de 20-200 socis</strong> que gestionen múltiples proveedors</li>
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives</strong> que gestionen múltiples proveedors</li>
                                 </ul>
                                 
                                 <div class="alert alert-info">
@@ -44,10 +64,10 @@
                             </div>
                             
                             <div class="col-lg-6">
-                                <h4><i class="fas fa-desktop text-info me-2"></i>Tres interfícies en una:</h4>
+                                <h4><i class="fas fa-desktop text-info me-2"></i>Tres apartats en una plataforma:</h4>
                                 <div class="border-start border-3 border-info ps-3 mb-3">
                                     <h6><i class="fas fa-globe text-info me-2"></i> <strong>Web Pública</strong></h6>
-                                    <small>Galeria de fotos, catàleg de productes, informació de la cooperativa. Escaparate per mostrar-vos al món.</small>
+                                    <small>Galeria de fotos, catàleg de productes, informació de la cooperativa. Aparador per mostrar-vos al món.</small>
                                 </div>
                                 <div class="border-start border-3 border-success ps-3 mb-3">
                                     <h6><i class="fas fa-users text-success me-2"></i> <strong>Intranet de Socis</strong></h6>
@@ -77,7 +97,7 @@
     <section class="mb-5">
         <div class="row">
             <div class="col-12 text-center mb-4">
-                <h2 class="display-5">🚀 Com implementar la teva cooperativa?</h2>
+                <h2 class="display-5">⚙️ Com implementar la teva cooperativa?</h2>
                 <p class="lead text-muted">Tria l'opció que millor s'adapti al teu nivell tècnic</p>
             </div>
         </div>
@@ -244,8 +264,8 @@
                                     </div>
                                     
                                     <div class="alert alert-danger">
-                                        <h6><i class="fas fa-shield-alt me-2"></i><strong>OBLIGATORI: Backup Automàtic</strong></h6>
-                                        <p><strong>⚠️ No oblidis contractar el backup automàtic!</strong></p>
+                                        <h6><i class="fas fa-shield-alt me-2"></i><strong>Molt Recomanat: Backup Automàtic</strong></h6>
+                                        <p><strong>💡 És altament recomanable contractar el backup automàtic!</strong></p>
                                         <p><strong>A OVH:</strong></p>
                                         <ul class="mb-2">
                                             <li>✅ Selecciona "Backup automatizado" (+3,30€/mes)</li>
@@ -253,7 +273,7 @@
                                             <li>🔄 Restauració amb un clic des del panell</li>
                                             <li>🛡️ Protecció completa del sistema</li>
                                         </ul>
-                                        <small><strong>Sense backup automàtic, pots perdre tota la cooperativa!</strong></small>
+                                        <small><strong>Sense backup pots tenir problemes greus en cas d'error del servidor!</strong></small>
                                     </div>
                                     
                                     <div class="alert alert-info mt-3">
@@ -432,7 +452,7 @@
     <section class="mt-5">
         <div class="row">
             <div class="col-12 text-center mb-4">
-                <h2 class="display-5">🌐 Funcionalitats Avançades</h2>
+                <h2 class="display-5">🌐 Funcionalitats Avançades (API)</h2>
                 <p class="lead text-muted">Per cooperatives que ja funcionen i volen més</p>
             </div>
         </div>
