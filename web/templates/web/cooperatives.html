@@ -13,67 +13,38 @@
         </div>
     </div>
 
-    <!-- Resumen de opciones -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="alert alert-info text-center">
-                <h4 class="mb-3">Trieu la millor opció per a vosaltres:</h4>
-                <div class="row">
-                    <div class="col-md-4">
-                        <i class="fab fa-github fa-2x text-primary mb-2"></i>
-                        <h6><strong>1. GitHub</strong></h6>
-                        <small>Per a desenvolupadors i experts tècnics</small>
+    <!-- QUÈ ÉS COOPCONSUM - Secció principal -->
+    <section class="mb-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2 class="h1 mb-3">🛠️ Què és CoopConsum?</h2>
+                        <p class="lead mb-0">Sistema complet de gestió per cooperatives de consum responsable</p>
                     </div>
-                    <div class="col-md-4">
-                        <i class="fab fa-docker fa-2x text-info mb-2"></i>
-                        <h6><strong>2. Docker</strong></h6>
-                        <small>Instal·lació fàcil per a principiants</small>
-                    </div>
-                    <div class="col-md-4">
-                        <i class="fas fa-exchange-alt fa-2x text-success mb-2"></i>
-                        <h6><strong>3. API</strong></h6>
-                        <small>Compartir dades entre cooperatives</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tres secciones principales -->
-    <div class="row">
-        <!-- Sección 1: Código Abierto -->
-        <div class="col-lg-4 mb-5">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-body p-4">
-                    <div class="text-center mb-4">
-                        <i class="fab fa-github fa-4x text-primary mb-3"></i>
-                        <h2 class="h3">🚀 Crea la teva Cooperativa</h2>
-                        <p class="text-muted">Codi obert per a noves cooperatives</p>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <h4>💡 Per a qui és?</h4>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de consum</strong> que fan comandes col·lectives setmanals/quinzenals</li>
-                            <li><i class="fas fa-check text-success me-2"></i> <strong>Grups de consum</strong> que volen digitalitzar-se i automatitzar processos</li>
-                            <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de 20-200 socis</strong> que gestionen múltiples proveedors</li>
-                            <li><i class="fas fa-check text-success me-2"></i> <strong>Desenvolupadors</strong> que volen contribuir al moviment cooperatiu</li>
-                        </ul>
-                        <div class="alert alert-info mt-3">
-                            <i class="fas fa-lightbulb me-2"></i>
-                            <strong>Cas d'ús típic:</strong> Una cooperativa fa comandes cada dimarts a diversos proveedors (pa, verdures, làctis). Els socis entren a la plataforma durant la setmana, fan les seves comandes, i el dimarts es tanquen automàticament. Els gestors reben un resum i després cobren automàticament als socis.
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h4>🛠️ Què és exactament?</h4>
-                        <div class="alert alert-light mb-3">
-                            <strong>🐍 Aplicació web Django (Python)</strong> especialment dissenyada per cooperatives de consum amb <strong>comandas col·lectives</strong> (comandes setmanals/quinzenals dels mateixos productes).
-                        </div>
-                        
-                        <h5>📱 Tres interfícies en una:</h5>
+                    <div class="card-body p-5">
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-lg-6">
+                                <div class="alert alert-light mb-4">
+                                    <h4><i class="fas fa-code text-primary me-2"></i>Tecnologia</h4>
+                                    <p class="mb-0"><strong>🐍 Aplicació web Django (Python)</strong> especialment dissenyada per cooperatives de consum amb <strong>comandas col·lectives</strong> (comandes setmanals/quinzenals dels mateixos productes).</p>
+                                </div>
+                                
+                                <h4><i class="fas fa-users text-success me-2"></i>Per a qui és?</h4>
+                                <ul class="list-unstyled mb-4">
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de consum</strong> que fan comandes col·lectives setmanals/quinzenals</li>
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Grups de consum</strong> que volen digitalitzar-se i automatitzar processos</li>
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives de 20-200 socis</strong> que gestionen múltiples proveedors</li>
+                                </ul>
+                                
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-lightbulb me-2"></i>Cas d'ús típic:</h6>
+                                    <p class="mb-0 small">Una cooperativa fa comandes cada dimarts a diversos proveedors (pa, verdures, làctis). Els socis entren a la plataforma durant la setmana, fan les seves comandes, i el dimarts es tanquen automàticament. Els gestors reben un resum i després cobren automàticament als socis.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-6">
+                                <h4><i class="fas fa-desktop text-info me-2"></i>Tres interfícies en una:</h4>
                                 <div class="border-start border-3 border-info ps-3 mb-3">
                                     <h6><i class="fas fa-globe text-info me-2"></i> <strong>Web Pública</strong></h6>
                                     <small>Galeria de fotos, catàleg de productes, informació de la cooperativa. Escaparate per mostrar-vos al món.</small>
@@ -82,35 +53,105 @@
                                     <h6><i class="fas fa-users text-success me-2"></i> <strong>Intranet de Socis</strong></h6>
                                     <small>Àrea privada per fer comandes, consultar el compte personal, veure historial de compres.</small>
                                 </div>
-                                <div class="border-start border-3 border-warning ps-3 mb-3">
+                                <div class="border-start border-3 border-warning ps-3 mb-4">
                                     <h6><i class="fas fa-cog text-warning me-2"></i> <strong>Administració</strong></h6>
                                     <small>Panell per gestors: configurar socis, proveedors, productes, comandes automàtiques, personalitzar la web.</small>
                                 </div>
+                                
+                                <h4><i class="fas fa-magic text-primary me-2"></i>Automatització:</h4>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-calendar text-primary me-2"></i> Comandes setmanals/quinzenals automàtiques</li>
+                                    <li><i class="fas fa-clock text-primary me-2"></i> Tancament automàtic i notificacions</li>
+                                    <li><i class="fas fa-euro-sign text-primary me-2"></i> Gestió de comptes i cobraments de socis</li>
+                                    <li><i class="fas fa-chart-line text-primary me-2"></i> Historial complet de moviments</li>
+                                </ul>
                             </div>
                         </div>
-                        
-                        <h5>⚡ Automatització de comandas col·lectives:</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- COM IMPLEMENTAR - Resumen de opciones -->
+    <section class="mb-5">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="display-5">🚀 Com implementar la teva cooperativa?</h2>
+                <p class="lead text-muted">Tria l'opció que millor s'adapti al teu nivell tècnic</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-light text-center border-2">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fab fa-github fa-3x text-primary mb-3"></i>
+                            <h5><strong>Opció Tècnica</strong></h5>
+                            <p class="text-muted mb-2">Per a desenvolupadors i experts</p>
+                            <span class="badge bg-primary">GitHub + Personalització</span>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fab fa-docker fa-3x text-info mb-3"></i>
+                            <h5><strong>Opció Principiant</strong></h5>
+                            <p class="text-muted mb-2">Instal·lació automàtica en 15 min</p>
+                            <span class="badge bg-info">Docker + Guia pas a pas</span>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-exchange-alt fa-3x text-success mb-3"></i>
+                            <h5><strong>Funcionalitats Avançades</strong></h5>
+                            <p class="text-muted mb-2">Per cooperatives existents</p>
+                            <span class="badge bg-success">API + Xarxes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OPCIONS D'IMPLEMENTACIÓ -->
+    <div class="row">
+        <!-- Opció 1: GitHub per Desenvolupadors -->
+        <div class="col-lg-6 mb-5">
+            <div class="card h-100 shadow-sm border-2 border-primary">
+                <div class="card-header bg-primary text-white text-center">
+                    <i class="fab fa-github fa-3x mb-3"></i>
+                    <h3>👨‍💻 Opció per Desenvolupadors</h3>
+                    <p class="mb-0">Codi font complet + Personalització total</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h5><i class="fas fa-users text-primary me-2"></i>Per a qui és?</h5>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-calendar text-primary me-2"></i> Comandes setmanals/quinzenals automàtiques</li>
-                            <li><i class="fas fa-clock text-primary me-2"></i> Tancament automàtic i notificacions</li>
-                            <li><i class="fas fa-euro-sign text-primary me-2"></i> Gestió de comptes i cobraments de socis</li>
-                            <li><i class="fas fa-chart-line text-primary me-2"></i> Historial complet de moviments</li>
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Desenvolupadors</strong> amb coneixements Django/Python</li>
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives</strong> que volen personalitzacions específiques</li>
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Projectes</strong> que volen contribuir al codi obert</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>📋 Com començar?</h4>
+                        <h5><i class="fas fa-star text-warning me-2"></i>Avantatges:</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-cog text-info me-2"></i> <strong>Personalització completa</strong> del codi</li>
+                            <li><i class="fas fa-palette text-info me-2"></i> <strong>Disseny custom</strong> i funcionalitats específiques</li>
+                            <li><i class="fas fa-code-branch text-info me-2"></i> <strong>Control total</strong> sobre el desplegament</li>
+                            <li><i class="fas fa-hands-helping text-info me-2"></i> <strong>Contribuir</strong> al projecte open source</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5><i class="fas fa-list-ol text-primary me-2"></i>Passos:</h5>
                         <ol class="ps-3">
                             <li>Descarrega el codi des de GitHub</li>
-                            <li>Segueix la guia d'instal·lació</li>
+                            <li>Configura l'entorn de desenvolupament local</li>
                             <li>Personalitza per a la teva cooperativa</li>
-                            <li>Desplega en el teu servidor</li>
+                            <li>Desplega en el teu servidor de producció</li>
                         </ol>
                     </div>
 
                     <div class="text-center">
                         <a href="https://github.com/fosc19/coopconsum" class="btn btn-primary btn-lg mb-3" target="_blank">
-                            <i class="fab fa-github me-2"></i>Veure a GitHub
+                            <i class="fab fa-github me-2"></i>Veure Codi a GitHub
                         </a>
                         <br>
                         <small class="text-muted">
@@ -121,319 +162,342 @@
             </div>
         </div>
 
-        <!-- Sección 2: Docker -->
-        <div class="col-lg-4 mb-5">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <div class="text-center mb-4">
-                        <i class="fab fa-docker fa-4x text-info mb-3"></i>
-                        <h2 class="h3">🐳 Instal·lació Fàcil amb Docker</h2>
-                        <p class="text-muted">Per a cooperatives sense coneixements tècnics - Guia pas a pas</p>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-lg-8 mx-auto">
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Què és Docker?</strong> És com una "caixa màgica" que conté tot el necessari per fer funcionar la plataforma. No necessites saber programar!
-                            </div>
-
-                            <h4>📋 Què necessites?</h4>
-                            <ul class="mb-4">
-                                <li><strong>Un VPS:</strong> Pots llogar-ne un per 5-10€/mes</li>
-                                <li><strong>15 minuts de temps</strong></li>
-                                <li><strong>Seguir aquesta guia súper senzilla</strong></li>
-                            </ul>
-
-                            <div class="accordion" id="dockerGuide">
-                                <!-- Paso 1: Comprar servidor -->
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
-                                            <strong>Pas 1: Comprar un servidor (5 min)</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#dockerGuide">
-                                        <div class="accordion-body">
-                                            <h5>🛒 On comprar?</h5>
-                                            <p><strong>Recomanació principal (més detallada):</strong></p>
-                                            <div class="border border-primary rounded p-3 mb-3">
-                                                <h6><strong>🥇 OVH VPS (Recomanat)</strong></h6>
-                                                <ul>
-                                                    <li><strong>Preu:</strong> 3-5€/mes + 3,30€/mes backup</li>
-                                                    <li><strong>Avantatges:</strong> Europeu, GDPR</li>
-                                                    <li><strong>Motiu:</strong> És el que nosaltres utilitzem i el manual més detallat està en aquest format</li>
-                                                    <li><strong>Web:</strong> <a href="https://www.ovh.com/es/vps/" target="_blank">ovh.com/es/vps/</a></li>
-                                                </ul>
-                                            </div>
-                                            
-                                            <p><strong>Alternatives:</strong></p>
-                                            <ul>
-                                                <li><strong>Hetzner:</strong> 4€/mes + 1€/mes backup</li>
-                                                <li><strong>DigitalOcean:</strong> 6€/mes + 1,20€/mes backup</li>
-                                                <li><strong>Vultr:</strong> 5€/mes + 1€/mes backup</li>
-                                            </ul>
-                                            
-                                            <h5>⚙️ Configuració del Servidor</h5>
-                                            <div class="bg-light p-3 rounded mb-3">
-                                                <ul class="mb-0">
-                                                    <li><strong>Sistema operatiu:</strong> Ubuntu 22.04 LTS</li>
-                                                    <li><strong>RAM:</strong> Mínim 2GB</li>
-                                                    <li><strong>Disc:</strong> Mínim 20GB</li>
-                                                    <li><strong>CPU:</strong> 1 core és suficient</li>
-                                                </ul>
-                                            </div>
-                                            
-                                            <div class="alert alert-danger">
-                                                <h6><i class="fas fa-shield-alt me-2"></i><strong>OBLIGATORI: Backup Automàtic</strong></h6>
-                                                <p><strong>⚠️ No oblidis contractar el backup automàtic!</strong></p>
-                                                <p><strong>A OVH:</strong></p>
-                                                <ul class="mb-2">
-                                                    <li>✅ Selecciona "Backup automatizado" (+3,30€/mes)</li>
-                                                    <li>📦 Còpies diàries automàtiques</li>
-                                                    <li>🔄 Restauració amb un clic des del panell</li>
-                                                    <li>🛡️ Protecció completa del sistema</li>
-                                                </ul>
-                                                <small><strong>Sense backup automàtic, pots perdre tota la cooperativa!</strong></small>
-                                            </div>
-                                            
-                                            <div class="alert alert-info mt-3">
-                                                <i class="fas fa-key me-2"></i>
-                                                <strong>Important:</strong> Guarda bé les dades d'accés (IP, usuari, contrasenya) que et donin!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Paso 2: Acceder al servidor -->
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
-                                            <strong>Pas 2: Accedir al servidor (5 min)</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="step2" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                        <div class="accordion-body">
-                                            <h5>💻 Des de Windows:</h5>
-                                            <ol>
-                                                <li>Descarrega <strong>PuTTY</strong> (és gratuït)</li>
-                                                <li>Obre PuTTY i posa la IP del teu servidor</li>
-                                                <li>Clica "Open" i accepta l'avís de seguretat</li>
-                                                <li>Introdueix l'usuari (normalment "root" o "ubuntu")</li>
-                                                <li>Introdueix la contrasenya</li>
-                                            </ol>
-
-                                            <h5>🍎 Des de Mac/Linux:</h5>
-                                            <ol>
-                                                <li>Obre el Terminal</li>
-                                                <li>Escriu: <code>ssh root@LA_TEVA_IP</code></li>
-                                                <li>Introdueix la contrasenya quan te la demani</li>
-                                            </ol>
-
-                                            <div class="alert alert-success">
-                                                <i class="fas fa-check me-2"></i>
-                                                Si veus algo com <code>root@servidor:~#</code> ja estàs dins!
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Paso 3: Instalación automática -->
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
-                                            <strong>Pas 3: Instal·lació automàtica (10 min)</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="step3" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                        <div class="accordion-body">
-                                            <h5>🚀 Una sola comanda ho fa tot!</h5>
-                                            <p>Copia i enganxa aquesta comanda màgica (prem Enter):</p>
-                                            
-                                            <div class="bg-dark text-light p-3 rounded mb-3">
-                                                <code>
-                                                    curl -sSL https://github.com/fosc19/coopconsum/raw/master/install_docker.sh | bash
-                                                </code>
-                                            </div>
-
-                                            <div class="alert alert-info">
-                                                <i class="fas fa-magic me-2"></i>
-                                                <strong>Què fa aquesta comanda?</strong>
-                                                <ul class="mb-0 mt-2">
-                                                    <li>Instal·la Docker automàticament</li>
-                                                    <li>Descarrega CoopConsum</li>
-                                                    <li>Usa valors per defecte automàticament</li>
-                                                    <li>Configura tot automàticament</li>
-                                                    <li>Llança la plataforma</li>
-                                                    <li>Configura les tasques automàtiques</li>
-                                                </ul>
-                                            </div>
-
-                                            <h5>⚙️ Durant la instal·lació</h5>
-                                            <p>L'script funciona automàticament amb valors per defecte. Si vols personalitzar:</p>
-                                            <div class="bg-light p-3 rounded">
-                                                <code>
-                                                    # Descarrega l'script primer per personalitzar-lo<br>
-                                                    wget https://github.com/fosc19/coopconsum/raw/master/install_docker.sh<br>
-                                                    # Edita les variables COOP_NAME i COOP_EMAIL<br>
-                                                    nano install_docker.sh<br>
-                                                    # Executa l'script<br>
-                                                    bash install_docker.sh
-                                                </code>
-                                            </div>
-                                            <p><small>O deixa que funcioni automàticament i canvia el nom després des del panell admin</small></p>
-
-                                            <div class="alert alert-success">
-                                                <i class="fas fa-check me-2"></i>
-                                                <strong>Això és tot!</strong> L'script ho configura tot automàticament, incloses les tasques diàries per gestionar comandes.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Paso 4: Acceso y configuración -->
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
-                                            <strong>Pas 4: Accedir a la teva cooperativa (2 min)</strong>
-                                        </button>
-                                    </h2>
-                                    <div id="step4" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                        <div class="accordion-body">
-                                            <div class="alert alert-success">
-                                                <i class="fas fa-party-horn me-2"></i>
-                                                <strong>Tot està llest!</strong> L'script automàtic ha configurat tot, incloses les tasques diàries per gestionar comandes.
-                                            </div>
-
-                                            <h5>🌐 Accedir a la plataforma</h5>
-                                            <ol>
-                                                <li>Obre el navegador</li>
-                                                <li>Ves a: <code>http://LA_TEVA_IP</code></li>
-                                                <li>Veuràs la pàgina principal de la teva cooperativa!</li>
-                                            </ol>
-
-                                            <h5>🔐 Accedir com a administrador</h5>
-                                            <ol>
-                                                <li>Ves a: <code>http://LA_TEVA_IP/admin/</code></li>
-                                                <li>Usuari: <strong>admin</strong></li>
-                                                <li>Contrasenya: <strong>cooperativa2025</strong></li>
-                                                <li><strong>IMPORTANT:</strong> Canvia la contrasenya immediatament!</li>
-                                            </ol>
-
-                                            <div class="alert alert-danger">
-                                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                                <strong>Seguretat:</strong> El primer que has de fer és canviar la contrasenya de l'administrador! Ves a la secció "Usuaris" dins del panell d'administració, clica sobre "admin" i canvia la contrasenya.
-                                            </div>
-
-                                            <h5>⚙️ Què s'ha configurat automàticament</h5>
-                                            <ul>
-                                                <li><i class="fas fa-check text-success me-2"></i> Docker i tots els serveis</li>
-                                                <li><i class="fas fa-check text-success me-2"></i> Base de dades amb la teva cooperativa</li>
-                                                <li><i class="fas fa-check text-success me-2"></i> Usuari administrador</li>
-                                                <li><i class="fas fa-check text-success me-2"></i> Tasques diàries (comandes, backups)</li>
-                                                <li><i class="fas fa-check text-success me-2"></i> Configuració de seguretat</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-4 p-4 bg-success text-white rounded">
-                                <h5><i class="fas fa-trophy me-2"></i>Felicitats!</h5>
-                                <p class="mb-0">Ja tens la teva cooperativa funcionant. Ara pots començar a afegir socis, productes i proveedors des del panell d'administració.</p>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5>🌐 Pas Extra: Contractar un Domini (Opcional)</h5>
-                                <div class="alert alert-light">
-                                    <p><strong>En lloc d'usar la IP del servidor, pots tenir un domini propi:</strong></p>
-                                    <ul>
-                                        <li><strong>Què és?</strong> En lloc de <code>http://192.168.1.100</code> pots tenir <code>https://latuacooperativa.cat</code></li>
-                                        <li><strong>On comprar?</strong> Namecheap, GoDaddy, o qualsevol registrador de dominis (10-15€/any)</li>
-                                        <li><strong>Com configurar?</strong> Al panell del domini, apunta els DNS cap a la IP del teu servidor</li>
-                                        <li><strong>HTTPS gratuït:</strong> Pots afegir certificat SSL gratuït amb Let's Encrypt</li>
-                                    </ul>
-                                    <small class="text-muted">Això és opcional però dona una imatge més professional a la cooperativa.</small>
-                                </div>
-                            </div>
-
-                            <div class="mt-4">
-                                <h5>🆘 Necessites ajuda?</h5>
-                                <ul>
-                                    <li><strong>Documentació completa:</strong> <a href="https://github.com/fosc19/coopconsum/blob/master/docs/DOCKER_README.md" target="_blank">DOCKER_README.md</a></li>
-                                    <li><strong>Contacte per dubtes:</strong> <a href="mailto:civada@gmail.com">civada@gmail.com</a> (projecte open source)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Opció 2: Docker per Principiants -->
+        <div class="col-lg-6 mb-5">
+            <div class="card h-100 shadow-sm border-2 border-info">
+                <div class="card-header bg-info text-white text-center">
+                    <i class="fab fa-docker fa-3x mb-3"></i>
+                    <h3>🐳 Opció per Principiants</h3>
+                    <p class="mb-0">Instal·lació automàtica en 15 minuts</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- Sección 3: API -->
-        <div class="col-lg-4 mb-5">
-            <div class="card h-100 shadow-sm border-0">
                 <div class="card-body p-4">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-exchange-alt fa-4x text-success mb-3"></i>
-                        <h2 class="h3">🌐 API per Cooperatives</h2>
-                        <p class="text-muted">Comparteix i accedeix a informació entre cooperatives</p>
+                    <div class="mb-4">
+                        <h5><i class="fas fa-users text-info me-2"></i>Per a qui és?</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives</strong> sense coneixements tècnics</li>
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Gestors</strong> que volen una solució ràpida</li>
+                            <li><i class="fas fa-check text-success me-2"></i> <strong>Grups</strong> que volen provar la plataforma</li>
+                        </ul>
                     </div>
                     
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Què és Docker?</strong> És com una "caixa màgica" que conté tot el necessari per fer funcionar la plataforma. No necessites saber programar!
+                    </div>
+
                     <div class="mb-4">
-                        <h4>🎯 Per a qui és?</h4>
+                        <h5><i class="fas fa-star text-warning me-2"></i>Avantatges:</h5>
                         <ul class="list-unstyled">
-                            <li><i class="fas fa-check text-success me-2"></i> Cooperatives que ja funcionen</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Desenvolupadors de cooperatives</li>
-                            <li><i class="fas fa-check text-success me-2"></i> Xarxes de cooperatives</li>
+                            <li><i class="fas fa-rocket text-info me-2"></i> <strong>Instal·lació en 15 minuts</strong></li>
+                            <li><i class="fas fa-magic text-info me-2"></i> <strong>Tot automàtic</strong> (base de dades, usuaris, configuració)</li>
+                            <li><i class="fas fa-shield-alt text-info me-2"></i> <strong>Segur i estable</strong> amb backups automàtics</li>
+                            <li><i class="fas fa-euro-sign text-info me-2"></i> <strong>Cost baix</strong> (5-10€/mes)</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>📊 Què pots obtenir?</h4>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-database text-info me-2"></i> <strong>Proveedors:</strong> Contactes i informació</li>
-                            <li><i class="fas fa-database text-info me-2"></i> <strong>Productes:</strong> Catàleg amb preus</li>
-                            <li><i class="fas fa-database text-info me-2"></i> <strong>Categories:</strong> Organització de productes</li>
+                        <h5><i class="fas fa-list-ol text-info me-2"></i>Què necessites?</h5>
+                        <ul class="mb-3">
+                            <li><strong>Un VPS:</strong> Pots llogar-ne un per 5-10€/mes</li>
+                            <li><strong>15 minuts de temps</strong></li>
+                            <li><strong>Seguir aquesta guia súper senzilla</strong></li>
                         </ul>
                     </div>
 
-                    <div class="mb-4">
-                        <h4>🔧 Exemples d'ús</h4>
-                        <div class="bg-light p-3 rounded">
-                            <code class="small">
-                                # Obtenir proveedors<br>
-                                GET /api/proveedores/<br><br>
-                                # Buscar productes ecològics<br>
-                                GET /api/productos/?search=ecològic<br><br>
-                                # Obtenir categories<br>
-                                GET /api/categorias/
-                            </code>
+                    <div class="accordion" id="dockerGuide">
+                        <!-- Paso 1: Comprar servidor -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
+                                    <strong>Pas 1: Comprar un servidor (5 min)</strong>
+                                </button>
+                            </h2>
+                            <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#dockerGuide">
+                                <div class="accordion-body">
+                                    <h5>🛒 On comprar?</h5>
+                                    <p><strong>Recomanació principal (més detallada):</strong></p>
+                                    <div class="border border-primary rounded p-3 mb-3">
+                                        <h6><strong>🥇 OVH VPS (Recomanat)</strong></h6>
+                                        <ul>
+                                            <li><strong>Preu:</strong> 3-5€/mes + 3,30€/mes backup</li>
+                                            <li><strong>Avantatges:</strong> Europeu, GDPR</li>
+                                            <li><strong>Motiu:</strong> És el que nosaltres utilitzem i el manual més detallat està en aquest format</li>
+                                            <li><strong>Web:</strong> <a href="https://www.ovh.com/es/vps/" target="_blank">ovh.com/es/vps/</a></li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <p><strong>Alternatives:</strong></p>
+                                    <ul>
+                                        <li><strong>Hetzner:</strong> 4€/mes + 1€/mes backup</li>
+                                        <li><strong>DigitalOcean:</strong> 6€/mes + 1,20€/mes backup</li>
+                                        <li><strong>Vultr:</strong> 5€/mes + 1€/mes backup</li>
+                                    </ul>
+                                    
+                                    <h5>⚙️ Configuració del Servidor</h5>
+                                    <div class="bg-light p-3 rounded mb-3">
+                                        <ul class="mb-0">
+                                            <li><strong>Sistema operatiu:</strong> Ubuntu 22.04 LTS</li>
+                                            <li><strong>RAM:</strong> Mínim 2GB</li>
+                                            <li><strong>Disc:</strong> Mínim 20GB</li>
+                                            <li><strong>CPU:</strong> 1 core és suficient</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="alert alert-danger">
+                                        <h6><i class="fas fa-shield-alt me-2"></i><strong>OBLIGATORI: Backup Automàtic</strong></h6>
+                                        <p><strong>⚠️ No oblidis contractar el backup automàtic!</strong></p>
+                                        <p><strong>A OVH:</strong></p>
+                                        <ul class="mb-2">
+                                            <li>✅ Selecciona "Backup automatizado" (+3,30€/mes)</li>
+                                            <li>📦 Còpies diàries automàtiques</li>
+                                            <li>🔄 Restauració amb un clic des del panell</li>
+                                            <li>🛡️ Protecció completa del sistema</li>
+                                        </ul>
+                                        <small><strong>Sense backup automàtic, pots perdre tota la cooperativa!</strong></small>
+                                    </div>
+                                    
+                                    <div class="alert alert-info mt-3">
+                                        <i class="fas fa-key me-2"></i>
+                                        <strong>Important:</strong> Guarda bé les dades d'accés (IP, usuari, contrasenya) que et donin!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 2: Acceder al servidor -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
+                                    <strong>Pas 2: Accedir al servidor (5 min)</strong>
+                                </button>
+                            </h2>
+                            <div id="step2" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                <div class="accordion-body">
+                                    <h5>💻 Des de Windows:</h5>
+                                    <ol>
+                                        <li>Descarrega <strong>PuTTY</strong> (és gratuït)</li>
+                                        <li>Obre PuTTY i posa la IP del teu servidor</li>
+                                        <li>Clica "Open" i accepta l'avís de seguretat</li>
+                                        <li>Introdueix l'usuari (normalment "root" o "ubuntu")</li>
+                                        <li>Introdueix la contrasenya</li>
+                                    </ol>
+
+                                    <h5>🍎 Des de Mac/Linux:</h5>
+                                    <ol>
+                                        <li>Obre el Terminal</li>
+                                        <li>Escriu: <code>ssh root@LA_TEVA_IP</code></li>
+                                        <li>Introdueix la contrasenya quan te la demani</li>
+                                    </ol>
+
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check me-2"></i>
+                                        Si veus algo com <code>root@servidor:~#</code> ja estàs dins!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 3: Instalación automática -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
+                                    <strong>Pas 3: Instal·lació automàtica (10 min)</strong>
+                                </button>
+                            </h2>
+                            <div id="step3" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                <div class="accordion-body">
+                                    <h5>🚀 Una sola comanda ho fa tot!</h5>
+                                    <p>Copia i enganxa aquesta comanda màgica (prem Enter):</p>
+                                    
+                                    <div class="bg-dark text-light p-3 rounded mb-3">
+                                        <code>
+                                            curl -sSL https://github.com/fosc19/coopconsum/raw/master/install_docker.sh | bash
+                                        </code>
+                                    </div>
+
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-magic me-2"></i>
+                                        <strong>Què fa aquesta comanda?</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li>Instal·la Docker automàticament</li>
+                                            <li>Descarrega CoopConsum</li>
+                                            <li>Usa valors per defecte automàticament</li>
+                                            <li>Configura tot automàticament</li>
+                                            <li>Llança la plataforma</li>
+                                            <li>Configura les tasques automàtiques</li>
+                                        </ul>
+                                    </div>
+
+                                    <h5>⚙️ Durant la instal·lació</h5>
+                                    <p>L'script funciona automàticament amb valors per defecte. Si vols personalitzar:</p>
+                                    <div class="bg-light p-3 rounded">
+                                        <code>
+                                            # Descarrega l'script primer per personalitzar-lo<br>
+                                            wget https://github.com/fosc19/coopconsum/raw/master/install_docker.sh<br>
+                                            # Edita les variables COOP_NAME i COOP_EMAIL<br>
+                                            nano install_docker.sh<br>
+                                            # Executa l'script<br>
+                                            bash install_docker.sh
+                                        </code>
+                                    </div>
+                                    <p><small>O deixa que funcioni automàticament i canvia el nom després des del panell admin</small></p>
+
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check me-2"></i>
+                                        <strong>Això és tot!</strong> L'script ho configura tot automàticament, incloses les tasques diàries per gestionar comandes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Paso 4: Acceso y configuración -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
+                                    <strong>Pas 4: Accedir a la teva cooperativa (2 min)</strong>
+                                </button>
+                            </h2>
+                            <div id="step4" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
+                                <div class="accordion-body">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-party-horn me-2"></i>
+                                        <strong>Tot està llest!</strong> L'script automàtic ha configurat tot, incloses les tasques diàries per gestionar comandes.
+                                    </div>
+
+                                    <h5>🌐 Accedir a la plataforma</h5>
+                                    <ol>
+                                        <li>Obre el navegador</li>
+                                        <li>Ves a: <code>http://LA_TEVA_IP</code></li>
+                                        <li>Veuràs la pàgina principal de la teva cooperativa!</li>
+                                    </ol>
+
+                                    <h5>🔐 Accedir com a administrador</h5>
+                                    <ol>
+                                        <li>Ves a: <code>http://LA_TEVA_IP/admin/</code></li>
+                                        <li>Usuari: <strong>admin</strong></li>
+                                        <li>Contrasenya: <strong>cooperativa2025</strong></li>
+                                        <li><strong>IMPORTANT:</strong> Canvia la contrasenya immediatament!</li>
+                                    </ol>
+
+                                    <div class="alert alert-danger">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Seguretat:</strong> El primer que has de fer és canviar la contrasenya de l'administrador! Ves a la secció "Usuaris" dins del panell d'administració, clica sobre "admin" i canvia la contrasenya.
+                                    </div>
+
+                                    <h5>⚙️ Què s'ha configurat automàticament</h5>
+                                    <ul>
+                                        <li><i class="fas fa-check text-success me-2"></i> Docker i tots els serveis</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Base de dades amb la teva cooperativa</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Usuari administrador</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Tasques diàries (comandes, backups)</li>
+                                        <li><i class="fas fa-check text-success me-2"></i> Configuració de seguretat</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <h4>📈 Beneficis</h4>
-                        <ul class="list-unstyled">
-                            <li><i class="fas fa-handshake text-primary me-2"></i> Compartir proveedors entre cooperatives</li>
-                            <li><i class="fas fa-handshake text-primary me-2"></i> Accedir a catàlegs de productes</li>
-                            <li><i class="fas fa-handshake text-primary me-2"></i> Crear xarxes de cooperació</li>
-                        </ul>
+                    <div class="mt-4 p-4 bg-success text-white rounded">
+                        <h5><i class="fas fa-trophy me-2"></i>Felicitats!</h5>
+                        <p class="mb-0">Ja tens la teva cooperativa funcionant. Ara pots començar a afegir socis, productes i proveedors des del panell d'administració.</p>
                     </div>
 
-                    <div class="text-center">
-                        <a href="/api/" class="btn btn-success btn-lg mb-3" target="_blank">
-                            <i class="fas fa-code me-2"></i>Explorar API
-                        </a>
-                        <br>
-                        <small class="text-muted">
-                            <i class="fas fa-lock-open me-1"></i>API pública i gratuïta
-                        </small>
+                    <div class="mt-4">
+                        <h5>🌐 Pas Extra: Contractar un Domini (Opcional)</h5>
+                        <div class="alert alert-light">
+                            <p><strong>En lloc d'usar la IP del servidor, pots tenir un domini propi:</strong></p>
+                            <ul>
+                                <li><strong>Què és?</strong> En lloc de <code>http://192.168.1.100</code> pots tenir <code>https://latuacooperativa.cat</code></li>
+                                <li><strong>On comprar?</strong> Namecheap, GoDaddy, o qualsevol registrador de dominis (10-15€/any)</li>
+                                <li><strong>Com configurar?</strong> Al panell del domini, apunta els DNS cap a la IP del teu servidor</li>
+                                <li><strong>HTTPS gratuït:</strong> Pots afegir certificat SSL gratuït amb Let's Encrypt</li>
+                            </ul>
+                            <small class="text-muted">Això és opcional però dona una imatge més professional a la cooperativa.</small>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>🆘 Necessites ajuda?</h5>
+                        <ul>
+                            <li><strong>Documentació completa:</strong> <a href="https://github.com/fosc19/coopconsum/blob/master/docs/DOCKER_README.md" target="_blank">DOCKER_README.md</a></li>
+                            <li><strong>Contacte per dubtes:</strong> <a href="mailto:civada@gmail.com">civada@gmail.com</a> (projecte open source)</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- FUNCIONALITATS AVANÇADES -->
+    <section class="mt-5">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="display-5">🌐 Funcionalitats Avançades</h2>
+                <p class="lead text-muted">Per cooperatives que ja funcionen i volen més</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow-sm border-2 border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+                        <h3>🔗 API per Cooperatives</h3>
+                        <p class="mb-0">Comparteix i accedeix a informació entre cooperatives</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-users text-success me-2"></i>Per a qui és?</h5>
+                                <ul class="list-unstyled mb-4">
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Cooperatives</strong> que ja funcionen</li>
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Xarxes</strong> de cooperatives</li>
+                                    <li><i class="fas fa-check text-success me-2"></i> <strong>Desenvolupadors</strong> que integren sistemes</li>
+                                </ul>
+                                
+                                <h5><i class="fas fa-database text-success me-2"></i>Què pots obtenir?</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-arrow-right text-info me-2"></i> <strong>Proveedors:</strong> Contactes i informació</li>
+                                    <li><i class="fas fa-arrow-right text-info me-2"></i> <strong>Productes:</strong> Catàleg sense preus</li>
+                                    <li><i class="fas fa-arrow-right text-info me-2"></i> <strong>Categories:</strong> Organització de productes</li>
+                                    <li><i class="fas fa-arrow-right text-info me-2"></i> <strong>Esdeveniments:</strong> Calendari públic</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-handshake text-success me-2"></i>Beneficis per cooperatives:</h5>
+                                <ul class="list-unstyled mb-4">
+                                    <li><i class="fas fa-network-wired text-primary me-2"></i> <strong>Xarxes</strong> de cooperació regional</li>
+                                    <li><i class="fas fa-share-alt text-primary me-2"></i> <strong>Compartir</strong> proveedors i recursos</li>
+                                    <li><i class="fas fa-search text-primary me-2"></i> <strong>Descobrir</strong> nous productes ecològics</li>
+                                    <li><i class="fas fa-calendar text-primary me-2"></i> <strong>Sincronitzar</strong> esdeveniments i calendaris</li>
+                                </ul>
+                                
+                                <div class="bg-light p-3 rounded mb-3">
+                                    <h6><i class="fas fa-code text-dark me-2"></i>Exemple d'ús:</h6>
+                                    <code class="small text-dark">
+                                        # Obtenir proveedors públics<br>
+                                        GET /api/proveedores/<br><br>
+                                        # Buscar productes ecològics<br>
+                                        GET /api/productos/?search=ecològic
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <a href="/api/" class="btn btn-success btn-lg mb-3" target="_blank">
+                                <i class="fas fa-code me-2"></i>Explorar API en Viu
+                            </a>
+                            <br>
+                            <small class="text-muted">
+                                <i class="fas fa-lock-open me-1"></i>API pública i gratuïta per totes les cooperatives
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 </div>
 {% endblock %}
