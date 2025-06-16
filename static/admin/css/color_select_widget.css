@@ -1,0 +1,53 @@
+/* Estils millorats per ColorSelectWidget */
+
+/* Millor estil per les opcions del desplegable de color */
+.field-color select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Efecte hover per les opcions (funciona en alguns navegadors) */
+.field-color select option:hover {
+    background-color: #f8f9fa;
+}
+
+/* Millorar l'aparença del select */
+.field-color select {
+    min-height: 40px;
+    font-size: 14px;
+}
+
+/* Estil per la previsualització del color seleccionat */
+.color-preview {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    margin-left: 10px;
+    vertical-align: middle;
+    transition: border-color 0.2s ease;
+}
+
+.color-preview:hover {
+    border-color: #007bff;
+}
+
+/* Millorar l'espaiado del camp */
+.field-color {
+    margin-bottom: 15px;
+}
+
+.field-color label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Responsive design per pantalles petites */
+@media (max-width: 768px) {
+    .field-color select {
+        width: 100%;
+        font-size: 16px; /* Evitar zoom en iOS */
+    }
+}

@@ -14,5 +14,11 @@ class EventoCalendarioAdmin(admin.ModelAdmin):
 
     def color_display(self, obj):
         # Método para mostrar el color como un pequeño cuadrado en la lista del admin
-        return format_html('<span style="display: inline-block; width: 20px; height: 20px; background-color: {};"></span>', obj.color)
+        return format_html('<span style="display: inline-block; width: 20px; height: 20px; background-color: {}; border: 1px solid #ccc; border-radius: 3px;"></span>', obj.color)
     color_display.short_description = 'Color'
+    
+    class Media:
+        css = {
+            'all': ('admin/css/color_select_widget.css',)
+        }
+        js = ('admin/js/color_select_widget.js',)
