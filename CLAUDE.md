@@ -184,7 +184,7 @@ git pull origin master
 # ⚠️ OBLIGATORI DESPRÉS DE GIT PULL - DOCKER REBUILD COMPLET:
 # IMPORTANT: Mai fer només restart! Sempre down + build + up si hi ha canvis de codi
 docker compose down
-docker compose build --no-cache  # SEMPRE --no-cache per canvis de Python/Django
+docker compose build --no-cache  # SEMPRE --no-cache per canvis de Python/Django/Templates/CSS
 docker compose up -d
 
 # ⚠️ VERIFICAR MIGRACIONS DESPRÉS DE REBUILD:
@@ -206,11 +206,20 @@ docker exec coopconsum-web-1 python manage.py shell -c "from web.models import C
 ```bash
 git pull origin master
 docker compose down           # ⚠️ OBLIGATORI
-docker compose build --no-cache  # ⚠️ OBLIGATORI per canvis de codi
+docker compose build --no-cache  # ⚠️ OBLIGATORI per canvis de codi/templates/CSS
 docker compose up -d          # ⚠️ OBLIGATORI
 ```
 
-**REGLA D'OR**: Si hi ha canvis de codi (Python, settings, apps.py, etc.) → SEMPRE rebuild complet!
+**REGLA D'OR**: Si hi ha canvis de codi (Python, settings, apps.py, **templates HTML, CSS, JavaScript**) → SEMPRE rebuild complet!
+
+### 🎨 EXEMPLES DE CANVIS QUE REQUEREIXEN REBUILD:
+- ✅ Fitxers Python (.py)
+- ✅ Templates Django (.html) 
+- ✅ Fitxers CSS (.css)
+- ✅ Fitxers JavaScript (.js)
+- ✅ Settings i configuració
+- ✅ Requirements.txt
+- ❌ **NOMÉS** fitxers de base de dades NO requereixen rebuild (només `restart`)
 
 ### CHECKLIST ABANS DE TESTING AL VPS:
 - [ ] Commits locals fets
