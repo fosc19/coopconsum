@@ -30,7 +30,7 @@ class ProveedorSerializer(serializers.ModelSerializer):
 
 
 class ProductoSerializer(serializers.ModelSerializer):
-    """Serializer para productos públicos"""
+    """Serializer para productos públicos (sin precios por seguridad)"""
     proveedor = ProveedorSerializer(read_only=True)
     categoria = CategoriaSerializer(read_only=True)
     unidad_venta_display = serializers.CharField(source='get_unidad_venta_display', read_only=True)
@@ -41,7 +41,7 @@ class ProductoSerializer(serializers.ModelSerializer):
             'id',
             'nombre',
             'descripcion', 
-            'precio',
+            # 'precio', # Eliminado por seguridad - no compartir preus
             'unidad_venta',
             'unidad_venta_display',
             'categoria',

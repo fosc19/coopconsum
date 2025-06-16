@@ -15,6 +15,11 @@ class EventoCalendario(models.Model):
         blank=True
     )
     fecha_creacion = models.DateTimeField(_("Fecha de creación"), auto_now_add=True)
+    compartir_api = models.BooleanField(
+        _("Compartir a l'API"),
+        default=False,
+        help_text=_("Si està marcat, aquest event serà visible a l'API pública per altres cooperatives")
+    )
 
     def __str__(self):
         return self.titulo

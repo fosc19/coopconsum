@@ -15,8 +15,17 @@ from .serializers import (
 @api_view(['GET'])
 def api_info(request):
     """Informació bàsica de l'API"""
+    from web.models import ConfiguracioWeb
+    
+    # Obtenir nom dinàmic de la cooperativa
+    try:
+        config = ConfiguracioWeb.objects.first()
+        nom_cooperativa = config.nom_cooperativa if config else "CoopConsum"
+    except:
+        nom_cooperativa = "CoopConsum"
+    
     return Response({
-        'nom': 'API Cooperatives CoopConsum',
+        'nom': f'API {nom_cooperativa}',
         'versio': '1.0',
         'descripcio': 'API pública per compartir informació entre cooperatives de consum',
         'documentacio': {
@@ -94,12 +103,15 @@ class ProductoViewSet(viewsets.ReadOnlyModelViewSet):
 class EventoCalendarioViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet para eventos del calendario.
-    Muestra todos los eventos (no hay campo público en el modelo actual).
+    Solo muestra eventos marcados para compartir en la API.
     """
-    queryset = EventoCalendario.objects.all()
     serializer_class = EventoCalendarioSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['color']
     search_fields = ['titulo', 'descripcion']
     ordering_fields = ['fecha', 'fecha_creacion']
     ordering = ['fecha']
+    
+    def get_queryset(self):
+        # Solo eventos marcados para compartir en la API
+        return EventoCalendario.objects.filter(compartir_api=True)

@@ -6,8 +6,8 @@ from .forms import EventoCalendarioForm # Importar el formulario
 @admin.register(EventoCalendario)
 class EventoCalendarioAdmin(admin.ModelAdmin):
     form = EventoCalendarioForm # Usar el formulario personalizado
-    list_display = ('titulo', 'fecha', 'creado_por', 'fecha_creacion', 'color_display') # Añadir color_display
-    list_filter = ('fecha', 'creado_por')
+    list_display = ('titulo', 'fecha', 'creado_por', 'compartir_api', 'fecha_creacion', 'color_display') # Añadir compartir_api
+    list_filter = ('fecha', 'creado_por', 'compartir_api')
     search_fields = ('titulo', 'descripcion')
     date_hierarchy = 'fecha'
     ordering = ('-fecha',)
