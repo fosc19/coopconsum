@@ -34,7 +34,7 @@ media/
 1. Ves a [github.com](https://github.com)
 2. Fes clic a "New repository"
 3. Configura:
-   - **Repository name**: `lacivada-cooperativa`
+   - **Repository name**: `coopconsum`
    - **Description**: `Sistema de gestió per cooperatives de consum - Codi obert`
    - **Visibility**: ✅ Public
    - **Initialize**: ❌ No afegir README (ja el tens)
@@ -43,7 +43,7 @@ media/
 #### Opció B: Des de línia de comandos
 ```bash
 # Al teu directori local
-git remote add origin https://github.com/fosc19/lacivada-cooperativa.git
+git remote add origin https://github.com/fosc19/coopconsum.git
 git branch -M main
 git push -u origin main
 ```
@@ -77,7 +77,7 @@ Crear un `README.md` atractiu amb:
 ### 4. **Estructura Recomanada del Repositori Públic**
 
 ```
-lacivada-cooperativa/
+coopconsum/
 ├── README.md                    # Descripció principal
 ├── LICENSE                      # Llicència MIT
 ├── INSTALL.md                   # Guia d'instal·lació
@@ -98,7 +98,7 @@ lacivada-cooperativa/
 ### 5. **Contingut del README.md Principal**
 
 ```markdown
-# 🌱 La Civada - Sistema de Gestió per Cooperatives
+# 🌱 CoopConsum - Sistema de Gestió per Cooperatives
 
 > Sistema complet de gestió per cooperatives de consum responsable
 
@@ -114,8 +114,8 @@ lacivada-cooperativa/
 ## 🚀 Instal·lació Ràpida
 
 ```bash
-git clone https://github.com/fosc19/lacivada-cooperativa.git
-cd lacivada-cooperativa
+git clone https://github.com/fosc19/coopconsum.git
+cd coopconsum
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
@@ -129,13 +129,13 @@ python manage.py runserver
 
 ## 🌐 Demo
 
-- **Web**: https://lacivada.com
-- **API**: https://lacivada.com/api/
+- **Demo VPS**: http://57.129.134.84/
+- **API**: http://57.129.134.84/api/
 
 ## 🤝 Comunitat
 
 Tens una cooperativa? Uneix-te a la xarxa!
-- Email: cooperatives@lacivada.com
+- Email: cooperatives@coopconsum.org
 - Issues: Per reportar bugs
 - Discussions: Per preguntes i idees
 
@@ -148,7 +148,7 @@ MIT License - Veure [LICENSE](LICENSE)
 
 Un cop creat el repositori, actualitzar l'enllaç a:
 - `web/templates/web/cooperatives.html` línia amb `href="#"`
-- Canviar per: `href="https://github.com/fosc19/lacivada-cooperativa"`
+- Canviar per: `href="https://github.com/fosc19/coopconsum"`
 
 ### 7. **Promoció del Projecte**
 
@@ -184,4 +184,4 @@ Un cop completats aquests passos, el teu projecte estarà disponible públicamen
 
 ---
 
-**Necessites ajuda?** Contacta amb l'equip tècnic de La Civada.
+**Necessites ajuda?** Contacta amb la comunitat CoopConsum a GitHub Issues.

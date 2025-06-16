@@ -1,4 +1,4 @@
-# Docker Setup - La Civada
+# Docker Setup - CoopConsum
 
 ## Fitxers Docker creats
 
@@ -37,7 +37,7 @@ sudo systemctl stop nginx
 sudo systemctl stop gunicorn
 
 # Backup de dades
-pg_dump lacivada_db > backup_pre_docker.sql
+pg_dump coopconsum_db > backup_pre_docker.sql
 
 # Llançar Docker
 docker compose up -d
@@ -73,7 +73,7 @@ docker compose restart web
 docker compose exec web python manage.py migrate
 
 # Backup
-docker compose exec db pg_dump -U lacivada_user lacivada_db > backup.sql
+docker compose exec db pg_dump -U coopconsum_user coopconsum_db > backup.sql
 ```
 
 ## Avantatges
@@ -113,11 +113,8 @@ Per activar la gestió automàtica de comandes recurrents, cal configurar els cr
 
 ### 1. Instal·lar cron jobs
 ```bash
-# Copiar fitxer de configuració
-cp crontab_docker.txt /tmp/crontab_docker.txt
-
-# Instal·lar cron jobs
-crontab /tmp/crontab_docker.txt
+# Els cron jobs s'han de configurar manualment o usar el script d'instal·lació automàtica
+# Consulta el fitxer install_docker.sh per veure com es configuren automàticament
 
 # Verificar instal·lació
 crontab -l
@@ -134,7 +131,7 @@ Els cron jobs executaran diàriament:
 ### 3. Logs de cron jobs
 ```bash
 # Veure logs dels cron jobs
-tail -f /var/log/lacivada_docker_cron.log
+tail -f /var/log/coopconsum_docker_cron.log
 
 # Verificar que els contenidors responen
 docker compose exec web python manage.py help | grep -E '(generar_pedidos|cerrar_pedidos)'

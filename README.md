@@ -24,7 +24,7 @@ Sistema complet de gestió per cooperatives de consum responsable, desenvolupat 
 
 1. **Clonar el repositori**
 ```bash
-git clone https://github.com/tu-usuario/coopconsum.git
+git clone https://github.com/fosc19/coopconsum.git
 cd coopconsum
 ```
 
@@ -69,29 +69,32 @@ Ja pots accedir a http://localhost:8000!
 
 ## 🚀 DEPLOYMENT AUTOMÀTIC AL VPS
 
-### Scripts d'automatització disponibles
-
-- **`./quick-deploy.sh`** - Deploy automàtic complet al VPS
-- **`./diagnose-vps.sh`** - Diagnòstic complet de problemes
-
-### Usage ràpid:
+### Opció 1: Instal·lació Automàtica amb Docker (Recomanada)
 
 ```bash
-# Deploy automàtic (fa tot el procés: git push + docker rebuild + migrations)
-./quick-deploy.sh
-
-# Diagnòstic si hi ha problemes
-./diagnose-vps.sh
-
-# Connexió manual SSH al VPS
-ssh -i /tmp/claude_new_key ubuntu@57.129.134.84
+# Una sola comanda ho fa tot (instal·la Docker + CoopConsum + configuració)
+curl -sSL https://github.com/fosc19/coopconsum/raw/master/install_docker.sh | bash
 ```
 
-### Documentació de troubleshooting
+### Opció 2: Despliegue a VPS existent
 
-Consulta aquests fitxers per problemes específics:
-- **`../TROUBLESHOOTING_DOCKER_SSH.md`** - Problemes Docker i SSH detallats
-- **`../CLAUDE.md`** - Workflow complet i configuració VPS
+Si ja tens un VPS amb Docker configurat:
+
+```bash
+# Clona el repositori
+git clone https://github.com/fosc19/coopconsum.git
+cd coopconsum
+
+# Configura variables d'entorn
+cp .env.example .env
+# Edita .env amb les teves configuracions
+
+# Llança els contenidors
+docker compose up -d
+
+# Accedeix a http://LA_TEVA_IP/admin/ 
+# Usuari: admin | Contrasenya: cooperativa2025
+```
 
 ## 🔧 Gestió amb Docker
 
@@ -103,21 +106,24 @@ docker compose ps
 # Veure logs del sistema
 docker compose logs web
 
-# Veure logs dels cron jobs
-docker compose logs cron
+# Test de connectivitat
+curl -I http://LA_TEVA_IP/  # Ha de retornar 200 OK
 ```
 
-### Verificar tasques automàtiques
+### Comandos de manteniment
 ```bash
-# Veure els cron jobs configurats
-crontab -l
+# Actualitzar el codi
+git pull origin master
+docker compose down
+docker compose build --no-cache  # Important per canvis de codi
+docker compose up -d
 
-# Veure logs de les tasques automàtiques
-tail -f /var/log/coopconsum_cron.log
+# Migracions de base de dades
+docker compose exec web python manage.py makemigrations
+docker compose exec web python manage.py migrate
 
-# Executar tasques manualment per provar
-docker compose exec web python manage.py generar_pedidos_test
-docker compose exec web python manage.py cerrar_pedidos
+# Backup de base de dades
+docker compose exec db pg_dump -U coopconsum_user coopconsum_db > backup.sql
 ```
 
 ### Comandos útiles para desarrollo
@@ -167,6 +173,7 @@ Exemple d'ús:
 ```bash
 # Obtenir llista de proveïdors
 curl http://localhost:8000/api/proveedores/
+curl http://57.129.134.84/api/proveedores/  # Exemple VPS
 
 # Buscar productes ecològics
 curl http://localhost:8000/api/productos/?search=ecològic
@@ -181,7 +188,7 @@ Crea un arxiu `.env` o configura directament a `settings.py`:
 ```python
 SECRET_KEY = 'la-teva-clau-secreta-aqui'
 DEBUG = False  # Per producció
-ALLOWED_HOSTS = ['el-teu-domini.cat']
+ALLOWED_HOSTS = ['57.129.134.84', 'localhost', 'el-teu-domini.cat']
 
 # Base de dades (exemple PostgreSQL)
 DATABASES = {
@@ -232,9 +239,9 @@ Aquest sistema neix de la necessitat de les cooperatives de consum de tenir eine
 
 ## 📞 Suport
 
-- **Documentació**: [Wiki del projecte](https://github.com/tu-usuario/coopconsum/wiki)
-- **Issues**: [Reportar problemes](https://github.com/tu-usuario/coopconsum/issues)
-- **Discussions**: [Fòrum de la comunitat](https://github.com/tu-usuario/coopconsum/discussions)
+- **Documentació**: [Wiki del projecte](https://github.com/fosc19/coopconsum/wiki)
+- **Issues**: [Reportar problemes](https://github.com/fosc19/coopconsum/issues)
+- **Discussions**: [Fòrum de la comunitat](https://github.com/fosc19/coopconsum/discussions)
 
 ## 🏆 Cooperatives que l'usen
 

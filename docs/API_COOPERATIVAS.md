@@ -165,9 +165,9 @@ L'API permet peticions des de qualsevol origen per facilitar l'accés des d'altr
 
 ## 📊 Límits d'Ús
 
-- **100 peticions per hora** per IP
+- **100 peticions per hora** per IP (configurable per cooperativa)
 - Només dades públiques disponibles
-- Sense accés a informació sensible
+- Sense accés a informació sensible (preus interns, dades de socis)
 
 ## 🔧 Integració amb Altres Cooperatives
 
