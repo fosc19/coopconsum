@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     curl \
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuari per l'aplicació
