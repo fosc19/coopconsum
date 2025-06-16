@@ -16,8 +16,7 @@ class APIInfoViewTest(APITestCase):
     def setUp(self):
         # Crear configuració web per test
         self.config = ConfiguracioWeb.objects.create(
-            nom_cooperativa='Test Cooperativa',
-            email_cooperativa='test@coop.com'
+            nom_cooperativa='Test Cooperativa'
         )
 
     def test_api_info_endpoint(self):
