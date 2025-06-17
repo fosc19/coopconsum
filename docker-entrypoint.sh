@@ -37,6 +37,10 @@ while ! pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER; do
 done
 echo "Base de dades disponible!"
 
+# Generar migracions si hi ha canvis de models
+echo "Generant migracions si cal..."
+python manage.py makemigrations --noinput
+
 # Executar migracions
 echo "Executant migracions..."
 python manage.py migrate --noinput
