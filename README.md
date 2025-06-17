@@ -10,12 +10,12 @@ Sistema complet de gestió per cooperatives de consum responsable, desenvolupat 
 
 ## 🧪 Testing & Quality
 
-✅ **133 tests unitaris** cobreixen tota la funcionalitat core:
-- 15 tests models socis (Socio, CuentaSocio, MovimientoCuenta)
-- 33 tests workflow pedidos (PedidoColectivo, ComandaRecurrente, SeleccionSocio)  
-- 33 tests catàleg productos (Categoria, Proveedor, Producto)
+✅ **65 tests unitaris** cobreixen tota la funcionalitat core:
+- 11 tests models socis (Socio, CuentaSocio, MovimientoCuenta)
+- 22 tests workflow pedidos (PedidoColectivo, ComandaRecurrente, SeleccionSocio)  
+- 22 tests catàleg productos (Categoria, Proveedor, Producto)
 - 36 tests API REST (endpoints públics, seguretat, filtres)
-- 16 tests esdeveniments (EventoCalendario, compartició API)
+- 14 tests esdeveniments (EventoCalendario, compartició API)
 
 **Executar tests**:
 ```bash
