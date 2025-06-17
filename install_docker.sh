@@ -292,6 +292,7 @@ elif [ "$HTTP_CODE" = "500" ]; then
     fi
 else
     print_warning "L'aplicació encara s'està inicialitzant... (HTTP $HTTP_CODE)"
+    print_status "Continuant amb la configuració..."
 fi
 
 # Debug: Verificar que arribem aquí
