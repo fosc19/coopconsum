@@ -62,6 +62,10 @@ EOF
 echo "Col·lectant fitxers estàtics..."
 python manage.py collectstatic --noinput
 
+# Crear configuració inicial de la web si no existeix
+echo "Creant configuració inicial de la web..."
+python manage.py crear_configuracio_inicial
+
 # Iniciar servidor
 echo "Iniciant servidor..."
 exec gunicorn coopconsum.wsgi:application --bind 0.0.0.0:8000 --workers 3

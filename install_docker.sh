@@ -252,12 +252,46 @@ print_status "Les tasques d'inicialització Django es fan automàticament al con
 # Esperar que el contenidor web finalitzi la seva configuració inicial
 sleep 15
 
-# Verificar que l'aplicació funciona
+# Verificar que l'aplicació funciona correctament
 print_status "Verificant que l'aplicació està funcionant..."
-if curl -f http://localhost >/dev/null 2>&1; then
-    print_success "Aplicació web funcionant correctament al port 80"
+
+# Test HTTP bàsic
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost 2>/dev/null || echo "000")
+
+if [ "$HTTP_CODE" = "200" ]; then
+    print_success "✅ Web pública funcionant correctament (HTTP 200)"
+    
+    # Verificació adicional: ConfiguracioWeb existeix
+    if run_docker_command compose exec -T web python manage.py shell -c "from web.models import ConfiguracioWeb; print('CONFIG_OK' if ConfiguracioWeb.objects.exists() else 'CONFIG_MISSING')" 2>/dev/null | grep -q "CONFIG_OK"; then
+        print_success "✅ ConfiguracioWeb creada correctament"
+    else
+        print_warning "⚠️ ConfiguracioWeb no detectada, creant manualment..."
+        run_docker_command compose exec -T web python manage.py crear_configuracio_inicial
+        print_success "✅ ConfiguracioWeb creada manualment"
+    fi
+elif [ "$HTTP_CODE" = "500" ]; then
+    print_warning "⚠️ Server Error 500 detectat, aplicant fix automàtic..."
+    
+    # Fix automàtic per Server Error 500
+    print_status "Verificant migracions..."
+    run_docker_command compose exec -T web python manage.py migrate --noinput
+    
+    print_status "Creant ConfiguracioWeb..."
+    run_docker_command compose exec -T web python manage.py crear_configuracio_inicial
+    
+    print_status "Reiniciant contenidor web..."
+    run_docker_command compose restart web
+    
+    # Test final després del fix
+    sleep 10
+    HTTP_CODE_FINAL=$(curl -s -o /dev/null -w "%{http_code}" http://localhost 2>/dev/null || echo "000")
+    if [ "$HTTP_CODE_FINAL" = "200" ]; then
+        print_success "✅ Fix aplicat correctament - Web funcionant"
+    else
+        print_error "❌ Fix no resolt, revisar logs: docker compose logs web"
+    fi
 else
-    print_warning "L'aplicació encara s'està inicialitzant..."
+    print_warning "L'aplicació encara s'està inicialitzant... (HTTP $HTTP_CODE)"
 fi
 
 # Debug: Verificar que arribem aquí
