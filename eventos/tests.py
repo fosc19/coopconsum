@@ -61,11 +61,12 @@ class EventoCalendarioModelTest(TestCase):
     def test_campos_requerits(self):
         """Test que els camps requerits no poden estar buits"""
         # Test títol requerit
+        evento = EventoCalendario(
+            fecha=timezone.now()
+            # Falta titulo (requerit)
+        )
         with self.assertRaises(Exception):
-            EventoCalendario.objects.create(
-                fecha=timezone.now()
-                # Falta titulo (requerit)
-            )
+            evento.full_clean()  # Això sí que valida i llança excepció
 
         # Test fecha requerida
         with self.assertRaises(Exception):
