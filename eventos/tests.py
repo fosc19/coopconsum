@@ -60,20 +60,23 @@ class EventoCalendarioModelTest(TestCase):
 
     def test_campos_requerits(self):
         """Test que els camps requerits no poden estar buits"""
+        from django.core.exceptions import ValidationError
+        
         # Test títol requerit
         evento = EventoCalendario(
             fecha=timezone.now()
             # Falta titulo (requerit)
         )
-        with self.assertRaises(Exception):
-            evento.full_clean()  # Això sí que valida i llança excepció
+        with self.assertRaises(ValidationError):
+            evento.full_clean()  # Això sí que valida i llança ValidationError
 
         # Test fecha requerida
-        with self.assertRaises(Exception):
-            EventoCalendario.objects.create(
-                titulo='Test'
-                # Falta fecha (requerida)
-            )
+        evento2 = EventoCalendario(
+            titulo='Test'
+            # Falta fecha (requerida)
+        )
+        with self.assertRaises(ValidationError):
+            evento2.full_clean()
 
     def test_evento_compartir_api(self):
         """Test funcionalitat compartir API"""
