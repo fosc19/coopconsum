@@ -1,10 +1,10 @@
 # 🤝 CoopConsum - Sistema de Gestió per Cooperatives
 
-![Django Tests](https://github.com/fosc19/coopconsum/workflows/Django%20Tests%20&%20Coverage/badge.svg)
+[![Django Tests](https://github.com/fosc19/coopconsum/actions/workflows/django.yml/badge.svg)](https://github.com/fosc19/coopconsum/actions/workflows/django.yml)
 ![Python Version](https://img.shields.io/badge/python-3.12-blue)
 ![Django Version](https://img.shields.io/badge/django-5.1.6-green)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-pending-lightgrey)
+![Tests](https://img.shields.io/badge/tests-65%20passing-brightgreen)
 
 Sistema complet de gestió per cooperatives de consum responsable, desenvolupat amb Django. Inclou gestió de socis, comandes, proveïdors, productes i una API pública per compartir informació entre cooperatives.
 
