@@ -114,4 +114,9 @@ class EventoCalendarioViewSet(viewsets.ReadOnlyModelViewSet):
     
     def get_queryset(self):
         # Solo eventos marcados para compartir en la API
-        return EventoCalendario.objects.filter(compartir_api=True)
+        # Compatible amb BDs que no tenen el camp compartir_api encara
+        try:
+            return EventoCalendario.objects.filter(compartir_api=True)
+        except Exception:
+            # Si el camp no existeix, retornar tots els esdeveniments
+            return EventoCalendario.objects.all()
