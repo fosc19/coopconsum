@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Si estamos ejecutando desde pipe (curl | bash), cerrar stdin
+if [ ! -t 0 ]; then
+    exec 0< /dev/null
+fi
+
 # Script d'instal·lació automàtica de CoopConsum amb Docker
 # Per a cooperatives sense coneixements tècnics
 
