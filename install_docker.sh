@@ -488,4 +488,6 @@ sudo chown $USER:$USER /var/log/coopconsum_cron.log
 print_success "Tasques automàtiques configurades al sistema"
 
 # MOSTRAR INSTRUCCIONS FINALS SEMPRE
+# Desactivar 'set -e' per assegurar que les instruccions finals sempre es mostren
+set +e
 show_final_instructions
