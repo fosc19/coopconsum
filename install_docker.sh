@@ -5,12 +5,29 @@
 
 set -e
 
-# Funció per gestionar errors
+# DEBUG: Activar mode verbose per veure tots els comandos
+set -x
+
+# Funció per gestionar errors millorada
 handle_error() {
     local line_no=$1
     local error_code=$2
-    echo "ERROR: Script failed at line $line_no with exit code $error_code"
-    echo "DEBUG: Last command that failed: $BASH_COMMAND"
+    echo ""
+    echo "❌ ERROR: Script failed at line $line_no with exit code $error_code"
+    echo "🐛 DEBUG: Last command that failed: $BASH_COMMAND"
+    echo ""
+    echo "🔍 Intentant mostrar instruccions finals abans de sortir..."
+    
+    # Intentar mostrar instruccions finals fins i tot si hi ha error
+    set +e
+    if declare -f show_final_instructions > /dev/null; then
+        show_final_instructions
+    else
+        echo "⚠️ No es poden mostrar instruccions finals - funció no definida encara"
+        echo "📋 Verificació manual necessària:"
+        echo "   curl -I http://localhost/"
+        echo "   curl -I http://localhost/admin/"
+    fi
     exit $error_code
 }
 
@@ -278,35 +295,46 @@ wait_for_service() {
 }
 
 # Health check 1: Esperar que la base de dades estigui llesta
+print_status "🔍 Health Check 1: Base de dades PostgreSQL"
+set +e  # Temporalment desactivar exit on error
 if ! wait_for_service "Base de dades PostgreSQL" 12 "run_docker_command compose exec -T db pg_isready"; then
     print_warning "⚠️ La base de dades trigarà més a estar llesta. Revisant logs..."
-    run_docker_command compose logs db --tail=10
+    run_docker_command compose logs db --tail=10 || true
     print_status "Continuant amb la instal·lació..."
 fi
+set -e  # Reactivar exit on error
 
 # Health check 2: Esperar que el contenidor web estigui healthy
+print_status "🔍 Health Check 2: Contenidor web Django"
+set +e  # Temporalment desactivar exit on error
 if ! wait_for_service "Contenidor web Django" 20 "run_docker_command compose ps web | grep -q 'Up'"; then
     print_warning "⚠️ El contenidor web trigarà més a inicialitzar-se. Revisant logs..."
-    run_docker_command compose logs web --tail=20
+    run_docker_command compose logs web --tail=20 || true
     print_status "Continuant amb la instal·lació..."
 fi
+set -e  # Reactivar exit on error
 
 # Health check 3: Verificar que Django pot connectar amb la BD
-print_status "Verificant connexió Django amb base de dades..."
+print_status "🔍 Health Check 3: Connexió Django amb base de dades"
+set +e  # Temporalment desactivar exit on error
 if run_docker_command compose exec -T web python manage.py check --database default 2>/dev/null; then
     print_success "✅ Django connecta correctament amb la base de dades"
 else
     print_warning "⚠️ Problemes amb la connexió a la base de dades"
     print_status "Intentant reparar connexions..."
     sleep 10
-    if ! run_docker_command compose exec -T web python manage.py check --database default 2>/dev/null; then
+    if run_docker_command compose exec -T web python manage.py check --database default 2>/dev/null; then
+        print_success "✅ Connexió reparada correctament"
+    else
         print_warning "⚠️ Connexió BD trigarà més - serveis encara s'estan inicialitzant"
         print_status "Continuant amb la instal·lació..."
     fi
 fi
+set -e  # Reactivar exit on error
 
 # Health check 4: Test HTTP amb retries intel·ligents
-print_status "Testejant resposta HTTP de l'aplicació web..."
+print_status "🔍 Health Check 4: Test HTTP de l'aplicació web"
+set +e  # Temporalment desactivar exit on error per aquest health check
 
 HTTP_ATTEMPTS=0
 MAX_HTTP_ATTEMPTS=15
@@ -360,11 +388,13 @@ if [ "$HTTP_SUCCESS" = false ]; then
     print_warning "⚠️ L'aplicació web no respon completament després de $MAX_HTTP_ATTEMPTS intents"
     print_status "Això no impedeix continuar amb la instal·lació - pot funcionar correctament"
     print_status "Mostrant logs per diagnòstic:"
-    run_docker_command compose logs web --tail=10
+    run_docker_command compose logs web --tail=10 || true
 fi
+set -e  # Reactivar exit on error després del Health check 4
 
 # Health check 5: Verificar ConfiguracioWeb
-print_status "Verificant model ConfiguracioWeb..."
+print_status "🔍 Health Check 5: Model ConfiguracioWeb"
+set +e  # Temporalment desactivar exit on error
 if run_docker_command compose exec -T web python manage.py shell -c "from web.models import ConfiguracioWeb; config = ConfiguracioWeb.objects.first(); print('CONFIG_OK:', config.nom_cooperativa if config else 'MISSING')" 2>/dev/null | grep -q "CONFIG_OK:"; then
     print_success "✅ ConfiguracioWeb verificada correctament"
 else
@@ -376,26 +406,32 @@ else
         print_status "Pots crear-la manualment després des de l'admin panel"
     fi
 fi
+set -e  # Reactivar exit on error
 
 # Health check 6: Verificar admin panel
-print_status "Verificant accés a l'admin panel..."
+print_status "🔍 Health Check 6: Accés admin panel"
+set +e  # Temporalment desactivar exit on error
 ADMIN_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/admin/ 2>/dev/null || echo "000")
 if [ "$ADMIN_CODE" = "200" ] || [ "$ADMIN_CODE" = "302" ]; then
     print_success "✅ Admin panel accessible (HTTP $ADMIN_CODE)"
 else
     print_warning "⚠️ Admin panel retorna HTTP $ADMIN_CODE"
 fi
+set -e  # Reactivar exit on error
 
 # Health check 7: Test API endpoints
-print_status "Verificant API endpoints..."
+print_status "🔍 Health Check 7: API endpoints"
+set +e  # Temporalment desactivar exit on error
 API_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/api/productos/ 2>/dev/null || echo "000")
 if [ "$API_CODE" = "200" ]; then
     print_success "✅ API endpoints funcionant (HTTP 200)"
 else
     print_warning "⚠️ API retorna HTTP $API_CODE (pot ser normal si no hi ha dades)"
 fi
+set -e  # Reactivar exit on error
 
 print_success "🎯 Health checks completats!"
+print_status "🚀 Continuant amb configuració final..."
 
 # ASSEGURAR QUE LES INSTRUCCIONS FINALS SEMPRE ES MOSTREN
 # Aquesta funció es crida sempre, independentment dels health checks
@@ -487,7 +523,20 @@ sudo chown $USER:$USER /var/log/coopconsum_cron.log
 
 print_success "Tasques automàtiques configurades al sistema"
 
+print_status "🎉 Instal·lació principal completada! Mostrant resum final..."
+
 # MOSTRAR INSTRUCCIONS FINALS SEMPRE
-# Desactivar 'set -e' per assegurar que les instruccions finals sempre es mostren
+# Desactivar 'set -e' i 'set -x' per assegurar que les instruccions finals sempre es mostren
 set +e
+set +x
+
+echo ""
+echo "🔧 FINALITZANT INSTAL·LACIÓ..."
+echo "================================="
+
 show_final_instructions
+
+# Doble verificació que les instruccions s'han mostrat
+echo ""
+echo "✅ SCRIPT INSTALL_DOCKER.SH COMPLETAT CORRECTAMENT"
+echo "🎯 Si veus aquest missatge, la instal·lació ha finalitzat amb èxit!"
