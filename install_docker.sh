@@ -452,9 +452,6 @@ show_final_instructions() {
     print_success "La teva cooperativa ja està llesta per funcionar! 🚀"
 }
 
-# Configurar trap per mostrar instruccions sempre, fins i tot si hi ha errors
-trap 'show_final_instructions' EXIT
-
 # Configurar cron jobs del sistema per execució automàtica diària
 print_status "Configurant tasques automàtiques al sistema..."
 
@@ -490,6 +487,5 @@ sudo chown $USER:$USER /var/log/coopconsum_cron.log
 
 print_success "Tasques automàtiques configurades al sistema"
 
-print_status "✅ Instal·lació completada! Les instruccions finals es mostraran automàticament."
-
-# Nota: Les instruccions finals es mostren via trap EXIT amb show_final_instructions()
+# MOSTRAR INSTRUCCIONS FINALS SEMPRE
+show_final_instructions
