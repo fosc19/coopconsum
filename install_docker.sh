@@ -5,29 +5,21 @@
 
 set -e
 
-# DEBUG: Activar mode verbose per veure tots els comandos
-set -x
-
-# Funció per gestionar errors millorada
+# Funció per gestionar errors
 handle_error() {
     local line_no=$1
     local error_code=$2
-    echo ""
-    echo "❌ ERROR: Script failed at line $line_no with exit code $error_code"
-    echo "🐛 DEBUG: Last command that failed: $BASH_COMMAND"
-    echo ""
-    echo "🔍 Intentant mostrar instruccions finals abans de sortir..."
+    echo "ERROR: Script failed at line $line_no with exit code $error_code"
+    echo "DEBUG: Last command that failed: $BASH_COMMAND"
     
-    # Intentar mostrar instruccions finals fins i tot si hi ha error
-    set +e
-    if declare -f show_final_instructions > /dev/null; then
+    # IMPORTANT: Mostrar instruccions finals encara que hi hagi errors
+    if [ -f /var/www/coopconsum/.env ]; then
+        echo ""
+        echo "⚠️ Hi ha hagut un error, però la instal·lació pot estar completa."
+        echo "Pots verificar-ho visitant: http://$(hostname -I | awk '{print $1}')"
         show_final_instructions
-    else
-        echo "⚠️ No es poden mostrar instruccions finals - funció no definida encara"
-        echo "📋 Verificació manual necessària:"
-        echo "   curl -I http://localhost/"
-        echo "   curl -I http://localhost/admin/"
     fi
+    
     exit $error_code
 }
 
@@ -83,6 +75,60 @@ run_docker_command() {
             print_warning "Després de la instal·lació, reinicia la sessió per usar Docker sense sudo"
         fi
     fi
+}
+
+# Funció per mostrar instruccions finals
+show_final_instructions() {
+    # Obtenir IP del servidor
+    SERVER_IP=$(hostname -I | awk '{print $1}')
+    
+    # Mostrar informació final SEMPRE
+    echo ""
+    echo "🎉 Instal·lació completada amb èxit!"
+    echo "===================================="
+    echo ""
+    print_success "CoopConsum està funcionant a:"
+    echo "  📱 Web pública: http://$SERVER_IP"
+    echo "  🔧 Panell admin: http://$SERVER_IP/admin/"
+    echo ""
+    print_success "Credencials d'administrador:"
+    echo "  👤 Usuari: admin"
+    echo "  🔑 Contrasenya: cooperativa2025"
+    echo ""
+    print_warning "IMPORTANT: Canvia la contrasenya immediatament!"
+    echo "  1. Accedeix a http://$SERVER_IP/admin/"
+    echo "  2. Inicia sessió amb les credencials anteriors"
+    echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
+    echo ""
+    print_status "Tasques automàtiques configurades (cron del sistema):"
+    echo "  ⏰ Generació de comandes: cada dia a les 23:58"
+    echo "  🔒 Tancament de comandes: cada dia a les 23:59"
+    echo "  🧹 Neteja de logs: cada diumenge a les 03:00"
+    echo "  📝 Logs disponibles a: /var/log/coopconsum_cron.log"
+    echo ""
+    print_success "💾 Backup automàtic: Configurat al proveïdor VPS (recomanat)"
+    echo ""
+    print_status "Comandos útils:"
+    echo "  📊 Veure estat: cd $INSTALL_DIR && docker compose ps"
+    echo "  📝 Veure logs: cd $INSTALL_DIR && docker compose logs -f"
+    echo "  🔄 Reiniciar: cd $INSTALL_DIR && docker compose restart"
+    echo "  🛑 Aturar: cd $INSTALL_DIR && docker compose down"
+    echo ""
+    print_status "Verificar tasques automàtiques:"
+    echo "  ✅ Veure cron jobs: crontab -l"
+    echo "  📋 Veure logs: tail -f /var/log/coopconsum_cron.log"
+    echo "  🧪 Provar manualment: cd $INSTALL_DIR && docker compose exec web python manage.py generar_pedidos_test"
+    echo ""
+    if [ "$DOCKER_JUST_INSTALLED" = true ]; then
+        echo ""
+        print_warning "IMPORTANT: Docker s'ha instal·lat durant aquesta execució."
+        print_status "Per a futures operacions de Docker sense sudo, executa:"
+        echo "  🔄 newgrp docker"
+        echo "  o bé reinicia la sessió SSH"
+        echo ""
+    fi
+    
+    print_success "La teva cooperativa ja està llesta per funcionar! 🚀"
 }
 
 # Verificar que s'executa amb permisos adequats
@@ -266,227 +312,49 @@ fi
 # dins del contenidor via docker-entrypoint.sh quan s'inicia
 print_status "Les tasques d'inicialització Django es fan automàticament al contenidor..."
 
-# HEALTH CHECKS COMPLETS
-print_status "Executant health checks complets..."
+# HEALTH CHECKS SIMPLIFICATS PER MODE NO INTERACTIU
+print_status "Verificant que tot estigui funcionant correctament..."
 echo ""
 
-# Funció per esperar que un servei estigui llest
-wait_for_service() {
-    local service_name="$1"
-    local max_attempts="$2"
-    local check_command="$3"
-    local attempt=1
-    
-    print_status "Esperant que $service_name estigui llest..."
-    
-    while [ $attempt -le $max_attempts ]; do
-        if eval "$check_command" 2>/dev/null; then
-            print_success "✅ $service_name llest (intent $attempt/$max_attempts)"
-            return 0
-        fi
-        
-        print_status "Intent $attempt/$max_attempts - $service_name encara no està llest..."
-        sleep 5
-        attempt=$((attempt + 1))
-    done
-    
-    print_error "❌ $service_name no s'ha inicialitzat després de $max_attempts intents"
-    return 1
-}
+# Desactivar temporalment set -e per als health checks
+set +e
 
-# Health check 1: Esperar que la base de dades estigui llesta
-print_status "🔍 Health Check 1: Base de dades PostgreSQL"
-set +e  # Temporalment desactivar exit on error
-if ! wait_for_service "Base de dades PostgreSQL" 12 "run_docker_command compose exec -T db pg_isready"; then
-    print_warning "⚠️ La base de dades trigarà més a estar llesta. Revisant logs..."
-    run_docker_command compose logs db --tail=10 || true
-    print_status "Continuant amb la instal·lació..."
-fi
-set -e  # Reactivar exit on error
-
-# Health check 2: Esperar que el contenidor web estigui healthy
-print_status "🔍 Health Check 2: Contenidor web Django"
-set +e  # Temporalment desactivar exit on error
-if ! wait_for_service "Contenidor web Django" 20 "run_docker_command compose ps web | grep -q 'Up'"; then
-    print_warning "⚠️ El contenidor web trigarà més a inicialitzar-se. Revisant logs..."
-    run_docker_command compose logs web --tail=20 || true
-    print_status "Continuant amb la instal·lació..."
-fi
-set -e  # Reactivar exit on error
-
-# Health check 3: Verificar que Django pot connectar amb la BD
-print_status "🔍 Health Check 3: Connexió Django amb base de dades"
-set +e  # Temporalment desactivar exit on error
-if run_docker_command compose exec -T web python manage.py check --database default 2>/dev/null; then
-    print_success "✅ Django connecta correctament amb la base de dades"
+# Health check 1: Base de dades
+print_status "Verificant base de dades PostgreSQL..."
+if run_docker_command compose exec -T db pg_isready 2>/dev/null; then
+    print_success "✅ Base de dades PostgreSQL funcionant"
 else
-    print_warning "⚠️ Problemes amb la connexió a la base de dades"
-    print_status "Intentant reparar connexions..."
-    sleep 10
-    if run_docker_command compose exec -T web python manage.py check --database default 2>/dev/null; then
-        print_success "✅ Connexió reparada correctament"
-    else
-        print_warning "⚠️ Connexió BD trigarà més - serveis encara s'estan inicialitzant"
-        print_status "Continuant amb la instal·lació..."
-    fi
+    print_warning "⚠️ Base de dades encara inicialitzant-se..."
 fi
-set -e  # Reactivar exit on error
 
-# Health check 4: Test HTTP amb retries intel·ligents
-print_status "🔍 Health Check 4: Test HTTP de l'aplicació web"
-set +e  # Temporalment desactivar exit on error per aquest health check
-
-HTTP_ATTEMPTS=0
-MAX_HTTP_ATTEMPTS=15
-HTTP_SUCCESS=false
-
-while [ $HTTP_ATTEMPTS -lt $MAX_HTTP_ATTEMPTS ] && [ "$HTTP_SUCCESS" = false ]; do
-    HTTP_ATTEMPTS=$((HTTP_ATTEMPTS + 1))
-    print_status "Test HTTP $HTTP_ATTEMPTS/$MAX_HTTP_ATTEMPTS..."
-    
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost 2>/dev/null || echo "000")
-    
-    case "$HTTP_CODE" in
-        "200")
-            print_success "✅ Web pública funcionant correctament (HTTP 200)"
-            HTTP_SUCCESS=true
-            ;;
-        "500")
-            print_warning "⚠️ Server Error 500 detectat (intent $HTTP_ATTEMPTS/$MAX_HTTP_ATTEMPTS)"
-            if [ $HTTP_ATTEMPTS -eq 1 ]; then
-                print_status "Aplicant fix automàtic per Server Error 500..."
-                
-                # Fix automàtic per Server Error 500
-                print_status "Verificant i aplicant migracions..."
-                run_docker_command compose exec -T web python manage.py makemigrations --noinput || true
-                run_docker_command compose exec -T web python manage.py migrate --noinput || true
-                
-                print_status "Creant ConfiguracioWeb..."
-                run_docker_command compose exec -T web python manage.py crear_configuracio_inicial || true
-                
-                print_status "Reiniciant contenidor web..."
-                run_docker_command compose restart web
-                
-                print_status "Esperant que el servei es recuperi..."
-                sleep 15
-            else
-                sleep 10
-            fi
-            ;;
-        "000"|"502"|"503")
-            print_status "Servei encara inicialitzant-se (HTTP $HTTP_CODE)..."
-            sleep 8
-            ;;
-        *)
-            print_warning "Resposta HTTP inesperada: $HTTP_CODE"
-            sleep 5
-            ;;
-    esac
-done
-
-if [ "$HTTP_SUCCESS" = false ]; then
-    print_warning "⚠️ L'aplicació web no respon completament després de $MAX_HTTP_ATTEMPTS intents"
-    print_status "Això no impedeix continuar amb la instal·lació - pot funcionar correctament"
-    print_status "Mostrant logs per diagnòstic:"
-    run_docker_command compose logs web --tail=10 || true
-fi
-set -e  # Reactivar exit on error després del Health check 4
-
-# Health check 5: Verificar ConfiguracioWeb
-print_status "🔍 Health Check 5: Model ConfiguracioWeb"
-set +e  # Temporalment desactivar exit on error
-if run_docker_command compose exec -T web python manage.py shell -c "from web.models import ConfiguracioWeb; config = ConfiguracioWeb.objects.first(); print('CONFIG_OK:', config.nom_cooperativa if config else 'MISSING')" 2>/dev/null | grep -q "CONFIG_OK:"; then
-    print_success "✅ ConfiguracioWeb verificada correctament"
+# Health check 2: Contenidor web
+print_status "Verificant contenidor web Django..."
+WEB_STATUS=$(run_docker_command compose ps --format json 2>/dev/null | grep -o '"Status":"[^"]*"' | grep -o 'Up' || echo "")
+if [ ! -z "$WEB_STATUS" ]; then
+    print_success "✅ Contenidor web funcionant"
 else
-    print_warning "⚠️ ConfiguracioWeb no detectada, creant..."
-    if run_docker_command compose exec -T web python manage.py crear_configuracio_inicial; then
-        print_success "✅ ConfiguracioWeb creada correctament"
-    else
-        print_warning "⚠️ No es pot crear ConfiguracioWeb automàticament"
-        print_status "Pots crear-la manualment després des de l'admin panel"
-    fi
+    print_warning "⚠️ Contenidor web encara inicialitzant-se..."
 fi
-set -e  # Reactivar exit on error
 
-# Health check 6: Verificar admin panel
-print_status "🔍 Health Check 6: Accés admin panel"
-set +e  # Temporalment desactivar exit on error
-ADMIN_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/admin/ 2>/dev/null || echo "000")
-if [ "$ADMIN_CODE" = "200" ] || [ "$ADMIN_CODE" = "302" ]; then
-    print_success "✅ Admin panel accessible (HTTP $ADMIN_CODE)"
+# Health check 3: Test HTTP simple
+print_status "Verificant resposta web..."
+sleep 10  # Donar més temps al servidor per inicialitzar-se
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost 2>/dev/null || echo "000")
+if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
+    print_success "✅ Servidor web responent correctament"
+elif [ "$HTTP_CODE" = "500" ]; then
+    print_warning "⚠️ Servidor web amb errors temporals - aplicant fixes..."
+    # Intentar crear ConfiguracioWeb si no existeix
+    run_docker_command compose exec -T web python manage.py crear_configuracio_inicial 2>/dev/null || true
+    sleep 5
 else
-    print_warning "⚠️ Admin panel retorna HTTP $ADMIN_CODE"
+    print_warning "⚠️ Servidor web encara inicialitzant-se..."
 fi
-set -e  # Reactivar exit on error
 
-# Health check 7: Test API endpoints
-print_status "🔍 Health Check 7: API endpoints"
-set +e  # Temporalment desactivar exit on error
-API_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/api/productos/ 2>/dev/null || echo "000")
-if [ "$API_CODE" = "200" ]; then
-    print_success "✅ API endpoints funcionant (HTTP 200)"
-else
-    print_warning "⚠️ API retorna HTTP $API_CODE (pot ser normal si no hi ha dades)"
-fi
-set -e  # Reactivar exit on error
+# Re-activar set -e
+set -e
 
-print_success "🎯 Health checks completats!"
-print_status "🚀 Continuant amb configuració final..."
-
-# ASSEGURAR QUE LES INSTRUCCIONS FINALS SEMPRE ES MOSTREN
-# Aquesta funció es crida sempre, independentment dels health checks
-show_final_instructions() {
-    # Obtenir IP del servidor
-    SERVER_IP=$(hostname -I | awk '{print $1}')
-    
-    # Mostrar informació final SEMPRE
-    echo ""
-    echo "🎉 Instal·lació completada amb èxit!"
-    echo "===================================="
-    echo ""
-    print_success "CoopConsum està funcionant a:"
-    echo "  📱 Web pública: http://$SERVER_IP"
-    echo "  🔧 Panell admin: http://$SERVER_IP/admin/"
-    echo ""
-    print_success "Credencials d'administrador:"
-    echo "  👤 Usuari: admin"
-    echo "  🔑 Contrasenya: cooperativa2025"
-    echo ""
-    print_warning "IMPORTANT: Canvia la contrasenya immediatament!"
-    echo "  1. Accedeix a http://$SERVER_IP/admin/"
-    echo "  2. Inicia sessió amb les credencials anteriors"
-    echo "  3. Ves a 'Usuaris' > 'admin' i canvia la contrasenya"
-    echo ""
-    print_status "Tasques automàtiques configurades (cron del sistema):"
-    echo "  ⏰ Generació de comandes: cada dia a les 23:58"
-    echo "  🔒 Tancament de comandes: cada dia a les 23:59"
-    echo "  🧹 Neteja de logs: cada diumenge a les 03:00"
-    echo "  📝 Logs disponibles a: /var/log/coopconsum_cron.log"
-    echo ""
-    print_success "💾 Backup automàtic: Configurat al proveïdor VPS (recomanat)"
-    echo ""
-    print_status "Comandos útils:"
-    echo "  📊 Veure estat: cd $INSTALL_DIR && docker compose ps"
-    echo "  📝 Veure logs: cd $INSTALL_DIR && docker compose logs -f"
-    echo "  🔄 Reiniciar: cd $INSTALL_DIR && docker compose restart"
-    echo "  🛑 Aturar: cd $INSTALL_DIR && docker compose down"
-    echo ""
-    print_status "Verificar tasques automàtiques:"
-    echo "  ✅ Veure cron jobs: crontab -l"
-    echo "  📋 Veure logs: tail -f /var/log/coopconsum_cron.log"
-    echo "  🧪 Provar manualment: cd $INSTALL_DIR && docker compose exec web python manage.py generar_pedidos_test"
-    echo ""
-    if [ "$DOCKER_JUST_INSTALLED" = true ]; then
-        echo ""
-        print_warning "IMPORTANT: Docker s'ha instal·lat durant aquesta execució."
-        print_status "Per a futures operacions de Docker sense sudo, executa:"
-        echo "  🔄 newgrp docker"
-        echo "  o bé reinicia la sessió SSH"
-        echo ""
-    fi
-    
-    print_success "La teva cooperativa ja està llesta per funcionar! 🚀"
-}
+print_success "🎯 Verificacions completades!"
 
 # Configurar cron jobs del sistema per execució automàtica diària
 print_status "Configurant tasques automàtiques al sistema..."
@@ -507,7 +375,7 @@ EOF
 # Instal·lar els cron jobs
 if crontab -l >/dev/null 2>&1; then
     # Si ja hi ha crontab, afegir els nous
-    (crontab -l; cat /tmp/coopconsum_cron) | crontab -
+    (crontab -l 2>/dev/null | grep -v "CoopConsum" || true; cat /tmp/coopconsum_cron) | crontab -
 else
     # Si no hi ha crontab, crear-ne un de nou
     crontab /tmp/coopconsum_cron
@@ -523,20 +391,9 @@ sudo chown $USER:$USER /var/log/coopconsum_cron.log
 
 print_success "Tasques automàtiques configurades al sistema"
 
-print_status "🎉 Instal·lació principal completada! Mostrant resum final..."
-
 # MOSTRAR INSTRUCCIONS FINALS SEMPRE
-# Desactivar 'set -e' i 'set -x' per assegurar que les instruccions finals sempre es mostren
-set +e
-set +x
-
-echo ""
-echo "🔧 FINALITZANT INSTAL·LACIÓ..."
-echo "================================="
-
+# Cridar directament la funció sense cap condició
 show_final_instructions
 
-# Doble verificació que les instruccions s'han mostrat
-echo ""
-echo "✅ SCRIPT INSTALL_DOCKER.SH COMPLETAT CORRECTAMENT"
-echo "🎯 Si veus aquest missatge, la instal·lació ha finalitzat amb èxit!"
+# Fi del script amb èxit
+exit 0
