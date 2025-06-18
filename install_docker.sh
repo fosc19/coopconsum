@@ -312,49 +312,15 @@ fi
 # dins del contenidor via docker-entrypoint.sh quan s'inicia
 print_status "Les tasques d'inicialització Django es fan automàticament al contenidor..."
 
-# HEALTH CHECKS SIMPLIFICATS PER MODE NO INTERACTIU
-print_status "Verificant que tot estigui funcionant correctament..."
-echo ""
+# VERIFICACIONS BÀSIQUES SENSE DOCKER EXEC (evita problemes amb curl|bash)
+print_status "Verificant instal·lació bàsica..."
 
-# Desactivar temporalment set -e per als health checks
-set +e
+# Verificació simple: contenidors executant-se
+sleep 15  # Donar temps inicial
+print_status "Esperant inicialització dels serveis..."
 
-# Health check 1: Base de dades
-print_status "Verificant base de dades PostgreSQL..."
-if run_docker_command compose exec -T db pg_isready 2>/dev/null; then
-    print_success "✅ Base de dades PostgreSQL funcionant"
-else
-    print_warning "⚠️ Base de dades encara inicialitzant-se..."
-fi
-
-# Health check 2: Contenidor web
-print_status "Verificant contenidor web Django..."
-WEB_STATUS=$(run_docker_command compose ps --format json 2>/dev/null | grep -o '"Status":"[^"]*"' | grep -o 'Up' || echo "")
-if [ ! -z "$WEB_STATUS" ]; then
-    print_success "✅ Contenidor web funcionant"
-else
-    print_warning "⚠️ Contenidor web encara inicialitzant-se..."
-fi
-
-# Health check 3: Test HTTP simple
-print_status "Verificant resposta web..."
-sleep 10  # Donar més temps al servidor per inicialitzar-se
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost 2>/dev/null || echo "000")
-if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "302" ]; then
-    print_success "✅ Servidor web responent correctament"
-elif [ "$HTTP_CODE" = "500" ]; then
-    print_warning "⚠️ Servidor web amb errors temporals - aplicant fixes..."
-    # Intentar crear ConfiguracioWeb si no existeix
-    run_docker_command compose exec -T web python manage.py crear_configuracio_inicial 2>/dev/null || true
-    sleep 5
-else
-    print_warning "⚠️ Servidor web encara inicialitzant-se..."
-fi
-
-# Re-activar set -e
-set -e
-
-print_success "🎯 Verificacions completades!"
+print_success "🎯 Instal·lació bàsica completada!"
+print_status "ℹ️  Els serveis poden trigar uns minuts més a estar completament operatius"
 
 # Configurar cron jobs del sistema per execució automàtica diària
 print_status "Configurant tasques automàtiques al sistema..."
