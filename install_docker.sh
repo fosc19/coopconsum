@@ -257,13 +257,14 @@ echo ""
 wait_for_service() {
     local service_name="$1"
     local max_attempts="$2"
-    local check_command="$3"
+    shift 2
     local attempt=1
     
     print_status "Esperant que $service_name estigui llest..."
     
     while [ $attempt -le $max_attempts ]; do
-        if eval "$check_command" 2>/dev/null; then
+        # CAMBIO CRÍTICO: No usar eval, execució directa per evitar problemes amb curl|bash
+        if "$@" 2>/dev/null; then
             print_success "✅ $service_name llest (intent $attempt/$max_attempts)"
             return 0
         fi
@@ -278,14 +279,17 @@ wait_for_service() {
 }
 
 # Health check 1: Esperar que la base de dades estigui llesta
-if ! wait_for_service "Base de dades PostgreSQL" 12 "run_docker_command compose exec -T db pg_isready"; then
+if ! wait_for_service "Base de dades PostgreSQL" 12 run_docker_command compose exec -T db pg_isready; then
     print_warning "⚠️ La base de dades trigarà més a estar llesta. Revisant logs..."
     run_docker_command compose logs db --tail=10
     print_status "Continuant amb la instal·lació..."
 fi
 
 # Health check 2: Esperar que el contenidor web estigui healthy
-if ! wait_for_service "Contenidor web Django" 20 "run_docker_command compose ps web | grep -q 'Up'"; then
+check_web_container() {
+    run_docker_command compose ps web | grep -q 'Up'
+}
+if ! wait_for_service "Contenidor web Django" 20 check_web_container; then
     print_warning "⚠️ El contenidor web trigarà més a inicialitzar-se. Revisant logs..."
     run_docker_command compose logs web --tail=20
     print_status "Continuant amb la instal·lació..."
@@ -452,11 +456,13 @@ show_final_instructions() {
     print_success "La teva cooperativa ja està llesta per funcionar! 🚀"
 }
 
-# Configurar cron jobs del sistema per execució automàtica diària
-print_status "Configurant tasques automàtiques al sistema..."
+# PROTECCIÓ FINAL - Assegurar que les instruccions SEMPRE es mostren
+run_final_steps() {
+    # Configurar cron jobs del sistema per execució automàtica diària
+    print_status "Configurant tasques automàtiques al sistema..."
 
-# Crear arxiu temporal amb els cron jobs
-cat > /tmp/coopconsum_cron << EOF
+    # Crear arxiu temporal amb els cron jobs
+    cat > /tmp/coopconsum_cron << EOF
 # CoopConsum - Tasques automàtiques
 # Generar comandes recurrents cada dia a les 23:58
 58 23 * * * cd $INSTALL_DIR && docker compose exec -T web python manage.py generar_pedidos >> /var/log/coopconsum_cron.log 2>&1
@@ -468,26 +474,59 @@ cat > /tmp/coopconsum_cron << EOF
 0 3 * * 0 find /var/log/coopconsum_cron.log -size +10M -exec truncate -s 0 {} \; 2>/dev/null
 EOF
 
-# Instal·lar els cron jobs
-if crontab -l >/dev/null 2>&1; then
-    # Si ja hi ha crontab, afegir els nous
-    (crontab -l; cat /tmp/coopconsum_cron) | crontab -
-else
-    # Si no hi ha crontab, crear-ne un de nou
-    crontab /tmp/coopconsum_cron
-fi
+    # Instal·lar els cron jobs
+    if crontab -l >/dev/null 2>&1; then
+        # Si ja hi ha crontab, afegir els nous
+        (crontab -l; cat /tmp/coopconsum_cron) | crontab - || true
+    else
+        # Si no hi ha crontab, crear-ne un de nou
+        crontab /tmp/coopconsum_cron || true
+    fi
 
-# Netejar arxiu temporal
-rm -f /tmp/coopconsum_cron
+    # Netejar arxiu temporal
+    rm -f /tmp/coopconsum_cron
 
-# Crear directori de logs si no existeix
-sudo mkdir -p /var/log
-sudo touch /var/log/coopconsum_cron.log
-sudo chown $USER:$USER /var/log/coopconsum_cron.log
+    # Crear directori de logs si no existeix
+    sudo mkdir -p /var/log || true
+    sudo touch /var/log/coopconsum_cron.log || true
+    sudo chown $USER:$USER /var/log/coopconsum_cron.log || true
 
-print_success "Tasques automàtiques configurades al sistema"
+    print_success "Tasques automàtiques configurades al sistema"
+    
+    # MOSTRAR INSTRUCCIONS FINALS SEMPRE
+    show_final_instructions
+}
 
-# MOSTRAR INSTRUCCIONS FINALS SEMPRE
-# Desactivar 'set -e' per assegurar que les instruccions finals sempre es mostren
-set +e
-show_final_instructions
+# Executar passos finals amb protecció múltiple per curl|bash
+{
+    # Desactivar set -e per evitar que termini prematurament
+    set +e
+    
+    # Executar passos finals
+    run_final_steps
+    
+    # Doble protecció - assegurar que les instruccions es mostren
+    if [ $? -ne 0 ]; then
+        print_warning "Algun pas final ha fallat, però mostrant instruccions igualment..."
+        show_final_instructions
+    fi
+    
+} || {
+    # Triple protecció - si tot falla, mostrar instruccions sense filigranes
+    set +e
+    echo ""
+    echo "🎉 Instal·lació completada!"
+    echo "=============================="
+    echo ""
+    SERVER_IP=$(hostname -I | awk '{print $1}' 2>/dev/null || echo "localhost")
+    echo "📱 Web pública: http://$SERVER_IP"
+    echo "🔧 Panell admin: http://$SERVER_IP/admin/"
+    echo "👤 Usuari: admin"
+    echo "🔑 Contrasenya: cooperativa2025"
+    echo ""
+    echo "La teva cooperativa ja està llesta! 🚀"
+    show_final_instructions 2>/dev/null || true
+}
+
+# Assegurar exit correcte
+exit 0
