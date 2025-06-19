@@ -1,11 +1,5 @@
 {% extends "web/base.html" %}
-{% load static %}
-{% load text_formatting %}
 {% block title %}{{ config.pagina_qui_som_titol }} | {{ config.nom_cooperativa }}{% endblock %}
-
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'web/css/text-formatting.css' %}">
-{% endblock %}
 {% block content %}
 <div class="container py-5">
   <h1 class="display-4 fw-bold mb-4 text-center">{{ config.pagina_qui_som_titol }}</h1>
@@ -34,15 +28,15 @@
     </div>
     <div class="col-md-6">
       <div class="card h-100 shadow-sm">
-        <div class="card-body formatted-text icon-section">
+        <div class="card-body">
           <h2 class="fw-bold mb-3"><i class="fas fa-leaf text-success me-2"></i>{{ config.qui_som_titol_altres_productes }}</h2>
           <div class="mb-3">
-            {{ config.qui_som_text_altres_productes|smart_format }}
+            {{ config.qui_som_text_altres_productes|linebreaksbr }}
           </div>
           <div class="mt-3">
             <strong>Criteris de selecció:</strong>
-            <div class="mt-2 formatted-text">
-              {{ config.qui_som_criteris_seleccio|smart_format }}
+            <div class="mt-2">
+              {{ config.qui_som_criteris_seleccio|linebreaksbr }}
             </div>
           </div>
         </div>
