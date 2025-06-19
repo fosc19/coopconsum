@@ -31,12 +31,12 @@
         <div class="card-body">
           <h2 class="fw-bold mb-3"><i class="fas fa-leaf text-success me-2"></i>{{ config.qui_som_titol_altres_productes }}</h2>
           <div class="mb-3">
-            {{ config.qui_som_text_altres_productes|linebreaksbr }}
+            {{ config.qui_som_text_altres_productes|safe }}
           </div>
           <div class="mt-3">
             <strong>Criteris de selecció:</strong>
             <div class="mt-2">
-              {{ config.qui_som_criteris_seleccio|linebreaksbr }}
+              {{ config.qui_som_criteris_seleccio|safe }}
             </div>
           </div>
         </div>

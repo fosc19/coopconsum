@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'adminlte3',
     'adminlte3_theme',
+    'ckeditor',
     # Apps cooperativa amb verbose_name numerat per ordre:
     'socios.apps.SociosConfig',
     'web.apps.WebConfig',
@@ -194,3 +195,32 @@ CORS_ALLOW_METHODS = [
     'HEAD',
     'OPTIONS',
 ]
+
+# CKEditor Configuration - Editor WYSIWYG per usuaris no tècnics
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['BulletedList', 'NumberedList'],
+            ['Link', 'Unlink'],
+            ['Format', 'RemoveFormat'],
+            ['Source']  # Opció per veure codi HTML si cal
+        ],
+        'format_tags': 'p;h2;h3;h4',
+        'height': 250,
+        'width': '100%',
+        'removeDialogTabs': 'image:advanced;link:advanced',  # Simplificar diàlegs
+        'extraPlugins': '',
+        'removePlugins': 'elementspath',  # Eliminar path de baix per netejar interfície
+    },
+    'minimal': {
+        'toolbar': [
+            ['Bold', 'Italic'],
+            ['BulletedList'],
+            ['RemoveFormat']
+        ],
+        'height': 150,
+        'width': '100%',
+    }
+}
