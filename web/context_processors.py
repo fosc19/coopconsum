@@ -5,9 +5,9 @@ def configuracio_web(request):
     try:
         config = ConfiguracioWeb.objects.first()
         return {
-            'config': config
+            'configuracio_web': config
         }
     except ConfiguracioWeb.DoesNotExist:
         return {
-            'config': None
+            'configuracio_web': None
         }
