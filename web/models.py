@@ -161,6 +161,18 @@ class ConfiguracioWeb(models.Model):
         """Retorna el text CTA amb el nom de la cooperativa substituït"""
         return self.text_cta.replace('{nom_cooperativa}', self.nom_cooperativa)
     
+    def get_pagina_qui_som_introducció_formatted(self):
+        """Retorna la introducció de 'qui som' amb el nom de la cooperativa substituït"""
+        return self.pagina_qui_som_introducció.replace('{nom_cooperativa}', self.nom_cooperativa)
+    
+    def get_pagina_apuntarse_introducció_formatted(self):
+        """Retorna la introducció de 'com apuntar-se' amb el nom de la cooperativa substituït"""
+        return self.pagina_apuntarse_introducció.replace('{nom_cooperativa}', self.nom_cooperativa)
+    
+    def get_apuntarse_text_formalitzacio_formatted(self):
+        """Retorna el text de formalització amb el nom de la cooperativa substituït"""
+        return self.apuntarse_text_formalitzacio.replace('{nom_cooperativa}', self.nom_cooperativa)
+    
     # === PÀGINA QUI SOM ===
     pagina_qui_som_titol = models.CharField(
         max_length=100,
