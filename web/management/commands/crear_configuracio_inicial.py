@@ -34,13 +34,13 @@ class Command(BaseCommand):
                 # Camps pàgina qui som
                 pagina_qui_som_titol="Qui som",
                 pagina_qui_som_introducció="{nom_cooperativa} és una cooperativa de consum responsable que s'autogestiona amb l'objectiu d'accedir a productes ecològics, de proximitat i sense intermediaris. Ens trobem regularment al nostre local per recollir una cistella de verdures i fruites, a més d'altres productes.",
-                qui_som_titol_cistella="La nostra cistella",
-                qui_som_text_cistella="Setmanalment podem recollir una cistella de fruites i verdures que ens porten productors locals amb producció ecològica. Cada família fa la comanda directament als productors.",
+                qui_som_titol_cistella="La cistella",
+                qui_som_text_cistella="Cada dimecres podem recollir una cistella de fruites i verdures que ens porta La Rural de Collserola, una cooperativa de pagesos que estan a Valldoreix i fan producció agroecològica. Cada família és sòcia de La Rural i fem la comanda directament al seu web.",
                 qui_som_titol_altres_productes="Altres productes", 
                 qui_som_text_altres_productes="• Setmanalment: làctics (iogurts, formatges, quallades), pa, ous, fruits secs...\n• Periòdicament: comandes directes a proveïdors (vedella, pollastre, xai, peix, oli, vins, productes d'higiene...)\n• Petit estoc al local: mel, arròs, llegums, cafè, te, sucre, pots de tomàquet, cigrons, llenties, olives, sucs, cerveses...",
                 qui_som_criteris_seleccio="• Productes ecològics, sense químics, amb certificació CCPAE o relació de confiança.\n• De proximitat, per reduir transport i apropar consumidors i productors.\n• Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d'exclusió, etc.",
-                qui_som_titol_ubicacio="On ens trobes",
-                qui_som_text_ubicacio="El nostre local es troba a [adreça del local]. Consulta els horaris de recollida i contacta'ns per més informació.",
+                qui_som_titol_ubicacio="On som",
+                qui_som_text_ubicacio="El nostre local es troba a Cal Temerari:\nCarrer Plana de l'Hospital 26, Carrer Sant Esteve 11, Sant Cugat del Vallès",
                 # Camps pàgina apuntar-se
                 pagina_apuntarse_titol="Com apuntar-se",
                 pagina_apuntarse_introducció="{nom_cooperativa} és una cooperativa autogestionada que funciona gràcies a la implicació de tothom. Per tant, has de tenir present que formar-ne part equival a adquirir un compromís que es tradueix en:",
