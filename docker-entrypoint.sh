@@ -70,6 +70,16 @@ python manage.py collectstatic --noinput
 echo "Creant configuració inicial de la web..."
 python manage.py crear_configuracio_inicial
 
+# Copiar imatges essencials al directori media
+echo "Creant directoris media i copiant imatges essencials..."
+mkdir -p /app/media/galeria
+if [ -f "/app/galeria/cistella.jpg" ]; then
+    cp /app/galeria/cistella.jpg /app/media/galeria/cistella.jpg
+    echo "✅ Imatge cistella.jpg copiada"
+else
+    echo "⚠️ No s'ha trobat galeria/cistella.jpg"
+fi
+
 # Iniciar servidor
 echo "Iniciant servidor..."
 exec gunicorn coopconsum.wsgi:application --bind 0.0.0.0:8000 --workers 3
