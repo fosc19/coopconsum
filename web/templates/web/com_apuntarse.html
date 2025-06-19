@@ -1,6 +1,11 @@
 {% extends "web/base.html" %}
 {% load static %}
+{% load text_formatting %}
 {% block title %}{{ config.pagina_apuntarse_titol }} | {{ config.nom_cooperativa }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'web/css/text-formatting.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -18,29 +23,29 @@
       </div>
 
       <div class="card shadow-sm mb-4">
-        <div class="card-body">
+        <div class="card-body formatted-text icon-section">
           <h2 class="fw-bold mb-3"><i class="fas fa-seedling text-success me-2"></i>{{ config.apuntarse_titol_compromis }}</h2>
           <div>
-            {{ config.apuntarse_text_compromis|linebreaksbr }}
+            {{ config.apuntarse_text_compromis|smart_format }}
           </div>
         </div>
       </div>
 
       <div class="card shadow-sm mb-4">
-          <div class="card-body">
+          <div class="card-body formatted-text icon-section">
               <h3 class="fw-bold mb-3"><i class="fas fa-users-cog text-primary me-2"></i>{{ config.apuntarse_titol_comissions }}</h3>
               <div>
-                {{ config.apuntarse_text_comissions|linebreaksbr }}
+                {{ config.apuntarse_text_comissions|smart_format_comissions }}
               </div>
           </div>
       </div>
 
       <div class="card shadow-sm mb-4">
-        <div class="card-body">
+        <div class="card-body formatted-text icon-section">
           <h2 class="fw-bold mb-3"><i class="fas fa-file-signature text-info me-2"></i>{{ config.apuntarse_titol_formalitzacio }}</h2>
-          <p>{{ config.get_apuntarse_text_formalitzacio_formatted }}</p>
+          <p class="intro-text">{{ config.get_apuntarse_text_formalitzacio_formatted }}</p>
           <div>
-            {{ config.apuntarse_requisits|linebreaksbr }}
+            {{ config.apuntarse_requisits|smart_format }}
           </div>
         </div>
       </div>
