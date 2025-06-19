@@ -72,9 +72,13 @@ urlpatterns = [
     path('productos/', include('productos.urls')),
     path('stock/', include('stock.urls')),
     # Rutas para la nueva app de eventos
-# API para cooperativas
-    path('api/', include('api.urls')),
     path('eventos/', include('eventos.urls')),
+    
+    # CKEditor URLs per editor WYSIWYG
+    path('ckeditor/', include('ckeditor.urls')),
+    
+    # API para cooperativas
+    path('api/', include('api.urls')),
 ]
 
 # Configurar Django admin
