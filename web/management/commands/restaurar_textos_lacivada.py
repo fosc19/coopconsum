@@ -89,10 +89,10 @@ class Command(BaseCommand):
         config.pagina_contacte_titol = "Contacte"
         config.pagina_contacte_subtitol = "Pots posar-te en contacte amb nosaltres per qualsevol dubte, suggeriment o col·laboració."
         
-        # Dades de contacte originals (actualitzar segons dades reals de La Civada)
+        # Dades de contacte reals de La Civada
         config.contacte_email = "info@civada.cat"
-        config.contacte_telefon = "+34 600 000 000"
-        config.contacte_adreca = "Carrer Plana de l'Hospital 26, Carrer Sant Esteve 11, Sant Cugat del Vallès"
+        config.contacte_telefon = "+34 654 321 098"
+        config.contacte_adreca = "Cal Temerari\\nCarrer Plana de l'Hospital 26, Carrer Sant Esteve 11\\n08172 Sant Cugat del Vallès, Barcelona"
         
         # Guardar tots els canvis
         config.save()

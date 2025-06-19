@@ -29,8 +29,8 @@ class Command(BaseCommand):
                 text_cta="Forma part de la nostra cooperativa i contribueix al canvi cap a un consum més responsable.",
                 text_boto_cta="Contacta",
                 contacte_email="admin@cooperativa.local",
-                contacte_telefon="",
-                contacte_adreca="",
+                contacte_telefon="+34 600 000 000",
+                contacte_adreca="Carrer de l'Exemple, 123, 08000 Barcelona",
                 # Camps pàgina qui som
                 pagina_qui_som_titol="Qui som",
                 pagina_qui_som_introducció="Coneix la nostra cooperativa de consum responsable.",
