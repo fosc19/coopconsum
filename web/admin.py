@@ -1,23 +1,23 @@
 from django.contrib import admin
-from ckeditor.widgets import CKEditorWidget
+# from ckeditor.widgets import CKEditorWidget  # Temporalment comentat
 from django import forms
 from .models import ConfiguracioWeb, GaleriaCategoria, GaleriaImagen
 
-class ConfiguracioWebAdminForm(forms.ModelForm):
-    class Meta:
-        model = ConfiguracioWeb
-        fields = '__all__'
-        widgets = {
-            'qui_som_text_altres_productes': CKEditorWidget(config_name='default'),
-            'qui_som_criteris_seleccio': CKEditorWidget(config_name='default'),
-            'apuntarse_text_compromis': CKEditorWidget(config_name='default'),
-            'apuntarse_text_comissions': CKEditorWidget(config_name='default'),
-            'apuntarse_requisits': CKEditorWidget(config_name='default'),
-        }
+# class ConfiguracioWebAdminForm(forms.ModelForm):  # Temporalment comentat
+#     class Meta:
+#         model = ConfiguracioWeb
+#         fields = '__all__'
+#         widgets = {
+#             'qui_som_text_altres_productes': CKEditorWidget(config_name='default'),
+#             'qui_som_criteris_seleccio': CKEditorWidget(config_name='default'),
+#             'apuntarse_text_compromis': CKEditorWidget(config_name='default'),
+#             'apuntarse_text_comissions': CKEditorWidget(config_name='default'),
+#             'apuntarse_requisits': CKEditorWidget(config_name='default'),
+#         }
 
 @admin.register(ConfiguracioWeb)
 class ConfiguracioWebAdmin(admin.ModelAdmin):
-    form = ConfiguracioWebAdminForm
+    # form = ConfiguracioWebAdminForm  # Temporalment comentat
     fieldsets = (
         ('🏢 Informació General', {
             'fields': ('nom_cooperativa', 'logo_principal'),

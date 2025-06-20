@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from ckeditor.fields import RichTextField
+# from ckeditor.fields import RichTextField  # Temporalment comentat
 
 class ConfiguracioWeb(models.Model):
     # Choices per a les icones FontAwesome
@@ -202,15 +202,13 @@ class ConfiguracioWeb(models.Model):
         default="Altres productes",
         help_text="Títol de la secció sobre altres productes"
     )
-    qui_som_text_altres_productes = RichTextField(
+    qui_som_text_altres_productes = models.TextField(
         default="<ul><li>Setmanalment: làctics (iogurts, formatges, quallades), pa, ous, fruits secs…</li><li>Periòdicament: comandes directes a proveïdors (vedella, pollastre, xai, peix, oli, vins, productes d'higiene...)</li><li>Petit estoc al local: mel, arròs, llegums, cafè, te, sucre, pots de tomàquet, cigrons, llenties, olives, sucs, cerveses…</li></ul>",
-        help_text="Descripció dels altres productes. Utilitza l'editor per crear llistes i formatat.",
-        config_name='default'
+        help_text="Descripció dels altres productes. Utilitza l'editor per crear llistes i formatat."
     )
-    qui_som_criteris_seleccio = RichTextField(
+    qui_som_criteris_seleccio = models.TextField(
         default="<ul><li>Productes ecològics, sense químics, amb certificació CCPAE o relació de confiança.</li><li>De proximitat, per reduir transport i apropar consumidors i productors.</li><li>Prioritzem productes amb benefici social: comerç just, elaborats per persones en risc d'exclusió, etc.</li></ul>",
-        help_text="Criteris de selecció dels productes. Utilitza l'editor per crear llistes i formatat.",
-        config_name='default'
+        help_text="Criteris de selecció dels productes. Utilitza l'editor per crear llistes i formatat."
     )
     
     # Secció ubicació
@@ -241,10 +239,9 @@ class ConfiguracioWeb(models.Model):
         default="Compromís",
         help_text="Títol de la secció sobre el compromís"
     )
-    apuntarse_text_compromis = RichTextField(
+    apuntarse_text_compromis = models.TextField(
         default="<ul><li>Participar en l'entrega de les cistelles de manera rotativa.</li><li>Assistir a l'assemblea que es realitza periòdicament (cada dos mesos aproximadament).</li><li>Formar part d'alguna de les comissions:</li></ul>",
-        help_text="Descripció del compromís. Utilitza l'editor per crear llistes i formatat.",
-        config_name='default'
+        help_text="Descripció del compromís. Utilitza l'editor per crear llistes i formatat."
     )
     
     # Secció comissions
@@ -253,10 +250,9 @@ class ConfiguracioWeb(models.Model):
         default="Comissions",
         help_text="Títol de la secció sobre les comissions"
     )
-    apuntarse_text_comissions = RichTextField(
+    apuntarse_text_comissions = models.TextField(
         default="<p><strong>Comissió d'Economia:</strong> portar els comptes de la cooperativa.</p><p><strong>Comissió de Benvinguda:</strong> informar i rebre els nous membres, gestionar les altes i baixes, controlar les quotes d'alta, lloguer i dipòsit.</p><p><strong>Comissió de Compres:</strong> gestionar les comandes amb els proveïdors, mantenir l'estoc amb productes i passar factures a la comissió d'economia.</p><p><strong>Comissió de Permanència (màsters):</strong> de manera rotativa, gestionar l'entrega de les cistelles.</p><p><strong>Comissió de Difusió:</strong> gestionar la web i la presència de La Civada en les xarxes socials.</p>",
-        help_text="Descripció de les comissions. Utilitza l'editor per formatat professional.",
-        config_name='default'
+        help_text="Descripció de les comissions. Utilitza l'editor per formatat professional."
     )
     
     # Secció formalització
@@ -269,10 +265,9 @@ class ConfiguracioWeb(models.Model):
         default="Per formalitzar el teu ingrés a La Civada, necessites:",
         help_text="Text introductori sobre els requisits"
     )
-    apuntarse_requisits = RichTextField(
+    apuntarse_requisits = models.TextField(
         default="<ul><li>Pagar un dipòsit de 50 euros (al cap de 2 mesos), que et serà retornat en cas de baixa.</li><li>Pagar 18 euros mensuals per unitat familiar en concepte de lloguer del local i col·laboració amb Cal Temerari (aquest preu varia en funció de les famílies sòcies, quant més famílies més baix serà).</li></ul>",
-        help_text="Requisits per formalitzar l'ingrés. Utilitza l'editor per crear llistes i formatat.",
-        config_name='default'
+        help_text="Requisits per formalitzar l'ingrés. Utilitza l'editor per crear llistes i formatat."
     )
     
     # === PÀGINA CONTACTE ===

@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'adminlte3',
     'adminlte3_theme',
-    'ckeditor',
+    # 'ckeditor',  # Temporalment comentat
     # Apps cooperativa amb verbose_name numerat per ordre:
     'socios.apps.SociosConfig',
     'web.apps.WebConfig',

@@ -74,8 +74,8 @@ urlpatterns = [
     # Rutas para la nueva app de eventos
     path('eventos/', include('eventos.urls')),
     
-    # CKEditor URLs per editor WYSIWYG
-    path('ckeditor/', include('ckeditor.urls')),
+    # CKEditor URLs per editor WYSIWYG (temporalment comentat)
+    # path('ckeditor/', include('ckeditor.urls')),
     
     # API para cooperativas
     path('api/', include('api.urls')),
