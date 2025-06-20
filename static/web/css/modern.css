@@ -160,12 +160,22 @@ a:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Botó hamburger personalitzat */
+/* Botó hamburger personalitzat - NOMÉS EN MÒBIL */
 .civada-menu .navbar-toggler {
   border: 2px solid var(--primary);
   border-radius: var(--border-radius);
   padding: 0.25rem 0.5rem;
   transition: all var(--transition-fast);
+}
+
+/* Ocultar hamburger en desktop sempre */
+@media (min-width: 769px) {
+  .civada-menu .navbar-toggler {
+    display: none !important;
+  }
+  .civada-menu .navbar-collapse {
+    display: flex !important;
+  }
 }
 
 .civada-menu .navbar-toggler:focus {
@@ -444,7 +454,7 @@ a:hover {
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 768px) {
   .civada-header img {
     max-height: 90px;
   }
