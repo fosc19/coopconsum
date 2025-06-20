@@ -176,13 +176,21 @@ a:hover {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2846, 125, 50, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
+/* Estils menú - forçar sobre Bootstrap navbar-nav */
+.civada-menu .navbar-nav .nav-link,
 .civada-menu .nav-link {
-  color: var(--gray-700);
-  font-weight: 600;
-  font-size: 1.2rem;
-  padding: 1.2rem 1.5rem;
+  color: var(--gray-700) !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  padding: 1.2rem 1.5rem !important;
   position: relative;
   transition: all var(--transition-fast);
+  display: flex !important;
+  align-items: center !important;
+}
+
+.civada-menu .navbar-nav {
+  gap: 0.25rem; /* Separació entre items del menú */
 }
 
 .civada-menu .nav-link::after {
@@ -425,9 +433,10 @@ a:hover {
    ====================================== */
 
 @media (max-width: 992px) {
+  .civada-menu .navbar-nav .nav-link,
   .civada-menu .nav-link {
-    padding: 1rem 1.2rem;
-    font-size: 1.1rem;
+    padding: 1rem 1.2rem !important;
+    font-size: 1.1rem !important;
   }
   
   .hero-content {
@@ -454,11 +463,13 @@ a:hover {
     text-align: center;
   }
   
+  .civada-menu .navbar-nav .nav-link,
   .civada-menu .nav-link {
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
+    padding: 1rem 1.5rem !important;
+    font-size: 1.1rem !important;
     border-bottom: 1px solid var(--gray-100);
     margin: 0;
+    justify-content: center !important;
   }
   
   .civada-menu .nav-link:last-child {
