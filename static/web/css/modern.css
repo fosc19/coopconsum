@@ -168,8 +168,8 @@ a:hover {
   transition: all var(--transition-fast);
 }
 
-/* Ocultar hamburger en desktop sempre */
-@media (min-width: 769px) {
+/* Ocultar hamburger només en desktop gran (>1400px) */
+@media (min-width: 1400px) {
   .civada-menu .navbar-toggler {
     display: none !important;
   }
@@ -454,7 +454,7 @@ a:hover {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .civada-header img {
     max-height: 90px;
   }
