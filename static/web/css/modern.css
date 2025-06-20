@@ -444,12 +444,12 @@ a:hover {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1199px) {
   .civada-header img {
     max-height: 90px;
   }
   
-  /* Menú hamburger en mòbil */
+  /* Menú hamburger en pantalles petites */
   .civada-menu .navbar-collapse {
     background-color: white;
     border-top: 1px solid var(--gray-200);
@@ -476,9 +476,9 @@ a:hover {
     border-bottom: none;
   }
   
-  /* Efecte hover en mòbil */
+  /* Efecte hover en pantalles petites */
   .civada-menu .nav-link::after {
-    display: none; /* Eliminar underline en mòbil */
+    display: none; /* Eliminar underline en pantalla petita */
   }
   
   .civada-menu .nav-link:hover,
@@ -489,6 +489,15 @@ a:hover {
   
   .section-title {
     margin-bottom: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  /* Estils específics per mòbil real */
+  .civada-menu .navbar-nav .nav-link,
+  .civada-menu .nav-link {
+    font-size: 1rem !important;
+    padding: 0.8rem 1rem !important;
   }
 }
 
