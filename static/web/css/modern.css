@@ -168,15 +168,7 @@ a:hover {
   transition: all var(--transition-fast);
 }
 
-/* Ocultar hamburger només en desktop gran (>1400px) */
-@media (min-width: 1400px) {
-  .civada-menu .navbar-toggler {
-    display: none !important;
-  }
-  .civada-menu .navbar-collapse {
-    display: flex !important;
-  }
-}
+/* Bootstrap navbar-expand-md ja gestiona la visibilitat del hamburger */
 
 .civada-menu .navbar-toggler:focus {
   box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
@@ -454,7 +446,7 @@ a:hover {
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 767px) {
   .civada-header img {
     max-height: 90px;
   }
