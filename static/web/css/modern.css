@@ -560,21 +560,47 @@ a:hover {
 }
 
 /* ======================================
-   ACCORDION FIXES - SOLUCIÓ FINAL
+   ACCORDION FIXES - SOLUCIÓ MULTI-CAPA COMPLETA
    ====================================== */
 
-/* Eliminar scroll-margin dels targets accordion */
-[id^="step"] {
-  scroll-margin-top: 0 !important;
-  scroll-padding-top: 0 !important;
-}
-
-/* Prevenir focus scroll sense outline */
+/* Prevenir scroll de focus amb outline personalitzat */
 .accordion-button:focus {
+  outline: 2px solid #0d6efd !important;
+  outline-offset: 2px !important;
   box-shadow: none !important;
 }
 
-/* Assegurar scroll manual durant acordions */
-html.accordion-no-scroll {
+/* Eliminar scroll-padding i margin dels targets */
+[id^="step"] {
+  scroll-margin: 0 !important;
+  scroll-padding: 0 !important;
+  scroll-snap-align: none !important;
+}
+
+/* Prevenir anchor points en accordions */
+.accordion-collapse {
+  anchor-name: none !important;
+}
+
+/* Temporal: desactiva smooth scroll durant operacions */
+html.no-smooth-scroll {
   scroll-behavior: auto !important;
+}
+
+/* Mode de bloqueig d'scroll durant animacions */
+body.accordion-animating {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+/* Assegurar que no hi ha scroll automàtic */
+.accordion-button {
+  scroll-margin: 0 !important;
+  scroll-padding: 0 !important;
+}
+
+/* Prevenir overflow anchor que pot causar scroll automàtic */
+#dockerGuide {
+  overflow-anchor: none !important;
 }
