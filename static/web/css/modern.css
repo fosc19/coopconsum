@@ -560,29 +560,45 @@ a:hover {
 }
 
 /* ======================================
-   ACCORDION FIXES
+   ACCORDION FIXES - SOLUCIÓ AVANÇADA
    ====================================== */
 
-/* Prevenir scroll automàtic quan s'obren accordions */
-.accordion-collapse {
-  scroll-behavior: auto !important;
+/* FIX: Prevenir scroll jump en accordions */
+.accordion-button {
+  position: relative;
 }
 
-/* Assegurar que els targets dels accordions no forcin scroll */
-.accordion-item:target {
-  scroll-margin-top: 0;
+.accordion-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
-/* Evitar scroll jump en elements amb ID */
-[id^="step"]:target {
-  scroll-margin-top: 0;
+/* Assegurar que el text sigui clickable */
+.accordion-button > * {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
 }
 
-/* Alternative: Interceptar l'scroll behavior per accordions */
-.accordion {
-  scroll-behavior: auto;
-}
-
+/* Prevenir el focus scroll */
 .accordion-button:focus {
   box-shadow: none;
+  outline: 2px solid #0d6efd;
+  outline-offset: -2px;
+}
+
+/* Eliminar scroll-margin dels targets */
+[id^="step"] {
+  scroll-margin-top: 0 !important;
+  scroll-padding-top: 0 !important;
+}
+
+/* Control temporal del smooth scroll durant animacions */
+.accordion-animating {
+  scroll-behavior: auto !important;
 }

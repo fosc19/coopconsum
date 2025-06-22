@@ -79,33 +79,64 @@ document.addEventListener('DOMContentLoaded', function() {
   
   createBackToTopButton();
   
-  // Fix per accordions: prevenir scroll automàtic
-  const accordionButtons = document.querySelectorAll('.accordion-button');
+  // FIX COMPLET ACCORDION: Prevenir scroll jump amb events Bootstrap
+  const accordionEl = document.getElementById('dockerGuide');
   
-  accordionButtons.forEach(button => {
-    button.addEventListener('click', function(e) {
-      // Guardar la posició actual del scroll
-      const currentScrollPosition = window.pageYOffset;
-      
-      // Esperar que l'accordion s'obri/tanqui
-      setTimeout(() => {
-        // Restaurar la posició de scroll si ha canviat automàticament
-        if (Math.abs(window.pageYOffset - currentScrollPosition) > 100) {
-          window.scrollTo({
-            top: currentScrollPosition,
-            behavior: 'auto'
-          });
-        }
-      }, 50);
+  if (accordionEl) {
+    let savedPosition = 0;
+    
+    // Interceptar events de Bootstrap
+    accordionEl.addEventListener('show.bs.collapse', function(e) {
+      savedPosition = window.pageYOffset;
+      document.documentElement.classList.add('accordion-animating');
     });
-  });
+    
+    accordionEl.addEventListener('shown.bs.collapse', function(e) {
+      window.scrollTo(0, savedPosition);
+      document.documentElement.classList.remove('accordion-animating');
+    });
+    
+    accordionEl.addEventListener('hide.bs.collapse', function(e) {
+      savedPosition = window.pageYOffset;
+      document.documentElement.classList.add('accordion-animating');
+    });
+    
+    accordionEl.addEventListener('hidden.bs.collapse', function(e) {
+      window.scrollTo(0, savedPosition);
+      document.documentElement.classList.remove('accordion-animating');
+    });
+    
+    // Opció alternativa: Control manual de clics
+    const accordionButtons = accordionEl.querySelectorAll('.accordion-button');
+    accordionButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        const scrollPos = window.pageYOffset;
+        const targetId = this.getAttribute('data-bs-target');
+        const targetEl = document.querySelector(targetId);
+        
+        if (targetEl) {
+          // Prevenir comportament per defecte només si cal
+          setTimeout(() => {
+            if (Math.abs(window.pageYOffset - scrollPos) > 50) {
+              window.scrollTo(0, scrollPos);
+            }
+          }, 10);
+        }
+      });
+    });
+  }
   
-  // Alternative: Interceptar canvis de hash que poden causar scroll
+  // Netejar URL si té hash al carregar
+  if (window.location.hash && window.location.hash.match(/^#step\d+$/)) {
+    history.replaceState("", document.title, window.location.pathname);
+  }
+  
+  // Prevenir navegació per hash
   window.addEventListener('hashchange', function(e) {
-    // Si el hash és un step d'accordion, prevenir scroll
-    if (window.location.hash.match(/^#step\d+$/)) {
+    if (location.hash && location.hash.match(/^#step\d+$/)) {
       e.preventDefault();
-      history.replaceState(null, null, ' ');
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+      return false;
     }
   });
 });
