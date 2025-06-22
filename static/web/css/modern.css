@@ -434,6 +434,23 @@ a:hover {
    MEDIA QUERIES
    ====================================== */
 
+/* Desktop: estructura flex correcta per navbar */
+@media (min-width: 768px) {
+  .civada-menu .navbar-collapse {
+    display: flex !important;
+    justify-content: space-between;
+  }
+  
+  .civada-menu .navbar-nav {
+    flex-grow: 1;
+    justify-content: center;
+  }
+  
+  .civada-menu .user-icons {
+    flex-shrink: 0;
+  }
+}
+
 @media (max-width: 992px) {
   .civada-menu .navbar-nav .nav-link,
   .civada-menu .nav-link {
