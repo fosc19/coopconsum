@@ -436,6 +436,12 @@ a:hover {
 
 /* Desktop: estructura flex correcta per navbar */
 @media (min-width: 768px) {
+  /* Forçar amagar botó hamburger en desktop */
+  .civada-menu .navbar-toggler {
+    display: none !important;
+  }
+  
+  /* Assegurar que navbar-collapse sempre es mostra en desktop */
   .civada-menu .navbar-collapse {
     display: flex !important;
     justify-content: space-between;
