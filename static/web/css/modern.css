@@ -563,9 +563,15 @@ a:hover {
    WIZARD/STEPPER STYLES
    ====================================== */
 
-/* Container del wizard */
+/* Container del wizard amb altura fixa */
 .wizard-container {
   position: relative;
+  min-height: 600px; /* Altura mínima per evitar canvis de layout */
+}
+
+/* Steps amb altura consistent */
+.wizard-step-content {
+  min-height: 500px; /* Altura mínima per cada step */
 }
 
 /* Progress bar i indicadors */

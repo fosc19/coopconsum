@@ -79,18 +79,36 @@ document.addEventListener('DOMContentLoaded', function() {
   
   createBackToTopButton();
   
-  // WIZARD/STEPPER NAVEGACIÓ SIMPLE
+  // WIZARD/STEPPER NAVEGACIÓ AMB SCROLL LOCK
   const wizardContainer = document.getElementById('dockerWizard');
   if (wizardContainer) {
     let currentStep = 1;
     const totalSteps = 4;
+    let savedScrollPosition = 0;
     
     // Funcions globals per la navegació
     window.changeStep = function(direction) {
       const newStep = currentStep + direction;
       
       if (newStep >= 1 && newStep <= totalSteps) {
+        // GUARDAR posició actual ABANS del canvi
+        savedScrollPosition = window.pageYOffset;
+        
         showStep(newStep);
+        
+        // RESTAURAR posició DESPRÉS del canvi
+        setTimeout(() => {
+          window.scrollTo(0, savedScrollPosition);
+          // Forçar posició múltiples vegades per assegurar-nos
+          let attempts = 0;
+          const forcePosition = setInterval(() => {
+            window.scrollTo(0, savedScrollPosition);
+            attempts++;
+            if (attempts > 5) {
+              clearInterval(forcePosition);
+            }
+          }, 10);
+        }, 10);
       }
     };
     
