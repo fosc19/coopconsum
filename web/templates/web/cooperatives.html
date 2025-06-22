@@ -215,16 +215,28 @@
                         </ul>
                     </div>
 
-                    <div class="accordion" id="dockerGuide">
-                        <!-- Paso 1: Comprar servidor -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#step1">
-                                    <strong>Pas 1: Comprar un servidor (5 min)</strong>
-                                </button>
-                            </h2>
-                            <div id="step1" class="accordion-collapse collapse show" data-bs-parent="#dockerGuide">
-                                <div class="accordion-body">
+                    <!-- WIZARD/STEPPER per la Guia Docker -->
+                    <div id="dockerWizard" class="wizard-container">
+                        <!-- Progress indicator -->
+                        <div class="wizard-progress mb-4">
+                            <div class="progress">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 25%" id="progressBar"></div>
+                            </div>
+                            <div class="wizard-steps d-flex justify-content-between mt-2">
+                                <span class="wizard-step active" data-step="1">Pas 1</span>
+                                <span class="wizard-step" data-step="2">Pas 2</span>
+                                <span class="wizard-step" data-step="3">Pas 3</span>
+                                <span class="wizard-step" data-step="4">Pas 4</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Comprar servidor -->
+                        <div class="wizard-step-content active" id="step1">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h4><strong>Pas 1: Comprar un servidor (5 min)</strong></h4>
+                                </div>
+                                <div class="card-body">
                                     <h5>🛒 On comprar?</h5>
                                     <p><strong>Recomanació principal (més detallada):</strong></p>
                                     <div class="border border-primary rounded p-3 mb-3">
@@ -275,15 +287,13 @@
                             </div>
                         </div>
 
-                        <!-- Paso 2: Acceder al servidor -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step2">
-                                    <strong>Pas 2: Accedir al servidor (5 min)</strong>
-                                </button>
-                            </h2>
-                            <div id="step2" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                <div class="accordion-body">
+                        <!-- Step 2: Acceder al servidor -->
+                        <div class="wizard-step-content" id="step2">
+                            <div class="card border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h4><strong>Pas 2: Accedir al servidor (5 min)</strong></h4>
+                                </div>
+                                <div class="card-body">
                                     <h5>💻 Des de Windows:</h5>
                                     <ol>
                                         <li>Descarrega <strong>PuTTY</strong> (és gratuït)</li>
@@ -308,15 +318,13 @@
                             </div>
                         </div>
 
-                        <!-- Paso 3: Instalación automática -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step3">
-                                    <strong>Pas 3: Instal·lació automàtica (10 min)</strong>
-                                </button>
-                            </h2>
-                            <div id="step3" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                <div class="accordion-body">
+                        <!-- Step 3: Instalación automática -->
+                        <div class="wizard-step-content" id="step3">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h4><strong>Pas 3: Instal·lació automàtica (10 min)</strong></h4>
+                                </div>
+                                <div class="card-body">
                                     <h5>🚀 Una sola comanda ho fa tot!</h5>
                                     <p>Copia i enganxa aquesta comanda màgica (prem Enter):</p>
                                     
@@ -361,15 +369,13 @@
                             </div>
                         </div>
 
-                        <!-- Paso 4: Acceso y configuración -->
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#step4">
-                                    <strong>Pas 4: Accedir a la teva cooperativa (2 min)</strong>
-                                </button>
-                            </h2>
-                            <div id="step4" class="accordion-collapse collapse" data-bs-parent="#dockerGuide">
-                                <div class="accordion-body">
+                        <!-- Step 4: Acceso y configuración -->
+                        <div class="wizard-step-content" id="step4">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h4><strong>Pas 4: Accedir a la teva cooperativa (2 min)</strong></h4>
+                                </div>
+                                <div class="card-body">
                                     <div class="alert alert-success">
                                         <i class="fas fa-party-horn me-2"></i>
                                         <strong>Tot està llest!</strong> L'script automàtic ha configurat tot, incloses les tasques diàries per gestionar comandes.
@@ -405,6 +411,16 @@
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Navigation buttons -->
+                        <div class="wizard-navigation d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
+                                <i class="fas fa-arrow-left me-2"></i>Anterior
+                            </button>
+                            <button type="button" class="btn btn-info" id="nextBtn" onclick="changeStep(1)">
+                                Següent<i class="fas fa-arrow-right ms-2"></i>
+                            </button>
                         </div>
                     </div>
 
