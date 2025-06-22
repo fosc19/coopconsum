@@ -558,3 +558,31 @@ a:hover {
 .animate-fade-in {
   animation: fadeIn 0.8s ease forwards;
 }
+
+/* ======================================
+   ACCORDION FIXES
+   ====================================== */
+
+/* Prevenir scroll automàtic quan s'obren accordions */
+.accordion-collapse {
+  scroll-behavior: auto !important;
+}
+
+/* Assegurar que els targets dels accordions no forcin scroll */
+.accordion-item:target {
+  scroll-margin-top: 0;
+}
+
+/* Evitar scroll jump en elements amb ID */
+[id^="step"]:target {
+  scroll-margin-top: 0;
+}
+
+/* Alternative: Interceptar l'scroll behavior per accordions */
+.accordion {
+  scroll-behavior: auto;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}

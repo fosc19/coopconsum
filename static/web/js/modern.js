@@ -78,4 +78,34 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   
   createBackToTopButton();
+  
+  // Fix per accordions: prevenir scroll automàtic
+  const accordionButtons = document.querySelectorAll('.accordion-button');
+  
+  accordionButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Guardar la posició actual del scroll
+      const currentScrollPosition = window.pageYOffset;
+      
+      // Esperar que l'accordion s'obri/tanqui
+      setTimeout(() => {
+        // Restaurar la posició de scroll si ha canviat automàticament
+        if (Math.abs(window.pageYOffset - currentScrollPosition) > 100) {
+          window.scrollTo({
+            top: currentScrollPosition,
+            behavior: 'auto'
+          });
+        }
+      }, 50);
+    });
+  });
+  
+  // Alternative: Interceptar canvis de hash que poden causar scroll
+  window.addEventListener('hashchange', function(e) {
+    // Si el hash és un step d'accordion, prevenir scroll
+    if (window.location.hash.match(/^#step\d+$/)) {
+      e.preventDefault();
+      history.replaceState(null, null, ' ');
+    }
+  });
 });
