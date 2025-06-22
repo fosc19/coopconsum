@@ -79,64 +79,57 @@ document.addEventListener('DOMContentLoaded', function() {
   
   createBackToTopButton();
   
-  // FIX COMPLET ACCORDION: Prevenir scroll jump amb events Bootstrap
+  // SOLUCIÓ DEFINITIVA ACCORDION: Sense scroll jump
   const accordionEl = document.getElementById('dockerGuide');
   
   if (accordionEl) {
-    let savedPosition = 0;
-    
-    // Interceptar events de Bootstrap
-    accordionEl.addEventListener('show.bs.collapse', function(e) {
-      savedPosition = window.pageYOffset;
-      document.documentElement.classList.add('accordion-animating');
-    });
-    
-    accordionEl.addEventListener('shown.bs.collapse', function(e) {
-      window.scrollTo(0, savedPosition);
-      document.documentElement.classList.remove('accordion-animating');
-    });
-    
-    accordionEl.addEventListener('hide.bs.collapse', function(e) {
-      savedPosition = window.pageYOffset;
-      document.documentElement.classList.add('accordion-animating');
-    });
-    
-    accordionEl.addEventListener('hidden.bs.collapse', function(e) {
-      window.scrollTo(0, savedPosition);
-      document.documentElement.classList.remove('accordion-animating');
-    });
-    
-    // Opció alternativa: Control manual de clics
-    const accordionButtons = accordionEl.querySelectorAll('.accordion-button');
-    accordionButtons.forEach(button => {
-      button.addEventListener('click', function(e) {
-        const scrollPos = window.pageYOffset;
-        const targetId = this.getAttribute('data-bs-target');
-        const targetEl = document.querySelector(targetId);
+    // Interceptar tots els clics en botons accordion
+    accordionEl.addEventListener('click', function(e) {
+      const button = e.target.closest('.accordion-button');
+      if (!button) return;
+      
+      // Prevenir comportament per defecte completament
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Guardar posició de scroll
+      const currentScrollPos = window.pageYOffset;
+      
+      // Activar mode no-scroll
+      document.documentElement.classList.add('accordion-no-scroll');
+      
+      // Obtenir target del collapse
+      const targetId = button.getAttribute('data-bs-target');
+      const targetElement = document.querySelector(targetId);
+      
+      if (targetElement) {
+        // Gestionar estat del collapse manualment
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetElement, {
+          toggle: false
+        });
         
-        if (targetEl) {
-          // Prevenir comportament per defecte només si cal
-          setTimeout(() => {
-            if (Math.abs(window.pageYOffset - scrollPos) > 50) {
-              window.scrollTo(0, scrollPos);
-            }
-          }, 10);
+        // Toggle del collapse
+        if (targetElement.classList.contains('show')) {
+          bsCollapse.hide();
+        } else {
+          bsCollapse.show();
         }
-      });
+        
+        // Actualitzar atributs ARIA manualment
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', !isExpanded);
+        
+        // Restaurar posició de scroll i desactivar mode no-scroll
+        setTimeout(() => {
+          window.scrollTo(0, currentScrollPos);
+          document.documentElement.classList.remove('accordion-no-scroll');
+        }, 100);
+      }
     });
   }
   
-  // Netejar URL si té hash al carregar
+  // Netejar hash de la URL si existeix
   if (window.location.hash && window.location.hash.match(/^#step\d+$/)) {
     history.replaceState("", document.title, window.location.pathname);
   }
-  
-  // Prevenir navegació per hash
-  window.addEventListener('hashchange', function(e) {
-    if (location.hash && location.hash.match(/^#step\d+$/)) {
-      e.preventDefault();
-      history.pushState("", document.title, window.location.pathname + window.location.search);
-      return false;
-    }
-  });
 });

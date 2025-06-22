@@ -5,18 +5,9 @@
 
 {% block content %}
 <style>
-    /* Evitar scroll automàtic en l'acordió */
-    .accordion-button:focus {
-        box-shadow: none;
-    }
-    
+    /* CSS específic per aquesta pàgina - sense conflictes scroll */
     .accordion-button[aria-expanded="true"] {
         background-color: rgba(13, 110, 253, 0.1);
-    }
-    
-    /* Millor comportament de l'scroll */
-    html {
-        scroll-behavior: smooth;
     }
     
     .accordion-collapse.collapsing {
