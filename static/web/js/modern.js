@@ -79,57 +79,102 @@ document.addEventListener('DOMContentLoaded', function() {
   
   createBackToTopButton();
   
-  // SOLUCIÓ DEFINITIVA ACCORDION: Sense scroll jump
+  // SOLUCIÓ ULTRA-ROBUSTA ACCORDION: Evitar scroll a "Necessites ajuda"
   const accordionEl = document.getElementById('dockerGuide');
   
   if (accordionEl) {
-    // Interceptar tots els clics en botons accordion
-    accordionEl.addEventListener('click', function(e) {
-      const button = e.target.closest('.accordion-button');
-      if (!button) return;
-      
-      // Prevenir comportament per defecte completament
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Guardar posició de scroll
-      const currentScrollPos = window.pageYOffset;
-      
-      // Activar mode no-scroll
-      document.documentElement.classList.add('accordion-no-scroll');
-      
-      // Obtenir target del collapse
-      const targetId = button.getAttribute('data-bs-target');
-      const targetElement = document.querySelector(targetId);
-      
-      if (targetElement) {
-        // Gestionar estat del collapse manualment
-        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetElement, {
-          toggle: false
-        });
-        
-        // Toggle del collapse
-        if (targetElement.classList.contains('show')) {
-          bsCollapse.hide();
-        } else {
-          bsCollapse.show();
+    let savedScrollPosition = 0;
+    let isAccordionOperating = false;
+    
+    // Force scroll position múltiples vegades durant la transició
+    function forceScrollPosition(position, duration = 500) {
+      const startTime = Date.now();
+      const forceScroll = () => {
+        window.scrollTo(0, position);
+        if (Date.now() - startTime < duration) {
+          requestAnimationFrame(forceScroll);
         }
+      };
+      forceScroll();
+    }
+    
+    // Interceptor d'events Bootstrap per detectar canvis
+    accordionEl.addEventListener('show.bs.collapse', function(e) {
+      savedScrollPosition = window.pageYOffset;
+      isAccordionOperating = true;
+      document.documentElement.classList.add('accordion-no-scroll');
+    });
+    
+    accordionEl.addEventListener('shown.bs.collapse', function(e) {
+      forceScrollPosition(savedScrollPosition, 300);
+      setTimeout(() => {
+        document.documentElement.classList.remove('accordion-no-scroll');
+        isAccordionOperating = false;
+      }, 400);
+    });
+    
+    accordionEl.addEventListener('hide.bs.collapse', function(e) {
+      savedScrollPosition = window.pageYOffset;
+      isAccordionOperating = true;
+      document.documentElement.classList.add('accordion-no-scroll');
+    });
+    
+    accordionEl.addEventListener('hidden.bs.collapse', function(e) {
+      forceScrollPosition(savedScrollPosition, 300);
+      setTimeout(() => {
+        document.documentElement.classList.remove('accordion-no-scroll');
+        isAccordionOperating = false;
+      }, 400);
+    });
+    
+    // Interceptar clics directament en botons
+    const accordionButtons = accordionEl.querySelectorAll('.accordion-button');
+    accordionButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        savedScrollPosition = window.pageYOffset;
+        isAccordionOperating = true;
         
-        // Actualitzar atributs ARIA manualment
-        const isExpanded = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', !isExpanded);
-        
-        // Restaurar posició de scroll i desactivar mode no-scroll
-        setTimeout(() => {
-          window.scrollTo(0, currentScrollPos);
-          document.documentElement.classList.remove('accordion-no-scroll');
-        }, 100);
+        // Forçar posició cada 50ms durant 1 segon
+        let attempts = 0;
+        const maxAttempts = 20;
+        const intervalId = setInterval(() => {
+          window.scrollTo(0, savedScrollPosition);
+          attempts++;
+          if (attempts >= maxAttempts || !isAccordionOperating) {
+            clearInterval(intervalId);
+          }
+        }, 50);
+      });
+    });
+    
+    // Observer per detectar canvis de layout
+    const observer = new MutationObserver((mutations) => {
+      if (isAccordionOperating) {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            // Força scroll quan detecta canvis de classe en accordion-items
+            window.scrollTo(0, savedScrollPosition);
+          }
+        });
       }
+    });
+    
+    // Observar canvis en tots els accordion-items
+    const accordionItems = accordionEl.querySelectorAll('.accordion-collapse');
+    accordionItems.forEach(item => {
+      observer.observe(item, { attributes: true, attributeFilter: ['class'] });
     });
   }
   
-  // Netejar hash de la URL si existeix
-  if (window.location.hash && window.location.hash.match(/^#step\d+$/)) {
+  // Prevenir QUALSEVOL scroll automàtic a hashs
+  if (window.location.hash) {
     history.replaceState("", document.title, window.location.pathname);
   }
+  
+  // Interceptar tots els canvis de hash
+  window.addEventListener('hashchange', function(e) {
+    e.preventDefault();
+    history.replaceState("", document.title, window.location.pathname);
+    return false;
+  });
 });
