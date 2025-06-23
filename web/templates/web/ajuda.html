@@ -4,9 +4,6 @@
 {% block title %}Ajuda - CoopConsum{% endblock %}
 
 {% block extra_css %}
-<!-- Intro.js CSS -->
-<link href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/minified/introjs.min.css" rel="stylesheet">
-
 <style>
   .help-section {
     margin-bottom: 2rem;
@@ -79,50 +76,6 @@
     margin-right: 0.5rem;
   }
   
-  /* Estils personalitzats per Intro.js */
-  .introjs-tooltip-modern {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    max-width: 350px;
-  }
-  
-  .introjs-tooltip-modern .introjs-tooltip-header {
-    background: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 7px 7px 0 0;
-    font-weight: bold;
-  }
-  
-  .introjs-highlight-modern {
-    border: 3px solid #007bff;
-    border-radius: 8px;
-    box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.3);
-  }
-  
-  .introjs-button {
-    background: #007bff;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-  
-  .introjs-button:hover {
-    background: #0056b3;
-  }
-  
-  .introjs-skipbutton {
-    background: #6c757d;
-  }
-  
-  .introjs-skipbutton:hover {
-    background: #545b62;
-  }
 </style>
 {% endblock %}
 
@@ -134,9 +87,7 @@
         <h1><i class="fas fa-question-circle mr-2"></i>Centre d'Ajuda</h1>
       </div>
       <div class="col-sm-6 text-right">
-        <button class="btn btn-info" onclick="startTour()" data-intro="Fes clic aquí per començar un tour guiat del sistema d'ajuda" data-step="1">
-          <i class="fas fa-route mr-1"></i>Tour Guiat
-        </button>
+        <!-- Eliminem el botó del tour -->
       </div>
     </div>
   </div>
@@ -146,7 +97,7 @@
   <div class="container-fluid">
     
     <!-- Barra de cerca -->
-    <div class="help-search" data-intro="Utilitza la cerca per trobar informació específica o filtra per rol d'usuari" data-step="2">
+    <div class="help-search">
       <div class="row">
         <div class="col-md-8">
           <div class="input-group">
@@ -170,7 +121,7 @@
     <div class="row">
       <!-- Índex de continguts -->
       <div class="col-md-3">
-        <div class="card" data-intro="Navega per les diferents seccions d'ajuda utilitzant aquest índex" data-step="3">
+        <div class="card">
           <div class="card-header">
             <h5><i class="fas fa-list mr-2"></i>Continguts</h5>
           </div>
@@ -195,7 +146,7 @@
         <div id="helpContent">
           
           <!-- Primers Passos -->
-          <div id="getting-started" class="help-section" data-role="basic" data-intro="Comença aquí si és la primera vegada que uses CoopConsum" data-step="4">
+          <div id="getting-started" class="help-section" data-role="basic">
             <div class="card help-card">
               <div class="card-body">
                 <div class="help-icon">🚀</div>
@@ -267,7 +218,7 @@
           </div>
 
           <!-- Comandes -->
-          <div id="comandas" class="help-section" data-role="basic" data-intro="Aquesta és la secció més important: aprèn com funcionen les comandes i els seus 4 estats" data-step="5">
+          <div id="comandas" class="help-section" data-role="basic">
             <div class="card help-card">
               <div class="card-body">
                 <div class="help-icon">🛒</div>
@@ -482,7 +433,7 @@
           </div>
 
           <!-- Troubleshooting -->
-          <div id="troubleshooting" class="help-section" data-role="basic" data-intro="Si tens problemes, consulta aquesta secció amb les solucions més comunes" data-step="6">
+          <div id="troubleshooting" class="help-section" data-role="basic">
             <div class="card help-card">
               <div class="card-body">
                 <div class="help-icon">🔧</div>
@@ -584,9 +535,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- Intro.js JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/minified/intro.min.js"></script>
-
 <script>
 // Cerca en el contingut d'ajuda
 function searchHelp() {
@@ -642,37 +590,9 @@ function highlightText(text, searchTerm) {
   return text.replace(regex, '<span class="highlight">$1</span>');
 }
 
-// Tour guiat amb Intro.js
+// Tour guiat eliminat
 function startTour() {
-  introJs().setOptions({
-    // Configuració en català
-    nextLabel: 'Següent',
-    prevLabel: 'Anterior', 
-    skipLabel: 'Saltar',
-    doneLabel: 'Finalitzar',
-    
-    // Missatges
-    tooltipClass: 'introjs-tooltip-modern',
-    highlightClass: 'introjs-highlight-modern',
-    
-    // Opcions d'aparença
-    showProgress: true,
-    showBullets: false,
-    exitOnOverlayClick: false,
-    exitOnEsc: true,
-    
-    // Posicionament
-    tooltipPosition: 'auto',
-    positionPrecedence: ['bottom', 'top', 'right', 'left']
-  }).oncomplete(function() {
-    // Missatge de finalització
-    setTimeout(function() {
-      alert('🎉 Tour completat! Ja pots navegar pel sistema d\'ajuda de forma autònoma.');
-    }, 500);
-  }).onexit(function() {
-    // Opcional: missatge quan surt abans d'acabar
-    console.log('Tour interromput per l\'usuari');
-  }).start();
+  alert('El tour guiat ha estat eliminat per simplificar la interfície.');
 }
 
 // Scroll spy per actualitzar navegació

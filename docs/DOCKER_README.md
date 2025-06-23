@@ -147,3 +147,15 @@ docker compose exec web python manage.py cerrar_pedidos
 ```
 
 **Important**: Els cron jobs són essencials per al funcionament de les comandes recurrents. Sense ells, les comandes no es generaran ni tancaran automàticament.
+
+## Recursos i Documentació
+
+Per obtenir ajuda sobre l'ús del sistema cop instal·lat:
+
+### 📚 Documentació d'Usuari
+- **[Manual d'Usuari Complet](MANUAL_USUARI.md)** - Guia detallada de totes les funcionalitats
+- **[Pàgina d'Ajuda Interactiva](/ajuda/)** - Ajuda contextual dins del sistema (disponible quan el sistema estigui funcionant)
+
+### 🔧 Suport Tècnic
+- **GitHub**: [https://github.com/fosc19/coopconsum](https://github.com/fosc19/coopconsum)
+- **Issues**: [https://github.com/fosc19/coopconsum/issues](https://github.com/fosc19/coopconsum/issues)

@@ -597,6 +597,11 @@
 - GitHub: [https://github.com/fosc19/coopconsum](https://github.com/fosc19/coopconsum)
 - Documentació Docker: `docs/DOCKER_README.md`
 
+### 📚 Recursos Addicionals
+
+- **[Pàgina d'Ajuda Interactiva](/ajuda/)** - Ajuda contextual i navegable dins del sistema
+- **[Documentació d'Instal·lació Docker](docs/DOCKER_README.md)** - Guia completa per instal·lar amb Docker
+
 ---
 
 *Manual actualitzat per la versió actual de CoopConsum*  
