@@ -413,7 +413,7 @@
                             </div>
                         </div>
 
-                        <!-- Navigation buttons -->
+                        <!-- Navigation buttons amb scroll target -->
                         <div class="wizard-navigation d-flex justify-content-between mt-4">
                             <button type="button" class="btn btn-outline-secondary" id="prevBtn" onclick="changeStep(-1)" disabled>
                                 <i class="fas fa-arrow-left me-2"></i>Anterior
@@ -422,6 +422,9 @@
                                 Següent<i class="fas fa-arrow-right ms-2"></i>
                             </button>
                         </div>
+                        
+                        <!-- Àncora invisible per scroll target -->
+                        <div id="wizardAnchor" style="position: absolute; top: 0; visibility: hidden;"></div>
                     </div>
 
                     <div class="mt-4 p-4 bg-success text-white rounded">

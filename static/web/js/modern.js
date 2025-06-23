@@ -86,31 +86,78 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalSteps = 4;
     let savedScrollPosition = 0;
     
-    // Funcions globals per la navegació
+    // Funcions globals per la navegació amb SCROLL LOCK ULTRA AGRESSIU
     window.changeStep = function(direction) {
       const newStep = currentStep + direction;
       
       if (newStep >= 1 && newStep <= totalSteps) {
-        // GUARDAR posició actual ABANS del canvi
+        // GUARDAR posició actual
         savedScrollPosition = window.pageYOffset;
         
+        // BLOQUEJAR SCROLL COMPLETAMENT
+        lockScrollCompletely();
+        
+        // Canviar step
         showStep(newStep);
         
-        // RESTAURAR posició DESPRÉS del canvi
+        // RESTAURAR després d'un temps
         setTimeout(() => {
-          window.scrollTo(0, savedScrollPosition);
-          // Forçar posició múltiples vegades per assegurar-nos
-          let attempts = 0;
-          const forcePosition = setInterval(() => {
-            window.scrollTo(0, savedScrollPosition);
-            attempts++;
-            if (attempts > 5) {
-              clearInterval(forcePosition);
-            }
-          }, 10);
-        }, 10);
+          unlockScrollCompletely();
+        }, 100);
       }
     };
+    
+    function lockScrollCompletely() {
+      // Mètode 1: Overflow hidden
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      
+      // Mètode 2: Position fixed
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollPosition}px`;
+      document.body.style.width = '100%';
+      document.body.style.paddingRight = scrollbarWidth + 'px';
+      
+      // Mètode 3: Prevenir events
+      document.addEventListener('wheel', preventDefault, { passive: false });
+      document.addEventListener('touchmove', preventDefault, { passive: false });
+      document.addEventListener('scroll', preventDefault, { passive: false });
+    }
+    
+    function unlockScrollCompletely() {
+      // Restaurar estils
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.paddingRight = '';
+      
+      // Eliminar event listeners
+      document.removeEventListener('wheel', preventDefault);
+      document.removeEventListener('touchmove', preventDefault);
+      document.removeEventListener('scroll', preventDefault);
+      
+      // SCROLL SUAU cap al wizard
+      const wizardAnchor = document.getElementById('wizardAnchor');
+      if (wizardAnchor) {
+        wizardAnchor.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      } else {
+        // Fallback: restaurar posició original
+        window.scrollTo(0, savedScrollPosition);
+      }
+    }
+    
+    function preventDefault(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
     
     function showStep(stepNumber) {
       // Amaga tots els steps
