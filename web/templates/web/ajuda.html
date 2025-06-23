@@ -224,22 +224,34 @@
               <div class="card-body">
                 <div class="help-icon">🛒</div>
                 <h3>Sistema de Comandes</h3>
-                <p class="text-muted mb-3">Participar en comandes col·lectives</p>
+                <p class="text-muted mb-3">Cicle complet de les comandes col·lectives</p>
                 
                 <div class="row">
-                  <div class="col-md-6">
-                    <h5>Estats de Comandes:</h5>
-                    <ul>
-                      <li><span class="badge badge-success">Obert</span> - Pots participar</li>
-                      <li><span class="badge badge-warning">Pendent</span> - En revisió</li>
-                      <li><span class="badge badge-secondary">Tancat</span> - Finalitzat</li>
-                      <li><span class="badge badge-dark">Inactiu</span> - Processat</li>
-                    </ul>
+                  <div class="col-md-8">
+                    <h5>🔄 Cicle de Vida d'una Comanda:</h5>
+                    <div class="mb-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <span class="badge badge-success mr-2">1. OBERT</span>
+                        <small>Socis poden afegir/modificar productes</small>
+                      </div>
+                      <div class="d-flex align-items-center mb-2">
+                        <span class="badge badge-warning mr-2">2. PENDENT</span>
+                        <small>Gestors revisen + Master pot enviar correccions</small>
+                      </div>
+                      <div class="d-flex align-items-center mb-2">
+                        <span class="badge badge-info mr-2">3. REVISIÓ</span>
+                        <small>Gestor accepta revisió - només es pot finalitzar</small>
+                      </div>
+                      <div class="d-flex align-items-center mb-2">
+                        <span class="badge badge-dark mr-2">4. INACTIU</span>
+                        <small>Finalitzada - ES DESCOMPTA DEL MONEDER</small>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <h5>Com Participar:</h5>
-                    <ol>
-                      <li>Selecciona una comanda oberta</li>
+                    <ol class="small">
+                      <li>Selecciona comanda <span class="badge badge-success badge-sm">OBERTA</span></li>
                       <li>Afegeix productes i quantitats</li>
                       <li>Revisa el total</li>
                       <li>Confirma la participació</li>
@@ -248,7 +260,12 @@
                 </div>
                 
                 <div class="alert alert-warning">
-                  <strong>Important:</strong> El saldo es descompta automàticament quan es tanca la comanda.
+                  <strong>⚠️ Important:</strong> 
+                  <ul class="mb-0">
+                    <li>Només pots modificar en estat <span class="badge badge-success badge-sm">OBERT</span></li>
+                    <li>El saldo es descompta quan passa a <span class="badge badge-dark badge-sm">INACTIU</span></li>
+                    <li>En estat <span class="badge badge-warning badge-sm">PENDENT</span> només gestors poden modificar</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -467,17 +484,41 @@
                     <div class="card-header" id="headingThree">
                       <h5 class="mb-0">
                         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree">
-                          No veig comandes obertes
+                          No puc modificar la meva participació
                         </button>
                       </h5>
                     </div>
                     <div id="collapseThree" class="collapse" data-parent="#troubleshootingAccordion">
                       <div class="card-body">
+                        <p><strong>Comprova l'estat de la comanda:</strong></p>
                         <ul>
-                          <li>Pot ser que no hi hagi comandes actives</li>
-                          <li>Comprova el calendari per dates futures</li>
-                          <li>Possible solapament de comandes setmanals</li>
-                          <li>Contacta amb els responsables de comandes</li>
+                          <li><span class="badge badge-success badge-sm">OBERT</span>: Hauríes de poder modificar - revisa el saldo</li>
+                          <li><span class="badge badge-warning badge-sm">PENDENT</span>: Normal, només gestors poden modificar</li>
+                          <li><span class="badge badge-info badge-sm">REVISIÓ</span>: Normal, ningú pot modificar</li>
+                          <li><span class="badge badge-dark badge-sm">INACTIU</span>: Normal, comanda finalitzada</li>
+                        </ul>
+                        <p class="small">Si està oberta i no pots modificar, contacta l'administrador.</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <div class="card-header" id="headingFour">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour">
+                          No s'ha descomptat el diners de la comanda
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseFour" class="collapse" data-parent="#troubleshootingAccordion">
+                      <div class="card-body">
+                        <div class="alert alert-info">
+                          <strong>El descompte només es fa quan la comanda passa a <span class="badge badge-dark badge-sm">INACTIU</span></strong>
+                        </div>
+                        <ul>
+                          <li>En estats <span class="badge badge-success badge-sm">OBERT</span>, <span class="badge badge-warning badge-sm">PENDENT</span>, <span class="badge badge-info badge-sm">REVISIÓ</span>: el saldo NO es descompta</li>
+                          <li>Espera a que el gestor finalitzi completament la comanda</li>
+                          <li>Un cop <span class="badge badge-dark badge-sm">INACTIVA</span>, el descompte és automàtic</li>
                         </ul>
                       </div>
                     </div>

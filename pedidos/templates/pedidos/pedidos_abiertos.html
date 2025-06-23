@@ -10,6 +10,11 @@
       <div class="col-sm-6">
         <h1>Comandes Obertes</h1>
       </div>
+      <div class="col-sm-6 text-right">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ajudaComandes">
+          <i class="fas fa-question-circle mr-1"></i>Ajuda
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -53,7 +58,10 @@
                   <td>{{ pedido.fecha_cierre|date:"d/m/Y" }}</td>
                   <td>
                     <a href="{% url 'seleccionar_pedido' pedido.id %}"
-                       class="btn btn-sm btn-primary">
+                       class="btn btn-sm btn-primary"
+                       data-toggle="tooltip" 
+                       data-placement="top" 
+                       title="Participar en aquesta comanda seleccionant productes i quantitats">
                       Seleccionar Productes
                     </a>
                   </td>
@@ -71,5 +79,97 @@
       </div> <!-- Fin card-body -->
     </div> <!-- Fin card -->
   </div> <!-- Fin container-fluid -->
+
+  <!-- Modal d'Ajuda Contextual -->
+  <div class="modal fade" id="ajudaComandes" tabindex="-1" role="dialog" aria-labelledby="ajudaComandesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ajudaComandesLabel">
+            <i class="fas fa-clipboard mr-2"></i>Ajuda - Comandes Obertes
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-info-circle mr-2 text-primary"></i>🔄 Cicle de Vida</h6>
+              <div class="mb-3">
+                <div class="d-flex align-items-center mb-1">
+                  <span class="badge badge-success mr-2">OBERT</span>
+                  <small>Pots participar i modificar</small>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span class="badge badge-warning mr-2">PENDENT</span>
+                  <small>Gestors revisen, tu no pots modificar</small>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span class="badge badge-info mr-2">REVISIÓ</span>
+                  <small>Acceptant correccions del Master</small>
+                </div>
+                <div class="d-flex align-items-center mb-1">
+                  <span class="badge badge-dark mr-2">INACTIU</span>
+                  <small>Finalitzada - ES DESCOMPTA DEL MONEDER</small>
+                </div>
+              </div>
+              
+              <h6><i class="fas fa-clock mr-2 text-warning"></i>Dates Importants</h6>
+              <ul class="small">
+                <li><strong>Obertura:</strong> Quan pots començar a participar</li>
+                <li><strong>Tancament:</strong> Data límit per afegir productes</li>
+                <li><strong>Lliurament:</strong> Quan rebre els productes</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-shopping-cart mr-2 text-success"></i>Com Participar</h6>
+              <ol class="small">
+                <li>Fes clic a "Seleccionar Productes" en una comanda <span class="badge badge-success badge-sm">OBERTA</span></li>
+                <li>Selecciona productes i quantitats desitjades</li>
+                <li>Revisa el total i comprova que tens saldo suficient</li>
+                <li>Confirma la teva participació</li>
+              </ol>
+              
+              <h6><i class="fas fa-edit mr-2 text-info"></i>Modificar Participació</h6>
+              <ul class="small">
+                <li><strong>Estat OBERT:</strong> Pots modificar lliurement</li>
+                <li><strong>Altres estats:</strong> NO pots modificar</li>
+                <li>Accedeix via "Panell del Soci" → Comandes Recents</li>
+              </ul>
+              
+              <h6><i class="fas fa-wallet mr-2 text-warning"></i>Quan es Cobra?</h6>
+              <p class="small mb-0">El descompte del moneder només es fa quan la comanda passa a estat <span class="badge badge-dark badge-sm">INACTIU</span>. Abans d'això, els diners segueixen al teu compte.</p>
+            </div>
+          </div>
+          
+          <div class="alert alert-success mt-3">
+            <h6><i class="fas fa-lightbulb mr-2"></i>Consells Útils</h6>
+            <ul class="mb-0 small">
+              <li>Comprova el calendari per dates de comandes futures</li>
+              <li>Assegura't de tenir saldo suficient abans de participar</li>
+              <li>Pots modificar la teva participació mentre estigui OBERTA</li>
+              <li>Un cop PENDENT, contacta el gestor si necessites canvis</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'web_ajuda' %}" class="btn btn-primary">
+            <i class="fas fa-book mr-1"></i>Manual Complet
+          </a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Inicialitzar tooltips de Bootstrap
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 {% endblock %}

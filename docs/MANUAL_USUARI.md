@@ -106,31 +106,60 @@
 
 **Accés**: Menú lateral > "Comandes" (badge amb número si hi ha obertes)
 
+#### 🔄 Cicle de Vida d'una Comanda
+
+**Procés complet** que segueixen totes les comandes col·lectives:
+
+##### **1. ESTAT OBERT** 🟢
+- **Durada**: Des de l'obertura fins la data límit
+- **Socis poden**: Afegir, modificar i eliminar productes
+- **Gestors poden**: Supervisar participacions
+- **Master pot**: Monitoritzar activitat
+
+##### **2. ESTAT PENDENT** 🟡  
+- **Quan**: Després de la data límit de participació
+- **Socis**: NO poden modificar res
+- **Gestors de comanda poden**: 
+  - Afegir/eliminar productes si algú s'ha oblidat
+  - Ajustar quantitats segons necessitats especials
+  - Revisar participacions abans d'enviar al proveïdor
+- **Master pot**: Enviar revisions i correccions a la comanda
+
+##### **3. REVISIÓ ACCEPTADA** 🔄
+- **Quan**: El gestor accepta una revisió del Master
+- **NINGÚ pot modificar** ja la comanda
+- **Gestors només poden**: Finalitzar la comanda
+- **Estat temporal** abans del tancament definitiu
+
+##### **4. ESTAT INACTIU** ⚫
+- **Comanda finalitzada** completament
+- **Es descompta del moneder** de tots els socis participants
+- **No es pot modificar** per ningú
+- **Procés completat** - productes llestos per recollir
+
 #### 📝 Participar en Comandes Obertes
 
-**Procés de participació**:
+**Procés de participació** (només en estat 🟢 OBERT):
 1. **Selecciona una comanda oberta** de la llista
 2. **Afegeix productes** amb les quantitats desitjades
 3. **Revisa el total** abans de confirmar
-4. **Guarda la comanda** - es descomptarà del moneder al tancar
+4. **Guarda la comanda** - es descomptarà quan passi a INACTIU
 
-**Estats de comandes**:
-- **🟢 Obert**: Pots afegir/modificar productes
-- **🟡 Pendent**: Comanda tancada, esperant revisió
-- **🔴 Tancat**: Finalitzada, no es pot modificar
-- **⚫ Inactiu**: Processada completament
+#### ✏️ Editar les Teves Participacions
 
-#### ✏️ Editar Comandes Actives
+**Quan pots modificar**:
+- **Només en estat 🟢 OBERT**: Pots afegir, canviar i eliminar productes
+- **En estat 🟡 PENDENT o posterior**: NO es pot modificar
 
-**Modificacions permeses**:
-- **Afegir nous productes** mentre estigui oberta
+**Modificacions permeses** (estat OBERT):
+- **Afegir nous productes** a la teva participació
 - **Canviar quantitats** dels productes existents
 - **Eliminar productes** que no vols
 - **Veure total actualitzat** en temps real
 
-**Limitacions**:
-- No es pot editar comandes **tancades** o **pendents**
+**Limitacions sempre**:
 - Les modificacions han de respectar el **saldo disponible**
+- No pots modificar participacions d'altres socis
 
 ---
 
@@ -222,7 +251,33 @@
 
 ### 📋 Gestió de Comandes
 
-**Qui hi té accés**: Responsables de comandes
+**Qui hi té accés**: Responsables de comandes i gestors
+
+#### 🔄 Gestió d'Estats de Comandes
+
+**Responsabilitats del Gestor de Comandes**:
+
+##### **Estat 🟢 OBERT**
+- **Supervisar participacions** dels socis
+- **Resoldre dubtes** sobre productes i quantitats
+- **Monitoritzar** nivells de participació per categoria
+
+##### **Estat 🟡 PENDENT**
+- **Revisar totes les participacions** abans d'enviar al proveïdor
+- **Afegir productes oblidats** per socis que ho sol·licitin
+- **Ajustar quantitats** segons necessitats especials
+- **Preparar comanda final** per enviar al proveïdor
+- **Rebre i revisar revisions** del Master
+
+##### **Estat 🔄 REVISIÓ ACCEPTADA**
+- **Acceptar revisions** proposades pel Master
+- **Finalitzar la comanda** definitivament
+- **NO es pot modificar** cap producte o quantitat
+
+##### **Estat ⚫ INACTIU**
+- **Comanda completada** - es descompta automàticament del moneder
+- **Coordinació del lliurament** segons dates establertes
+- **Resolució d'incidències** de productes no disponibles
 
 **Funcionalitats principals**:
 
@@ -510,10 +565,23 @@
 - Revisar el calendari per verificar dates d'obertura/tancament
 - Contactar amb l'administrador per revisar la configuració de comandes recurrents
 
+**No puc modificar la meva participació en una comanda**:
+- **Estat 🟢 OBERT**: Hauríes de poder modificar - revisa si tens saldo suficient
+- **Estat 🟡 PENDENT**: Normal, només gestors poden modificar en aquest estat
+- **Estat 🔄 REVISIÓ ACCEPTADA**: Normal, ningú pot modificar
+- **Estat ⚫ INACTIU**: Normal, comanda finalitzada
+- Si la comanda està oberta i no pots modificar, contacta l'administrador
+
+**No entenc per què no s'ha descomptat el diners de la comanda**:
+- El descompte **només** es fa quan la comanda passa a estat ⚫ INACTIU
+- En estats 🟢 OBERT, 🟡 PENDENT, 🔄 REVISIÓ: el saldo encara NO es descompta
+- Espera a que el gestor finalitzi completament la comanda
+
 **Error en afegir productes a comanda**:
-- Verifica que tens saldo suficient
-- Comprova que la comanda encara està oberta
+- Verifica que tens saldo suficient per la compra total
+- Comprova que la comanda està en estat 🟢 OBERT (no 🟡 PENDENT)
 - Revisa les quantitats introduïdes
+- Si la comanda diu "oberta" però no pots afegir, pot estar en estat 🟡 PENDENT
 
 ### 📞 Contacte i Suport
 
