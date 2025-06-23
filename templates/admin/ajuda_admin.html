@@ -6,11 +6,13 @@
 {% block extrastyle %}
 {{ block.super }}
 <style>
+  /* Adaptar colors per tema fosc de Django admin */
   .admin-help-section {
     margin-bottom: 2rem;
-    background: white;
+    background: #2b2b2b;
+    border: 1px solid #444;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     overflow: hidden;
   }
   
@@ -24,12 +26,44 @@
   
   .admin-help-content {
     padding: 1.5rem;
+    color: #f2f2f2;
+  }
+  
+  .admin-help-content h4 {
+    color: #79aec8;
+    margin-top: 0;
+  }
+  
+  .admin-help-content h5 {
+    color: #79aec8;
+  }
+  
+  .admin-help-content p {
+    color: #e0e0e0;
+    line-height: 1.6;
+  }
+  
+  .admin-help-content ul li {
+    color: #e0e0e0;
+  }
+  
+  .admin-help-content strong {
+    color: #ffffff;
+  }
+  
+  .admin-help-content code {
+    background: #1a1a1a;
+    color: #79aec8;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid #444;
   }
   
   .admin-help-search {
     margin-bottom: 2rem;
     padding: 1rem;
-    background: #f8f9fa;
+    background: #1a1a1a;
+    border: 1px solid #444;
     border-radius: 8px;
   }
   
@@ -49,16 +83,22 @@
   .admin-help-toc {
     position: sticky;
     top: 20px;
-    background: white;
+    background: #2b2b2b;
+    border: 1px solid #444;
     border-radius: 8px;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .admin-help-toc h3 {
+    color: #79aec8 !important;
+    margin-top: 0;
   }
   
   .admin-help-toc a {
     display: block;
     padding: 0.5rem;
-    color: #417690;
+    color: #79aec8;
     text-decoration: none;
     border-radius: 4px;
     transition: background-color 0.2s;
@@ -74,6 +114,13 @@
     border-left: 4px solid #417690;
     padding-left: 1rem;
     margin-bottom: 1rem;
+    background: rgba(65, 118, 144, 0.1);
+    padding: 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .workflow-step p {
+    margin: 0.5rem 0;
   }
   
   .alert-admin {
@@ -81,13 +128,63 @@
     margin: 1rem 0;
     border-radius: 4px;
     border-left: 4px solid #ffc107;
-    background-color: #fff3cd;
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #fff3cd;
+    border: 1px solid #ffc107;
+  }
+  
+  .alert-admin strong {
+    color: #ffc107;
+  }
+  
+  .alert-admin a {
+    color: #79aec8;
   }
   
   .admin-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+    background: #1a1a1a;
+    min-height: 100vh;
+  }
+  
+  .admin-container h1 {
+    color: #79aec8 !important;
+    margin-bottom: 2rem;
+  }
+  
+  /* Ajustar input de cerca per tema fosc */
+  .admin-help-search input {
+    background: #2b2b2b;
+    color: #f2f2f2;
+    border: 1px solid #444;
+  }
+  
+  .admin-help-search input::placeholder {
+    color: #999;
+  }
+  
+  .admin-help-search button {
+    background: #417690;
+    color: white;
+    border: none;
+  }
+  
+  .admin-help-search button:hover {
+    background: #5a94b8;
+  }
+  
+  /* Grid responsive per tema fosc */
+  @media (max-width: 768px) {
+    .admin-container > div {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .admin-help-toc {
+      position: static;
+      margin-bottom: 2rem;
+    }
   }
 </style>
 {% endblock %}
