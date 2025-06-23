@@ -58,10 +58,7 @@
                   <td>{{ pedido.fecha_cierre|date:"d/m/Y" }}</td>
                   <td>
                     <a href="{% url 'seleccionar_pedido' pedido.id %}"
-                       class="btn btn-sm btn-primary"
-                       data-toggle="tooltip" 
-                       data-placement="top" 
-                       title="Participar en aquesta comanda seleccionant productes i quantitats">
+                       class="btn btn-sm btn-primary">
                       Seleccionar Productes
                     </a>
                   </td>
