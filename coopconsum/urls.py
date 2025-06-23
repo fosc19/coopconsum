@@ -43,6 +43,9 @@ urlpatterns = [
     # Logout específic per admin - ABANS d'admin/ per prioritat
     path('admin/logout/', admin_logout_view, name='admin_logout'),
     
+    # Ajuda específica per admin - ABANS d'admin/ per prioritat
+    path('admin/ajuda/', lambda request: __import__('web.views', fromlist=['ajuda_admin']).ajuda_admin(request), name='admin_ajuda'),
+    
     path('admin/', admin.site.urls),
 
     # Web pública (escaparate/tienda)

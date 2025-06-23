@@ -1,0 +1,395 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Ajuda Administració - CoopConsum{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .admin-help-section {
+    margin-bottom: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  
+  .admin-help-header {
+    background: #417690;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .admin-help-content {
+    padding: 1.5rem;
+  }
+  
+  .admin-help-search {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .step-number {
+    background: #417690;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  
+  .admin-help-toc {
+    position: sticky;
+    top: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .admin-help-toc a {
+    display: block;
+    padding: 0.5rem;
+    color: #417690;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .admin-help-toc a:hover,
+  .admin-help-toc a.active {
+    background-color: #417690;
+    color: white;
+  }
+  
+  .workflow-step {
+    border-left: 4px solid #417690;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .alert-admin {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    border-left: 4px solid #ffc107;
+    background-color: #fff3cd;
+  }
+  
+  .admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+  <h1 style="color: #417690; margin-bottom: 2rem;">
+    <i class="fas fa-cogs"></i> Centre d'Ajuda - Administració
+  </h1>
+  
+  <!-- Barra de cerca -->
+  <div class="admin-help-search">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <input type="text" 
+             id="adminSearchHelp" 
+             placeholder="Cerca ajuda específica d'administració..." 
+             style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;"
+             onkeyup="searchAdminHelp()">
+      <button onclick="clearSearch()" style="padding: 0.5rem 1rem; background: #417690; color: white; border: none; border-radius: 4px;">
+        Neteja
+      </button>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem;">
+    <!-- Índex de continguts -->
+    <div class="admin-help-toc">
+      <h3 style="margin-top: 0; color: #417690;">Continguts</h3>
+      <a href="#primers-passos" onclick="scrollToSection('primers-passos')">Primers Passos Admin</a>
+      <a href="#gestio-usuaris" onclick="scrollToSection('gestio-usuaris')">Gestió d'Usuaris</a>
+      <a href="#validacio-ingressos" onclick="scrollToSection('validacio-ingressos')">Validació d'Ingressos</a>
+      <a href="#gestio-comandes" onclick="scrollToSection('gestio-comandes')">Gestió de Comandes</a>
+      <a href="#configuracio-sistema" onclick="scrollToSection('configuracio-sistema')">Configuració Sistema</a>
+      <a href="#manteniment" onclick="scrollToSection('manteniment')">Manteniment</a>
+      <a href="#troubleshooting-admin" onclick="scrollToSection('troubleshooting-admin')">Troubleshooting</a>
+    </div>
+
+    <!-- Contingut principal -->
+    <div>
+      <!-- Primers Passos Admin -->
+      <div id="primers-passos" class="admin-help-section">
+        <div class="admin-help-header">
+          🚀 Primers Passos d'Administració
+        </div>
+        <div class="admin-help-content">
+          <p><strong>Benvingut al panel d'administració de CoopConsum!</strong> Aquí trobaràs les tasques essencials per gestionar la cooperativa.</p>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+            <div>
+              <h4><span class="step-number">1</span>Accés i Navegació</h4>
+              <ul>
+                <li>URL: <code>/admin/</code></li>
+                <li>Credencials de superusuari necessàries</li>
+                <li>Navegació per mòduls al lateral esquerre</li>
+                <li>Canvia contrasenya al primer accés</li>
+              </ul>
+            </div>
+            <div>
+              <h4><span class="step-number">2</span>Tasques Diàries</h4>
+              <ul>
+                <li><strong>Validar ingressos</strong> pendents</li>
+                <li><strong>Revisar comandes</strong> en estat pendent</li>
+                <li><strong>Gestionar usuaris</strong> nous</li>
+                <li><strong>Comprovar configuració</strong> del sistema</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="alert-admin">
+            <strong>💡 Consell Important:</strong> Sempre fes backup abans de fer canvis importants al sistema.
+          </div>
+        </div>
+      </div>
+
+      <!-- Gestió d'Usuaris -->
+      <div id="gestio-usuaris" class="admin-help-section">
+        <div class="admin-help-header">
+          👥 Gestió d'Usuaris i Permisos
+        </div>
+        <div class="admin-help-content">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div>
+              <h4>Crear Nou Soci</h4>
+              <div class="workflow-step">
+                <p><strong>Pas 1:</strong> Anar a "Socios" → "Socios" → "Añadir Socio"</p>
+                <p><strong>Pas 2:</strong> Omple dades obligatòries: nom, email, número UF</p>
+                <p><strong>Pas 3:</strong> Crear usuari associat si cal accés a la intranet</p>
+                <p><strong>Pas 4:</strong> Assignar permisos especials si escau</p>
+              </div>
+            </div>
+            <div>
+              <h4>Permisos Especials</h4>
+              <ul>
+                <li><strong>gestiona_productos:</strong> Pot afegir/editar productes</li>
+                <li><strong>gestiona_stock:</strong> Pot gestionar inventari</li>
+                <li><strong>puede_crear_comandas_esporadicas:</strong> Pot crear comandes especials</li>
+              </ul>
+              
+              <h4>Activar/Desactivar Usuaris</h4>
+              <p>Marca/desmarca "Activo" per permetre/bloquejar l'accés.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Validació d'Ingressos -->
+      <div id="validacio-ingressos" class="admin-help-section">
+        <div class="admin-help-header">
+          💰 Validació d'Ingressos del Moneder
+        </div>
+        <div class="admin-help-content">
+          <h4>Workflow de Validació</h4>
+          <div class="workflow-step">
+            <p><strong>1. Localitzar ingressos pendents:</strong></p>
+            <p>Anar a "Socios" → "Movimientos Cuenta" → Filtrar per "Estado: Pendiente"</p>
+          </div>
+          <div class="workflow-step">
+            <p><strong>2. Verificar justificant:</strong></p>
+            <p>Comprovar transferència bancària o ingrés en efectiu</p>
+          </div>
+          <div class="workflow-step">
+            <p><strong>3. Validar o rebutjar:</strong></p>
+            <p>Canviar estat a "Validado" o eliminar si no és correcte</p>
+          </div>
+          
+          <div class="alert-admin">
+            <strong>⚠️ Important:</strong> El saldo del soci s'actualitza automàticament quan valides l'ingrés.
+          </div>
+        </div>
+      </div>
+
+      <!-- Gestió de Comandes -->
+      <div id="gestio-comandes" class="admin-help-section">
+        <div class="admin-help-header">
+          🛒 Gestió de Comandes i Pedidos Col·lectius
+        </div>
+        <div class="admin-help-content">
+          <h4>Estats de Comandes</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <p><strong>🟢 OBERT:</strong> Socis poden participar</p>
+              <p><strong>🟡 PENDENT:</strong> Gestors revisen</p>
+            </div>
+            <div>
+              <p><strong>🔄 REVISIÓ:</strong> Master ha fet correccions</p>
+              <p><strong>⚫ INACTIU:</strong> Finalitzada, descompte fet</p>
+            </div>
+          </div>
+          
+          <h4>Comandes Recurrents</h4>
+          <div class="workflow-step">
+            <p><strong>Crear:</strong> "Pedidos" → "Comandas Recurrentes" → "Añadir"</p>
+            <p><strong>⚠️ Important:</strong> NO posar data de finalització (pot crear problemes de visualització)</p>
+            <p><strong>Assignar:</strong> Responsable gestor per cada comanda</p>
+          </div>
+          
+          <h4>Revisar Participacions</h4>
+          <p>A "Pedidos Col·lectius" pots veure totes les participacions i fer ajustos abans de finalitzar.</p>
+        </div>
+      </div>
+
+      <!-- Configuració Sistema -->
+      <div id="configuracio-sistema" class="admin-help-section">
+        <div class="admin-help-header">
+          ⚙️ Configuració del Sistema
+        </div>
+        <div class="admin-help-content">
+          <h4>ConfiguracioWeb</h4>
+          <p>Configuració principal del sistema a "Web" → "Configuracio Webs":</p>
+          <ul>
+            <li><strong>Nom cooperativa:</strong> Apareix a tota la web</li>
+            <li><strong>Descripció:</strong> Text de presentació</li>
+            <li><strong>Contacte:</strong> Email i telèfon</li>
+            <li><strong>Configuració API:</strong> Activar/desactivar API pública</li>
+          </ul>
+          
+          <h4>Galeria d'Imatges</h4>
+          <p>Gestiona imatges públiques a "Web" → "Galeria Imagens"</p>
+          
+          <h4>Categories i Proveïdors</h4>
+          <p>Configura visibilitat pública marcant "Visible en web"</p>
+        </div>
+      </div>
+
+      <!-- Manteniment -->
+      <div id="manteniment" class="admin-help-section">
+        <div class="admin-help-header">
+          🔧 Manteniment i Monitorització
+        </div>
+        <div class="admin-help-content">
+          <h4>Tasques de Manteniment</h4>
+          <ul>
+            <li><strong>Backup diari:</strong> Automàtic a les 02:00</li>
+            <li><strong>Logs:</strong> Revisar errors al sistema</li>
+            <li><strong>Espai disc:</strong> Monitoritzar media files</li>
+            <li><strong>Usuaris inactius:</strong> Revisar periòdicament</li>
+          </ul>
+          
+          <h4>Comandes Automàtiques</h4>
+          <p>Els cron jobs executen:</p>
+          <ul>
+            <li><strong>23:58:</strong> Generar noves comandes recurrents</li>
+            <li><strong>23:59:</strong> Tancar comandes del dia</li>
+            <li><strong>02:00:</strong> Backup de base de dades</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Troubleshooting Admin -->
+      <div id="troubleshooting-admin" class="admin-help-section">
+        <div class="admin-help-header">
+          🛠️ Resolució de Problemes Comuns
+        </div>
+        <div class="admin-help-content">
+          <h4>Problemes Freqüents</h4>
+          
+          <div class="workflow-step">
+            <h5>Soci no pot accedir a la intranet</h5>
+            <p>1. Verificar que té usuari creat</p>
+            <p>2. Comprovar que està "Activo"</p>
+            <p>3. Revisar permisos assignats</p>
+          </div>
+          
+          <div class="workflow-step">
+            <h5>Comandes no es veuen a la intranet</h5>
+            <p>1. Comprovar dates d'obertura/tancament</p>
+            <p>2. Revisar solapament entre comandes setmanals</p>
+            <p>3. Verificar estat de la comanda</p>
+          </div>
+          
+          <div class="workflow-step">
+            <h5>Problemes amb el moneder</h5>
+            <p>1. Revisar moviments pendents de validació</p>
+            <p>2. Comprovar que no hi ha moviments duplicats</p>
+            <p>3. Verificar que els imports són correctes</p>
+          </div>
+          
+          <div class="alert-admin">
+            <strong>📞 Suport Tècnic:</strong> 
+            <a href="mailto:civada@gmail.com">civada@gmail.com</a> | 
+            <a href="https://github.com/fosc19/coopconsum/issues" target="_blank">GitHub Issues</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cerca en el contingut d'ajuda admin
+function searchAdminHelp() {
+  const searchTerm = document.getElementById('adminSearchHelp').value.toLowerCase();
+  const sections = document.querySelectorAll('.admin-help-section');
+  
+  sections.forEach(section => {
+    const text = section.textContent.toLowerCase();
+    if (text.includes(searchTerm) || searchTerm === '') {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+function clearSearch() {
+  document.getElementById('adminSearchHelp').value = '';
+  searchAdminHelp();
+}
+
+function scrollToSection(sectionId) {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+    
+    // Actualitzar enllaç actiu
+    document.querySelectorAll('.admin-help-toc a').forEach(link => {
+      link.classList.remove('active');
+    });
+    document.querySelector(`a[href="#${sectionId}"]`).classList.add('active');
+  }
+}
+
+// Scroll spy per actualitzar navegació
+window.addEventListener('scroll', function() {
+  const sections = document.querySelectorAll('.admin-help-section');
+  const tocLinks = document.querySelectorAll('.admin-help-toc a');
+  
+  let currentSection = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 100 && rect.bottom >= 100) {
+      currentSection = section.id;
+    }
+  });
+  
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+    const href = link.getAttribute('href');
+    if (href === `#${currentSection}`) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+{% endblock %}

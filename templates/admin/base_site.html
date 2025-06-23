@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">CoopConsum - Administració</a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}
+<div style="display: flex; align-items: center; gap: 1rem;">
+    <a href="{% url 'admin_ajuda' %}" 
+       style="color: #ffc; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 4px; transition: background 0.2s;"
+       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        <i class="fas fa-question-circle"></i> Ajuda Admin
+    </a>
+    <a href="{% url 'web_ajuda' %}" 
+       style="color: #ffc; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 4px; transition: background 0.2s;"
+       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        <i class="fas fa-users"></i> Ajuda Socis
+    </a>
+    <a href="/" 
+       style="color: #ffc; text-decoration: none; padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); border-radius: 4px; transition: background 0.2s;"
+       onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+       onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+        <i class="fas fa-home"></i> Web Pública
+    </a>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<!-- Font Awesome per les icones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

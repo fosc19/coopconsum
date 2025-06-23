@@ -116,3 +116,7 @@ def cooperatives(request):
 def ajuda(request):
     """Vista para la página de ayuda interactiva."""
     return render(request, 'web/ajuda.html')
+
+def ajuda_admin(request):
+    """Vista para la página de ayuda específica de administradores."""
+    return render(request, 'admin/ajuda_admin.html')
