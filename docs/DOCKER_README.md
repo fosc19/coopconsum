@@ -98,6 +98,10 @@ Quan s'executa per primera vegada, el sistema crea automàticament un usuari adm
 2. Inicia sessió amb les credencials anteriors
 3. Ves a "Usuaris" > "admin"
 4. Canvia la contrasenya per una de segura
+5. **Consulta la documentació d'usuari:**
+   - **[Manual d'Usuari](MANUAL_USUARI.md)** - Guia completa de totes les funcionalitats
+   - **Pàgina d'Ajuda de la Intranet** (`/ajuda/`) - Ajuda interactiva un cop dins del sistema
+   - **Botons d'Ajuda Contextual** - Disponibles a moltes pàgines de la intranet per explicar funcionalitats específiques
 
 ## Notes importants
 
