@@ -30,10 +30,12 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        {# <h1>Dashboard Principal</h1> #} {# Título eliminado #}
+        <h1>Calendari de Comandes</h1>
       </div>
       <div class="col-sm-6 text-right">
-        {# <small>{{ socio.nombre }} {{ socio.apellido }}</small> #} {# Nombre del socio eliminado #}
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ajudaCalendari">
+          <i class="fas fa-question-circle mr-1"></i>Ajuda
+        </button>
       </div>
     </div>
   </div>
@@ -58,6 +60,65 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal d'Ajuda Contextual -->
+  <div class="modal fade" id="ajudaCalendari" tabindex="-1" role="dialog" aria-labelledby="ajudaCalendariLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ajudaCalendariLabel">
+            <i class="fas fa-calendar-alt mr-2"></i>Ajuda - Calendari de Comandes
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-info-circle mr-2 text-primary"></i>Què és el Calendari?</h6>
+              <p class="small">El calendari mostra totes les dates importants de la cooperativa, especialment dates d'obertura i tancament de comandes col·lectives.</p>
+              
+              <h6><i class="fas fa-eye mr-2 text-success"></i>Com Utilitzar-lo</h6>
+              <ul class="small">
+                <li><strong>Navegació:</strong> Utilitza les fletxes per canviar de mes</li>
+                <li><strong>Esdeveniments:</strong> Fes clic en un esdeveniment per veure detalls</li>
+                <li><strong>Colors:</strong> Diferents colors representen diferents tipus d'activitats</li>
+                <li><strong>Planificació:</strong> Usa'l per planificar les teves participacions</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-clipboard mr-2 text-warning"></i>Tipus d'Esdeveniments</h6>
+              <ul class="small">
+                <li><strong>Obertura de Comandes:</strong> Quan pots començar a afegir productes</li>
+                <li><strong>Tancament de Comandes:</strong> Data límit per participar</li>
+                <li><strong>Lliuraments:</strong> Quan pots recollir els productes</li>
+                <li><strong>Esdeveniments Especials:</strong> Assemblees, activitats de la cooperativa</li>
+              </ul>
+              
+              <h6><i class="fas fa-lightbulb mr-2 text-info"></i>Consells</h6>
+              <ul class="small">
+                <li>Revisa el calendari setmanalment per no perdre comandes</li>
+                <li>Assegura't de tenir saldo abans que obrin les comandes</li>
+                <li>Planifica amb antelació els teus lliuraments</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="alert alert-success mt-3">
+            <h6><i class="fas fa-route mr-2"></i>Següents Passos</h6>
+            <p class="mb-0 small">Després de consultar el calendari, visita la secció <strong>Comandes</strong> per participar en les comandes obertes o el <strong>Panell del Soci</strong> per gestionar el teu moneder.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'web_ajuda' %}" class="btn btn-primary">
+            <i class="fas fa-book mr-1"></i>Manual Complet
+          </a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}
 
@@ -72,6 +133,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Inicialitzar tooltips de Bootstrap
+  $('[data-toggle="tooltip"]').tooltip();
+  
   var calendarEl = document.getElementById('calendar');
   // Leer los datos JSON de la etiqueta script
   var eventsDataElement = document.getElementById('calendar-events-data');

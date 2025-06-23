@@ -11,4 +11,5 @@ urlpatterns = [
     path('com-apuntar-se/', views.com_apuntarse, name='web_com_apuntarse'), # Nueva URL
     path('imatges/', views.galeria, name='web_galeria'),
     path('cooperatives/', views.cooperatives, name='web_cooperatives'), # Nueva página para cooperativas
+    path('ajuda/', views.ajuda, name='web_ajuda'), # Página de ayuda interactiva
 ]

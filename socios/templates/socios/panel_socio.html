@@ -11,6 +11,11 @@
       <div class="col-sm-6">
         <h1>Panell del Soci</h1>
       </div>
+      <div class="col-sm-6 text-right">
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ajudaPanellSoci">
+          <i class="fas fa-question-circle mr-1"></i>Ajuda
+        </button>
+      </div>
     </div>
   </div>
 </section>
@@ -55,15 +60,15 @@
                     </span>
                     <span>
                       <strong>{{ comanda.total_gastado|floatformat:2 }} €</strong>
-                      <button type="button" class="btn btn-xs btn-outline-primary ml-2" data-toggle="modal" data-target="#detalleComanda{{ comanda.id }}">
+                      <button type="button" class="btn btn-xs btn-outline-primary ml-2" data-toggle="modal" data-target="#detalleComanda{{ comanda.id }}" data-toggle="tooltip" data-placement="top" title="Veure detalls dels productes de la comanda">
                         Veure
                       </button>
                       {% if comanda.estado == 'abierto' %}
-                        <a href="{% url 'seleccionar_pedido' comanda.pedido_id %}" class="btn btn-xs btn-outline-secondary ml-2" title="Editar comanda">
+                        <a href="{% url 'seleccionar_pedido' comanda.pedido_id %}" class="btn btn-xs btn-outline-secondary ml-2" data-toggle="tooltip" data-placement="top" title="Editar productes de la comanda (només si està oberta)">
                           <i class="fas fa-pen"></i>
                         </a>
                       {% else %}
-                        <button type="button" class="btn btn-xs btn-outline-secondary ml-2 disabled" title="No es pot editar" disabled>
+                        <button type="button" class="btn btn-xs btn-outline-secondary ml-2 disabled" data-toggle="tooltip" data-placement="top" title="No es pot editar - comanda tancada" disabled>
                           <i class="fas fa-pen"></i>
                         </button>
                       {% endif %}
@@ -202,7 +207,7 @@
                 <textarea class="form-control" id="comentario" name="comentario" rows="2" required></textarea>
                 <small class="form-text text-muted">Poseu el vostre numero de uf</small>
               </div>
-              <button type="submit" class="btn btn-primary">Enviar per a validar</button>
+              <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="L'administrador validarà l'ingrés i s'afegirà al teu saldo">Enviar per a validar</button>
             </form>
           </div>
         </div>
@@ -408,6 +413,78 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal d'Ajuda Contextual -->
+  <div class="modal fade" id="ajudaPanellSoci" tabindex="-1" role="dialog" aria-labelledby="ajudaPanellSociLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ajudaPanellSociLabel">
+            <i class="fas fa-question-circle mr-2"></i>Ajuda - Panell del Soci
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Tancar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6><i class="fas fa-clipboard mr-2 text-primary"></i>Comandes Recents</h6>
+              <ul class="small">
+                <li><strong>Veure:</strong> Detalls dels productes de la comanda</li>
+                <li><strong>Editar:</strong> Només si la comanda està oberta</li>
+                <li><strong>Estats:</strong> 
+                  <span class="badge badge-success badge-sm">Obert</span>
+                  <span class="badge badge-warning badge-sm">Pendent</span>
+                  <span class="badge badge-secondary badge-sm">Tancat</span>
+                </li>
+              </ul>
+              
+              <h6><i class="fas fa-lightbulb mr-2 text-warning"></i>Desitjos Actius</h6>
+              <ul class="small">
+                <li>Cartes de desitjos disponibles per expressar interès</li>
+                <li>Seguiment del teu interès en nous productes</li>
+                <li>Contribueix a ampliar el catàleg de la cooperativa</li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-wallet mr-2 text-success"></i>Moneder Digital</h6>
+              <ul class="small">
+                <li><strong>Saldo:</strong> Import disponible per compres</li>
+                <li><strong>Moviments:</strong> Historial d'ingressos i despeses</li>
+                <li><strong>Estats:</strong> Validat, Pendent, Descomptat</li>
+              </ul>
+              
+              <h6><i class="fas fa-plus-circle mr-2 text-info"></i>Enviar Ingrés</h6>
+              <ul class="small">
+                <li>Omple l'import en euros</li>
+                <li>Adjunta justificant de la transferència (opcional)</li>
+                <li><strong>Important:</strong> Inclou el teu número UF al comentari</li>
+                <li>L'administrador validarà l'ingrés</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="alert alert-info mt-3">
+            <h6><i class="fas fa-info-circle mr-2"></i>Consells Útils</h6>
+            <ul class="mb-0 small">
+              <li>Comprova regularment el calendari per dates de comandes</li>
+              <li>Mantén sempre saldo suficient per participar en comandes</li>
+              <li>Explora les cartes de desitjos per influir en el catàleg</li>
+              <li>Contacta amb l'administrador si tens dubtes sobre moviments</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="{% url 'web_ajuda' %}" class="btn btn-primary">
+            <i class="fas fa-book mr-1"></i>Manual Complet
+          </a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tancar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% block extra_css %}
 {{ block.super }}
 {# CSS de FullCalendar #}
@@ -427,6 +504,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Inicialitzar tooltips de Bootstrap
+  $('[data-toggle="tooltip"]').tooltip();
+  
   // Script para actualizar el label del custom file input de Bootstrap
   var fileInputs = document.querySelectorAll('.custom-file-input');
   Array.prototype.forEach.call(fileInputs, function(input) {

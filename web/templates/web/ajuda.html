@@ -1,0 +1,579 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ajuda - CoopConsum{% endblock %}
+
+{% block extra_css %}
+<style>
+  .help-section {
+    margin-bottom: 2rem;
+  }
+  
+  .help-card {
+    transition: transform 0.2s ease-in-out;
+    border-left: 4px solid #007bff;
+  }
+  
+  .help-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .help-icon {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 1rem;
+  }
+  
+  .help-search {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 100;
+    padding: 1rem 0;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .help-toc {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  
+  .help-toc .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+  }
+  
+  .help-toc .nav-link:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+  
+  .help-toc .nav-link.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .highlight {
+    background-color: #fff3cd;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+  }
+  
+  .step-number {
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1><i class="fas fa-question-circle mr-2"></i>Centre d'Ajuda</h1>
+      </div>
+      <div class="col-sm-6 text-right">
+        <button class="btn btn-info" onclick="startTour()">
+          <i class="fas fa-route mr-1"></i>Tour Guiat
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="content">
+  <div class="container-fluid">
+    
+    <!-- Barra de cerca -->
+    <div class="help-search">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="input-group">
+            <input type="text" class="form-control" id="searchHelp" placeholder="Cerca ajuda..." onkeyup="searchHelp()">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <select class="form-control" id="filterRole" onchange="filterByRole()">
+            <option value="">Tots els rols</option>
+            <option value="basic">Soci Bàsic</option>
+            <option value="gestor">Gestor</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Índex de continguts -->
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-list mr-2"></i>Continguts</h5>
+          </div>
+          <div class="card-body p-0">
+            <nav class="nav nav-pills flex-column help-toc" id="helpToc">
+              <a class="nav-link active" href="#getting-started">Primers Passos</a>
+              <a class="nav-link" href="#dashboard">Dashboard</a>
+              <a class="nav-link" href="#comandas">Comandes</a>
+              <a class="nav-link" href="#productos">Productes</a>
+              <a class="nav-link" href="#stock">Estoc</a>
+              <a class="nav-link" href="#monedero">Moneder</a>
+              <a class="nav-link" href="#desitjos">Desitjos</a>
+              <a class="nav-link" href="#admin">Administració</a>
+              <a class="nav-link" href="#troubleshooting">Problemes</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contingut principal -->
+      <div class="col-md-9">
+        <div id="helpContent">
+          
+          <!-- Primers Passos -->
+          <div id="getting-started" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">🚀</div>
+                <h3>Primers Passos</h3>
+                <p class="text-muted mb-3">Com començar a usar CoopConsum</p>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5><span class="step-number">1</span>Accedir al Sistema</h5>
+                    <ul>
+                      <li>Utilitza les credencials proporcionades</li>
+                      <li>Canvia la contrasenya al primer accés</li>
+                      <li>Comprova el teu perfil de soci</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5><span class="step-number">2</span>Explorar la Interfície</h5>
+                    <ul>
+                      <li>Menú lateral amb totes les funcions</li>
+                      <li>Dashboard amb calendari d'activitats</li>
+                      <li>Panell del soci amb informació personal</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <h5><span class="step-number">3</span>Primera Comanda</h5>
+                    <ul>
+                      <li>Consulta comandes obertes</li>
+                      <li>Selecciona productes</li>
+                      <li>Comprova el saldo disponible</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5><span class="step-number">4</span>Gestionar Moneder</h5>
+                    <ul>
+                      <li>Envia ingressos per validar</li>
+                      <li>Segueix l'estat dels moviments</li>
+                      <li>Controla el saldo actual</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard -->
+          <div id="dashboard" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">📅</div>
+                <h3>Dashboard i Calendari</h3>
+                <p class="text-muted mb-3">Pantalla principal amb calendari d'activitats</p>
+                
+                <div class="alert alert-info">
+                  <strong>Consell:</strong> El calendari mostra dates d'obertura i tancament de comandes. Planifica les teves participacions!
+                </div>
+                
+                <h5>Funcionalitats:</h5>
+                <ul>
+                  <li><strong>Vista mensual:</strong> Navegació entre mesos</li>
+                  <li><strong>Esdeveniments:</strong> Dates de comandes i activitats</li>
+                  <li><strong>Colors:</strong> Diferents colors per tipus d'esdeveniment</li>
+                  <li><strong>Detalls:</strong> Clic en un esdeveniment per més informació</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comandes -->
+          <div id="comandas" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">🛒</div>
+                <h3>Sistema de Comandes</h3>
+                <p class="text-muted mb-3">Participar en comandes col·lectives</p>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Estats de Comandes:</h5>
+                    <ul>
+                      <li><span class="badge badge-success">Obert</span> - Pots participar</li>
+                      <li><span class="badge badge-warning">Pendent</span> - En revisió</li>
+                      <li><span class="badge badge-secondary">Tancat</span> - Finalitzat</li>
+                      <li><span class="badge badge-dark">Inactiu</span> - Processat</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Com Participar:</h5>
+                    <ol>
+                      <li>Selecciona una comanda oberta</li>
+                      <li>Afegeix productes i quantitats</li>
+                      <li>Revisa el total</li>
+                      <li>Confirma la participació</li>
+                    </ol>
+                  </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                  <strong>Important:</strong> El saldo es descompta automàticament quan es tanca la comanda.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Productes -->
+          <div id="productos" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">📦</div>
+                <h3>Catàleg de Productes</h3>
+                <p class="text-muted mb-3">Explora productes, categories i proveïdors</p>
+                
+                <div class="row">
+                  <div class="col-md-4">
+                    <h5>Navegació:</h5>
+                    <ul>
+                      <li>Tots els productes</li>
+                      <li>Per categories</li>
+                      <li>Per proveïdors</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>Informació:</h5>
+                    <ul>
+                      <li>Preus actualitzats</li>
+                      <li>Unitats de venda</li>
+                      <li>Disponibilitat</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-4">
+                    <h5>Cerca:</h5>
+                    <ul>
+                      <li>Per nom de producte</li>
+                      <li>Filtrat per categoria</li>
+                      <li>Per proveïdor</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estoc -->
+          <div id="stock" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">📊</div>
+                <h3>Estoc i Inventari</h3>
+                <p class="text-muted mb-3">Compres immediates d'estoc disponible</p>
+                
+                <div class="alert alert-success">
+                  <strong>Avantatge:</strong> Els productes d'estoc es poden comprar immediatament sense esperar comandes.
+                </div>
+                
+                <h5>Com Funciona:</h5>
+                <ol>
+                  <li>Consulta nivells d'estoc disponible</li>
+                  <li>Selecciona productes i quantitats</li>
+                  <li>Compra immediata amb descompte del moneder</li>
+                  <li>Recollida segons horaris de la cooperativa</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moneder -->
+          <div id="monedero" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">💰</div>
+                <h3>Moneder Digital</h3>
+                <p class="text-muted mb-3">Gestió del saldo i moviments</p>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Ingressos:</h5>
+                    <ul>
+                      <li>Transferències bancàries</li>
+                      <li>Ingressos en efectiu</li>
+                      <li>Validació per administrador</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Moviments:</h5>
+                    <ul>
+                      <li>Compres en comandes</li>
+                      <li>Compres d'estoc</li>
+                      <li>Historial complet</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="alert alert-info">
+                  <strong>Consell:</strong> Inclou sempre el teu número UF en el comentari dels ingressos.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desitjos -->
+          <div id="desitjos" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">💡</div>
+                <h3>Sistema de Desitjos</h3>
+                <p class="text-muted mb-3">Proposa nous productes per la cooperativa</p>
+                
+                <h5>Cartes de Desitjos:</h5>
+                <ul>
+                  <li>Propostes de productes nous</li>
+                  <li>Sistema de pre-comandes</li>
+                  <li>Mínims necessaris per viabilitat</li>
+                  <li>Seguiment d'evolució</li>
+                </ul>
+                
+                <h5>Com Participar:</h5>
+                <ol>
+                  <li>Explora cartes actives</li>
+                  <li>Selecciona productes d'interès</li>
+                  <li>Indica quantitats desitjades</li>
+                  <li>Confirma l'interès</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- Administració -->
+          <div id="admin" class="help-section" data-role="admin">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">⚙️</div>
+                <h3>Panel d'Administració</h3>
+                <p class="text-muted mb-3">Funcions avançades per administradors</p>
+                
+                <div class="alert alert-warning">
+                  <strong>Accés Restringit:</strong> Només per superusuaris i usuaris amb permisos especials.
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Gestió d'Usuaris:</h5>
+                    <ul>
+                      <li>Crear nous socis</li>
+                      <li>Assignar permisos</li>
+                      <li>Gestionar comptes</li>
+                      <li>Validar ingressos</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Gestió de Comandes:</h5>
+                    <ul>
+                      <li>Crear comandes recurrents</li>
+                      <li>Gestionar pedidos col·lectius</li>
+                      <li>Revisar participacions</li>
+                      <li>Tancar comandes</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="alert alert-danger">
+                  <strong>Comandes Recurrents:</strong> No posar data de finalització. Poden solapar-se i causar problemes de visualització.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Troubleshooting -->
+          <div id="troubleshooting" class="help-section" data-role="basic">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">🔧</div>
+                <h3>Solució de Problemes</h3>
+                <p class="text-muted mb-3">Problemes comuns i solucions</p>
+                
+                <div class="accordion" id="troubleshootingAccordion">
+                  <div class="card">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne">
+                          No puc accedir al sistema
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseOne" class="collapse show" data-parent="#troubleshootingAccordion">
+                      <div class="card-body">
+                        <ul>
+                          <li>Verifica usuari i contrasenya</li>
+                          <li>Comprova la connexió a internet</li>
+                          <li>Contacta amb l'administrador</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <div class="card-header" id="headingTwo">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo">
+                          El meu saldo no s'actualitza
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" data-parent="#troubleshootingAccordion">
+                      <div class="card-body">
+                        <ul>
+                          <li>L'ingrés pot estar pendent de validació</li>
+                          <li>Comprova l'estat a "Moviments del Moneder"</li>
+                          <li>Contacta amb l'administrador si cal</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <div class="card-header" id="headingThree">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree">
+                          No veig comandes obertes
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" data-parent="#troubleshootingAccordion">
+                      <div class="card-body">
+                        <ul>
+                          <li>Pot ser que no hi hagi comandes actives</li>
+                          <li>Comprova el calendari per dates futures</li>
+                          <li>Possible solapament de comandes setmanals</li>
+                          <li>Contacta amb els responsables de comandes</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Cerca en el contingut d'ajuda
+function searchHelp() {
+  const searchTerm = document.getElementById('searchHelp').value.toLowerCase();
+  const sections = document.querySelectorAll('.help-section');
+  
+  sections.forEach(section => {
+    const text = section.textContent.toLowerCase();
+    if (text.includes(searchTerm) || searchTerm === '') {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+// Filtrar per rol
+function filterByRole() {
+  const selectedRole = document.getElementById('filterRole').value;
+  const sections = document.querySelectorAll('.help-section');
+  
+  sections.forEach(section => {
+    const sectionRole = section.getAttribute('data-role');
+    if (selectedRole === '' || sectionRole === selectedRole || sectionRole === 'basic') {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+// Navegació smooth scroll
+document.querySelectorAll('.help-toc a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href').substring(1);
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+      
+      // Actualitzar enllaç actiu
+      document.querySelectorAll('.help-toc a').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    }
+  });
+});
+
+// Highlighting de text quan es cerca
+function highlightText(text, searchTerm) {
+  if (!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+// Tour guiat simulat (placeholder)
+function startTour() {
+  alert('Tour guiat: Aquesta funcionalitat s\'implementarà en la següent fase amb Intro.js');
+}
+
+// Scroll spy per actualitzar navegació
+window.addEventListener('scroll', function() {
+  const sections = document.querySelectorAll('.help-section');
+  const tocLinks = document.querySelectorAll('.help-toc a');
+  
+  let currentSection = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 100 && rect.bottom >= 100) {
+      currentSection = section.id;
+    }
+  });
+  
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${currentSection}`) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
+{% endblock %}

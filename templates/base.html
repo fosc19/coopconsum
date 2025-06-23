@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- CSS personalitzat d'ajuda -->
+  <link rel="stylesheet" href="{% load static %}{% static 'web/css/ajuda.css' %}">
   {% block extra_css %}
   <style>
     .card-img-top {
@@ -255,7 +257,14 @@
               </a>
             </li>
           {% endif %}
-          <!-- 10. Sortir (Logout) -->
+          <!-- 10. Ajuda -->
+          <li class="nav-item">
+            <a href="{% url 'web_ajuda' %}" class="nav-link">
+              <i class="nav-icon fas fa-question-circle"></i>
+              <p>Ajuda</p>
+            </a>
+          </li>
+          <!-- 11. Sortir (Logout) -->
           <li class="nav-item mt-4"> {# Cambiado a mt-4 para más espacio superior #}
             <a href="{% url 'logout' %}" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>

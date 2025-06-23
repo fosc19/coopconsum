@@ -112,3 +112,7 @@ def galeria(request):
 def cooperatives(request):
     """Vista para la página de cooperativas - código abierto y API."""
     return render(request, 'web/cooperatives.html')
+
+def ajuda(request):
+    """Vista para la página de ayuda interactiva."""
+    return render(request, 'web/ajuda.html')
