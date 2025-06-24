@@ -227,6 +227,11 @@ def validar_registro_compra_view(request, registro_id):
         # Obtener la cuenta del socio (crearla si no existe podría ser una opción, pero más seguro fallar si no existe)
         cuenta_socio = CuentaSocio.objects.get(socio=registro.socio)
 
+        # Verificar que hay suficiente stock antes de proceder
+        if registro.producto.stock < registro.cantidad:
+            messages.error(request, f"Error: No hi ha prou estoc de '{registro.producto.nombre}'. Stock actual: {registro.producto.stock}, quantitat sol·licitada: {registro.cantidad}.")
+            return redirect('stock:gestion_stock')
+
         # Calcular el costo total y redondear a 2 decimales
         costo_total = round(registro.cantidad * registro.producto.precio, 2)
 
@@ -239,13 +244,21 @@ def validar_registro_compra_view(request, registro_id):
             estado='validado' # Asumimos que estos cargos son válidos directamente
         )
 
+        # Actualizar el stock del producto (restar la cantidad comprada)
+        # Usar F() para operación atómica y evitar condiciones de carrera
+        from django.db.models import F
+        Producto.objects.filter(id=registro.producto.id).update(stock=F('stock') - registro.cantidad)
+        
+        # Refrescar el objeto producto para obtener el stock actualizado
+        registro.producto.refresh_from_db()
+        
         # Actualizar el registro de compra
         registro.estado = 'validado'
         registro.costo_total_calculado = costo_total
         registro.movimiento_cuenta = movimiento # Enlazar con el movimiento creado
         registro.save()
 
-        messages.success(request, f"Registre #{registro.id} validat. S'ha carregat {costo_total:.2f} € al compte de {registro.socio}.")
+        messages.success(request, f"Registre #{registro.id} validat. S'ha carregat {costo_total:.2f} € al compte de {registro.socio}. Stock actualitzat: {registro.producto.stock} unitats.")
 
     except CuentaSocio.DoesNotExist:
         messages.error(request, f"Error: No s'ha trobat el compte per al soci {registro.socio}. No s'ha pogut validar el registre #{registro.id}.")
