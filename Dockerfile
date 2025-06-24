@@ -28,6 +28,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el codi de l'aplicació
 COPY . .
 
+# Copiar configuració optimitzada de Gunicorn
+COPY gunicorn.conf.py .
+
 # Crear directoris necessaris
 RUN mkdir -p /app/staticfiles /app/media
 
@@ -43,4 +46,4 @@ EXPOSE 8000
 
 # Punt d'entrada
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["gunicorn", "coopconsum.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "coopconsum.wsgi:application", "--config", "gunicorn.conf.py"]

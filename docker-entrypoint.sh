@@ -80,6 +80,6 @@ else
     echo "⚠️ No s'ha trobat coopconsum/galeria/cistella.jpg"
 fi
 
-# Iniciar servidor
-echo "Iniciant servidor..."
-exec gunicorn coopconsum.wsgi:application --bind 0.0.0.0:8000 --workers 3
+# Iniciar servidor amb configuració optimitzada
+echo "Iniciant servidor amb configuració optimitzada..."
+exec gunicorn coopconsum.wsgi:application --config gunicorn.conf.py
