@@ -64,10 +64,10 @@ class MovimientoCuenta(models.Model):
         
         # Validar monto
         if self.monto is not None:
-            if self.monto <= 0:
-                errors['monto'] = "L'import ha de ser major que 0."
-            elif self.monto > Decimal('9999.99'):
-                errors['monto'] = "L'import no pot ser superior a 9999.99€."
+            if self.monto == 0:
+                errors['monto'] = "L'import no pot ser 0."
+            elif abs(self.monto) > Decimal('9999.99'):
+                errors['monto'] = "L'import no pot ser superior a 9999.99€ en valor absolut."
         
         # Validar descripción
         if self.descripcion:
