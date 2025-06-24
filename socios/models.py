@@ -4,9 +4,9 @@ from productos.models import Producto # Importar Producto
 from django.utils import timezone # Para la fecha
 
 class Socio(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='socio', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='socio')
     nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
+    apellido = models.CharField(max_length=100, blank=True)
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=20, blank=True)
     direccion = models.TextField(blank=True)
