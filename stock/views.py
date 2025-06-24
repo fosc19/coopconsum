@@ -227,15 +227,15 @@ def validar_registro_compra_view(request, registro_id):
         # Obtener la cuenta del socio (crearla si no existe podría ser una opción, pero más seguro fallar si no existe)
         cuenta_socio = CuentaSocio.objects.get(socio=registro.socio)
 
-        # Calcular el costo total
-        costo_total = registro.cantidad * registro.producto.precio
+        # Calcular el costo total y redondear a 2 decimales
+        costo_total = round(registro.cantidad * registro.producto.precio, 2)
 
-        # Crear el movimiento de cuenta (cargo)
+        # Crear el movimiento de cuenta (egreso = sortida de diners del compte)
         movimiento = MovimientoCuenta.objects.create(
             cuenta=cuenta_socio,
-            tipo_movimiento='Cargo Compra Registrada', # O un tipo más específico
-            monto=-costo_total, # Monto negativo para un cargo
-            descripcion=f"Càrrec per compra registrada #{registro.id}: {registro.cantidad} x {registro.producto.nombre}",
+            tipo_movimiento='egreso', # Tipo vàlid segons el model
+            monto=costo_total, # Monto positiu (egreso ja indica sortida)
+            descripcion=f"Compra registrada #{registro.id}: {registro.cantidad} x {registro.producto.nombre}",
             estado='validado' # Asumimos que estos cargos son válidos directamente
         )
 
