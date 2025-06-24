@@ -234,7 +234,7 @@ def validar_registro_compra_view(request, registro_id):
         movimiento = MovimientoCuenta.objects.create(
             cuenta=cuenta_socio,
             tipo_movimiento='egreso', # Tipo vàlid segons el model
-            monto=costo_total, # Monto positiu (egreso ja indica sortida)
+            monto=-costo_total, # Monto negatiu per restar diners del compte
             descripcion=f"Compra registrada #{registro.id}: {registro.cantidad} x {registro.producto.nombre}",
             estado='validado' # Asumimos que estos cargos son válidos directamente
         )
