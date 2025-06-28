@@ -295,52 +295,6 @@ class ConfiguracioWeb(models.Model):
         default="Carrer de l'Exemple, 123, 08000 Barcelona",
         help_text="Adreça física de la cooperativa"
     )
-    
-    # === XARXES SOCIALS ===
-    # Facebook
-    mostrar_facebook = models.BooleanField(
-        default=False,
-        help_text="Mostrar enllaç de Facebook al footer i pàgines"
-    )
-    facebook_url = models.URLField(
-        blank=True,
-        default="",
-        help_text="URL completa de la pàgina de Facebook (ex: https://facebook.com/nomcooperativa)"
-    )
-    
-    # Instagram  
-    mostrar_instagram = models.BooleanField(
-        default=False,
-        help_text="Mostrar enllaç d'Instagram al footer i pàgines"
-    )
-    instagram_url = models.URLField(
-        blank=True,
-        default="",
-        help_text="URL completa del perfil d'Instagram (ex: https://instagram.com/nomcooperativa)"
-    )
-    
-    # Twitter
-    mostrar_twitter = models.BooleanField(
-        default=False,
-        help_text="Mostrar enllaç de Twitter al footer i pàgines"
-    )
-    twitter_url = models.URLField(
-        blank=True,
-        default="",
-        help_text="URL completa del perfil de Twitter (ex: https://twitter.com/nomcooperativa)"
-    )
-    
-    # WhatsApp
-    mostrar_whatsapp = models.BooleanField(
-        default=False,
-        help_text="Mostrar enllaç de WhatsApp al footer i pàgines"
-    )
-    whatsapp_telefon = models.CharField(
-        max_length=20,
-        blank=True,
-        default="",
-        help_text="Número de WhatsApp sense espais (ex: 34600000000)"
-    )
 
 class GaleriaCategoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
