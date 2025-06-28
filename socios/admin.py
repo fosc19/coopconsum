@@ -38,10 +38,23 @@ class CuentaSocioAdmin(admin.ModelAdmin):
 
 @admin.register(MovimientoCuenta)
 class MovimientoCuentaAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'cuenta', 'fecha', 'tipo_movimiento', 'monto', 'estado', 'descripcion')
+    list_display = ('get_descripcion_movimiento', 'cuenta', 'fecha', 'get_tipo_movimiento_display', 'monto', 'estado', 'descripcion')
     list_filter = ('estado', 'tipo_movimiento', 'fecha', 'cuenta__socio')
     search_fields = ('cuenta__socio__nombre', 'cuenta__socio__apellido', 'descripcion', 'tipo_movimiento')
     date_hierarchy = 'fecha'
     ordering = ('-fecha',)
+    
+    def get_tipo_movimiento_display(self, obj):
+        """Tradueix 'egreso' per 'compra' per a la visualització"""
+        if obj.tipo_movimiento == "egreso":
+            return "compra"
+        return obj.tipo_movimiento
+    get_tipo_movimiento_display.short_description = 'Tipo Movimiento'
+    
+    def get_descripcion_movimiento(self, obj):
+        """Personalitza la descripció del moviment traduint 'egreso' per 'compra'"""
+        tipo_display = "compra" if obj.tipo_movimiento == "egreso" else obj.tipo_movimiento
+        return f"{tipo_display} - {obj.monto} en {obj.fecha}"
+    get_descripcion_movimiento.short_description = 'Movimiento de Cuenta'
 
 
