@@ -93,7 +93,18 @@
                     {% endif %}
                     <p>Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
                     <div class="footer-social mt-3">
-                        <!-- Xarxes socials temporalment desactivades fins crear migració -->
+                        {% if configuracio_web.mostrar_facebook and configuracio_web.facebook_url %}
+                            <a href="{{ configuracio_web.facebook_url }}" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_instagram and configuracio_web.instagram_url %}
+                            <a href="{{ configuracio_web.instagram_url }}" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_twitter and configuracio_web.twitter_url %}
+                            <a href="{{ configuracio_web.twitter_url }}" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_whatsapp and configuracio_web.whatsapp_telefon %}
+                            <a href="https://wa.me/{{ configuracio_web.whatsapp_telefon }}" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-4">
