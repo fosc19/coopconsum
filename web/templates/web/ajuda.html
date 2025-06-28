@@ -128,13 +128,18 @@
           <div class="card-body p-0">
             <nav class="nav nav-pills flex-column help-toc" id="helpToc">
               <a class="nav-link active" href="#getting-started">Primers Passos</a>
-              <a class="nav-link" href="#dashboard">Dashboard</a>
+              <a class="nav-link" href="#dashboard">Calendari</a>
               <a class="nav-link" href="#comandas">Comandes</a>
               <a class="nav-link" href="#productos">Productes</a>
               <a class="nav-link" href="#stock">Estoc</a>
-              <a class="nav-link" href="#monedero">Moneder</a>
+              <a class="nav-link" href="#monedero">Panell de Soci</a>
               <a class="nav-link" href="#desitjos">Desitjos</a>
               <a class="nav-link" href="#admin">Administració</a>
+              <a class="nav-link" href="#gestio-productes">Gestió Productes</a>
+              <a class="nav-link" href="#gestio-comandes">Gestió Comandes</a>
+              <a class="nav-link" href="#gestio-estoc">Gestió Estoc</a>
+              <a class="nav-link" href="#master">Validació Master</a>
+              <a class="nav-link" href="#registrar-compra">Registrar Compra</a>
               <a class="nav-link" href="#troubleshooting">Problemes</a>
             </nav>
           </div>
@@ -588,7 +593,7 @@
                 </div>
                 
                 <div class="alert alert-warning">
-                  <strong>Important:</strong> Les correccions es processen pels gestors de comandes, que validen i apliquen els ajustos als moniders dels socis.
+                  <strong>Important:</strong> Les correccions es processen pels gestors de comandes, que validen i apliquen els ajustos als moneders dels socis.
                 </div>
               </div>
             </div>
@@ -723,6 +728,30 @@
                           <li>Espera a que el gestor finalitzi completament la comanda</li>
                           <li>Un cop <span class="badge badge-dark badge-sm">INACTIVA</span>, el descompte és automàtic</li>
                         </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <div class="card-header" id="headingFive">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive">
+                          No veig la comanda setmanal nova
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseFive" class="collapse" data-parent="#troubleshootingAccordion">
+                      <div class="card-body">
+                        <div class="alert alert-info">
+                          <strong>Les comandes setmanals tarden 2 dies a aparèixer per evitar confusions</strong>
+                        </div>
+                        <ul>
+                          <li>Això és normal i està dissenyat així intencionalment</li>
+                          <li>Evita que es solapi amb la comanda de la setmana anterior</li>
+                          <li>Permet temps per tancar correctament la comanda anterior</li>
+                          <li>Si fa més de 2 dies que hauria d'estar disponible, contacta l'administrador</li>
+                        </ul>
+                        <p class="small text-muted">Aquest retard és per garantir que no hi hagi confusions entre la comanda de la setmana anterior i la nova.</p>
                       </div>
                     </div>
                   </div>
