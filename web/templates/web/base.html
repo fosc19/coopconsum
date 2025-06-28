@@ -93,9 +93,18 @@
                     {% endif %}
                     <p>Cooperativa de consum responsable. Productes locals, ecològics i de proximitat.</p>
                     <div class="footer-social mt-3">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        {% if configuracio_web.mostrar_facebook and configuracio_web.facebook_url %}
+                            <a href="{{ configuracio_web.facebook_url }}" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_instagram and configuracio_web.instagram_url %}
+                            <a href="{{ configuracio_web.instagram_url }}" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_twitter and configuracio_web.twitter_url %}
+                            <a href="{{ configuracio_web.twitter_url }}" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        {% endif %}
+                        {% if configuracio_web.mostrar_whatsapp and configuracio_web.whatsapp_telefon %}
+                            <a href="https://wa.me/{{ configuracio_web.whatsapp_telefon }}" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-4 mb-4">
@@ -119,13 +128,13 @@
                 </div>
                 <div class="col-lg-4 col-md-4 mb-4">
                     <h5 class="footer-title">Contacte</h5>
-                    <p><i class="fas fa-map-marker-alt me-2"></i> Carrer Principal, 123, 08000 Barcelona</p>
-                    <p><i class="fas fa-phone me-2"></i> +34 93 123 45 67</p>
-                    <p><i class="fas fa-envelope me-2"></i> info@civada.org</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> {{ configuracio_web.contacte_adreca|default:"Carrer Principal, 123, 08000 Barcelona" }}</p>
+                    <p><i class="fas fa-phone me-2"></i> {{ configuracio_web.contacte_telefon|default:"+34 93 123 45 67" }}</p>
+                    <p><i class="fas fa-envelope me-2"></i> {{ configuracio_web.contacte_email|default:"info@civada.org" }}</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; {{ now|date:"Y" }} Civada. Tots els drets reservats.</p>
+                <p>&copy; {{ now|date:"Y" }} {{ configuracio_web.nom_cooperativa|default:"Civada" }}. Tots els drets reservats.</p>
             </div>
         </div>
     </footer>
