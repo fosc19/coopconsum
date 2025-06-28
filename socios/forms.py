@@ -58,15 +58,15 @@ class IngresoForm(forms.Form):
     )
     
     comentario = forms.CharField(
-        min_length=3,
+        required=False,
         max_length=500,
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
             'placeholder': 'Afegiu qualsevol comentari si ho necessiteu...'
         }),
-        label='Comentari',
-        help_text='Mínim 3 caràcters. Comentari opcional per a l\'ingrés.'
+        label='Comentari (opcional)',
+        help_text='Comentari opcional per a l\'ingrés.'
     )
     
     justificante = forms.FileField(
@@ -98,9 +98,11 @@ class IngresoForm(forms.Form):
         """Validación personalizada para el comentario."""
         comentario = self.cleaned_data.get('comentario', '').strip()
         
+        # Si está vacío, es válido (campo opcional)
         if not comentario:
-            raise forms.ValidationError("El comentari és obligatori.")
+            return comentario
         
+        # Si no está vacío, debe tener al menos 3 caracteres
         if len(comentario) < 3:
             raise forms.ValidationError("El comentari ha de tenir almenys 3 caràcters.")
         
