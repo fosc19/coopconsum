@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('web', '0005_configuracioweb_apuntarse_requisits_and_more'),
+        ('web', '0004_expand_configuracio_web'),
     ]
 
     operations = [
