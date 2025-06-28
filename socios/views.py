@@ -263,13 +263,16 @@ def enviar_ingreso(request):
                 comentario = form.cleaned_data['comentario']
                 justificante = form.cleaned_data.get('justificante')
                 
+                # Si el comentari està buit, usar un text per defecte
+                descripcion = comentario.strip() if comentario and comentario.strip() else "Ingrés enviat per validar"
+                
                 # Crear el movimiento
                 try:
                     movimiento = MovimientoCuenta.objects.create(
                         cuenta=cuenta,
                         tipo_movimiento="ingreso",
                         monto=monto,
-                        descripcion=comentario,
+                        descripcion=descripcion,
                         estado="pendiente"
                     )
                     
