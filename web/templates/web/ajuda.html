@@ -199,7 +199,7 @@
             <div class="card help-card">
               <div class="card-body">
                 <div class="help-icon">📅</div>
-                <h3>Dashboard i Calendari</h3>
+                <h3>Calendari</h3>
                 <p class="text-muted mb-3">Pantalla principal amb calendari d'activitats</p>
                 
                 <div class="alert alert-info">
@@ -316,9 +316,6 @@
                 <h3>Estoc i Inventari</h3>
                 <p class="text-muted mb-3">Consulta de productes d'estoc disponibles</p>
                 
-                <div class="alert alert-info">
-                  <strong>Important:</strong> Els productes d'estoc es poden recollir el dia de recollida de comandes col·lectives. No hi ha compra immediata des de la intranet.
-                </div>
                 
                 <h5>Com Funciona:</h5>
                 <ol>
@@ -336,30 +333,42 @@
             <div class="card help-card">
               <div class="card-body">
                 <div class="help-icon">💰</div>
-                <h3>Moneder Digital</h3>
-                <p class="text-muted mb-3">Gestió del saldo i moviments</p>
+                <h3>Panell de Soci</h3>
+                <p class="text-muted mb-3">Gestió personal del soci: moneder, comandes i configuració</p>
                 
                 <div class="row">
                   <div class="col-md-6">
+                    <h5>Moneder Digital:</h5>
+                    <ul>
+                      <li>Consulta saldo actual</li>
+                      <li>Historial de moviments</li>
+                      <li>Enviar ingrés per validar</li>
+                      <li>Seguiment d'ingressos pendents</li>
+                    </ul>
+                    
                     <h5>Ingressos:</h5>
                     <ul>
-                      <li>Transferències bancàries</li>
-                      <li>Ingressos en efectiu</li>
+                      <li>Introdueix la cantitat que has ingresat</li>
+                      <li>Adjunta justificant (opcional)</li>
                       <li>Validació per administrador</li>
                     </ul>
                   </div>
                   <div class="col-md-6">
-                    <h5>Moviments:</h5>
+                    <h5>Comandes Recents:</h5>
                     <ul>
-                      <li>Compres en comandes</li>
-                      <li>Compres d'estoc</li>
-                      <li>Historial complet</li>
+                      <li>Historial de participacions</li>
+                      <li>Detalls de cada comanda</li>
+                      <li>Imports gastats</li>
+                      <li>Edició de comandes obertes</li>
+                    </ul>
+                    
+                    <h5>Altres Funcions:</h5>
+                    <ul>
+                      <li>Configuració personal</li>
+                      <li>Gestió de preferències</li>
+                      <li>Notificacions i avisos</li>
                     </ul>
                   </div>
-                </div>
-                
-                <div class="alert alert-info">
-                  <strong>Consell:</strong> Inclou sempre el teu número UF en el comentari dels ingressos.
                 </div>
               </div>
             </div>
@@ -427,6 +436,197 @@
                 
                 <div class="alert alert-danger">
                   <strong>Comandes Recurrents:</strong> No posar data de finalització. Poden solapar-se i causar problemes de visualització.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestió de Productes -->
+          <div id="gestio-productes" class="help-section" data-role="advanced">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">🛍️</div>
+                <h3>Gestió de Productes</h3>
+                <p class="text-muted mb-3">Permisos especials per gestors de productes</p>
+                
+                <div class="alert alert-warning">
+                  <strong>Accés Restringit:</strong> Només per socis amb permisos de "Gestiona productes".
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Gestió del Catàleg:</h5>
+                    <ul>
+                      <li>Afegir nous productes</li>
+                      <li>Editar productes existents</li>
+                      <li>Gestionar categories</li>
+                      <li>Configurar preus i unitats</li>
+                      <li>Activar/desactivar productes</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Gestió de Proveïdors:</h5>
+                    <ul>
+                      <li>Afegir nous proveïdors</li>
+                      <li>Actualitzar informació de contacte</li>
+                      <li>Gestionar visibilitat a la web</li>
+                      <li>Configurar productes per proveïdor</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestió de Comandes -->
+          <div id="gestio-comandes" class="help-section" data-role="advanced">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">📦</div>
+                <h3>Gestió de Comandes</h3>
+                <p class="text-muted mb-3">Funcions avançades per gestors de comandes</p>
+                
+                <div class="alert alert-warning">
+                  <strong>Accés Restringit:</strong> Només per socis amb permisos de comandes.
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Comandes Recurrents:</h5>
+                    <ul>
+                      <li>Crear plantilles de comandes</li>
+                      <li>Configurar periodicitat</li>
+                      <li>Assignar categories i proveïdors</li>
+                      <li>Gestionar dates d'obertura</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Gestió d'Estats:</h5>
+                    <ul>
+                      <li>Canviar estat de comandes</li>
+                      <li>Revisar participacions dels socis</li>
+                      <li>Gestionar correccions del Master</li>
+                      <li>Finalitzar comandes</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="alert alert-danger">
+                  <strong>Important:</strong> No posar data de finalització a comandes recurrents. Poden solapar-se i causar problemes.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestió d'Estoc -->
+          <div id="gestio-estoc" class="help-section" data-role="advanced">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">📊</div>
+                <h3>Gestió d'Estoc</h3>
+                <p class="text-muted mb-3">Control d'inventari i validació de compres</p>
+                
+                <div class="alert alert-warning">
+                  <strong>Accés Restringit:</strong> Només per socis amb permisos de "Gestiona estoc".
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Control d'Inventari:</h5>
+                    <ul>
+                      <li>Actualitzar nivells d'estoc</li>
+                      <li>Registrar entrades de mercaderia</li>
+                      <li>Fer ajustos d'inventari</li>
+                      <li>Consultar moviments d'estoc</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Validació de Compres:</h5>
+                    <ul>
+                      <li>Revisar registres de compra pendents</li>
+                      <li>Validar compres dels socis</li>
+                      <li>Aplicar descomptes al moneder</li>
+                      <li>Actualitzar estoc automàticament</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Funcions Master -->
+          <div id="master" class="help-section" data-role="advanced">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">👑</div>
+                <h3>Funcions Master</h3>
+                <p class="text-muted mb-3">Funcions de supervisió i control</p>
+                
+                <div class="alert alert-danger">
+                  <strong>Accés Restringit:</strong> Només per superusuaris i masters.
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Supervisió de Comandes:</h5>
+                    <ul>
+                      <li>Revisar totes les comandes</li>
+                      <li>Enviar correccions als gestors</li>
+                      <li>Aprovar/rebutjar propostes</li>
+                      <li>Control de qualitat</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Gestió Global:</h5>
+                    <ul>
+                      <li>Accés a totes les funcions</li>
+                      <li>Supervisió de tots els processos</li>
+                      <li>Configuració del sistema</li>
+                      <li>Resolució de conflictes</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registrar Compra Soci -->
+          <div id="registrar-compra" class="help-section" data-role="advanced">
+            <div class="card help-card">
+              <div class="card-body">
+                <div class="help-icon">🧾</div>
+                <h3>Registrar Compra Soci</h3>
+                <p class="text-muted mb-3">Sistema de registre d'estoc manual</p>
+                
+                <div class="alert alert-info">
+                  <strong>Funcionalitat:</strong> Permet registrar compres d'estoc quan els socis agafen productes el dia de recollida.
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5>Procés de Registre:</h5>
+                    <ol>
+                      <li>Seleccionar el soci</li>
+                      <li>Escollir el producte d'estoc</li>
+                      <li>Introduir la quantitat</li>
+                      <li>Afegir notes si cal</li>
+                      <li>Guardar el registre</li>
+                    </ol>
+                  </div>
+                  <div class="col-md-6">
+                    <h5>Validació Posterior:</h5>
+                    <ul>
+                      <li>Els registres queden pendents</li>
+                      <li>El gestor d'estoc els valida</li>
+                      <li>S'aplica automàticament:</li>
+                      <li class="ml-3">- Descompte del moneder</li>
+                      <li class="ml-3">- Reducció de l'estoc</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                  <strong>Important:</strong> Aquest registre NO fa el cobrament immediat. Cal validar-lo posteriorment des de la gestió d'estoc.
                 </div>
               </div>
             </div>

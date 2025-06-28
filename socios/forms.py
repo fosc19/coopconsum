@@ -63,10 +63,10 @@ class IngresoForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Poseu el vostre numero de uf i qualsevol comentari addicional...'
+            'placeholder': 'Afegiu qualsevol comentari si ho necessiteu...'
         }),
         label='Comentari',
-        help_text='Mínim 3 caràcters. Poseu el vostre numero de uf.'
+        help_text='Mínim 3 caràcters. Comentari opcional per a l\'ingrés.'
     )
     
     justificante = forms.FileField(
