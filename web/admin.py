@@ -91,6 +91,16 @@ class ConfiguracioWebAdmin(admin.ModelAdmin):
             'fields': ('contacte_email', 'contacte_telefon', 'contacte_adreca'),
             'description': 'Informació de contacte que apareixerà a la pàgina'
         }),
+        
+        ('📱 XARXES SOCIALS - Configuració', {
+            'fields': (
+                ('mostrar_facebook', 'facebook_url'),
+                ('mostrar_instagram', 'instagram_url'),
+                ('mostrar_twitter', 'twitter_url'),
+                ('mostrar_whatsapp', 'whatsapp_telefon'),
+            ),
+            'description': 'Configura quines xarxes socials mostrar al footer. Activa les caselles i afegeix les URLs corresponents.'
+        }),
     )
     
     def has_add_permission(self, request):
@@ -98,6 +108,12 @@ class ConfiguracioWebAdmin(admin.ModelAdmin):
     
     def has_delete_permission(self, request, obj=None):
         return False
+    
+    def save_model(self, request, obj, form, change):
+        """Neteja el cache quan es desa la configuració per veure canvis immediatament"""
+        from django.core.cache import cache
+        cache.delete('configuracio_web_cached')
+        super().save_model(request, obj, form, change)
     
     class Media:
         css = {
