@@ -51,9 +51,10 @@
 **Enviar Ingrés per Validar**:
 1. Omple l'**import** en euros
 2. Adjunta **justificant** (opcional) - captura de la transferència
-3. Afegeix **comentari** amb el teu número UF
-4. Fes clic a "Enviar per a validar"
-5. L'administrador validarà l'ingrés
+3. Afegeix **comentari** (opcional) - pots deixar-ho en blanc
+4. Si no poses comentari, s'assigna automàticament "Ingrés enviat per validar"
+5. Fes clic a "Enviar per a validar"
+6. L'administrador validarà l'ingrés
 
 #### 📋 Comandes Recents i Anteriors
 

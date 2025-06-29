@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
 ![Tests](https://img.shields.io/badge/tests-65%20passing-brightgreen)
 
-Sistema complet de gestió per cooperatives de consum responsable, desenvolupat amb Django. Inclou gestió de socis, comandes, proveïdors, productes i una API pública per compartir informació entre cooperatives.
+Sistema complet de gestió per cooperatives de consum responsable, desenvolupat amb Django. Inclou gestió de socis, comandes, proveïdors, productes, configuració web dinàmica i una API pública per compartir informació entre cooperatives.
 
 ## 🧪 Testing & Quality
 
@@ -33,11 +33,11 @@ coverage report -m
 
 ## ✨ Característiques
 
-- 👥 **Gestió de Socis**: Registre, perfils i administració de membres
-- 📦 **Sistema de Comandes**: Comandes col·lectives
+- 👥 **Gestió de Socis**: Registre, perfils i administració de membres amb ingrés opcional de comentaris
+- 📦 **Sistema de Comandes**: Comandes col·lectives amb seguiment automatitzat
 - 🏪 **Gestió de Proveïdors**: Catàleg de proveïdors locals i ecològics
 - 🛒 **Catàleg de Productes**: Organització per categories amb preus
-- 🌐 **Web Pública**: Lloc web amb informació i catàleg públic
+- 🌐 **Web Pública**: Lloc web amb configuració dinàmica, xarxes socials i contacte
 - 🔗 **API REST**: Intercanvi de dades entre cooperatives
 - 📱 **Responsive**: Disseny adaptat a mòbils i tauletes
 
