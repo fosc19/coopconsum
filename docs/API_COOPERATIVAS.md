@@ -203,6 +203,5 @@ for producto in productos['results']:
 ## 📞 Contacte
 
 Per més informació sobre l'API o per afegir la teva cooperativa a la xarxa:
-- Email: api@civada.net
 - Web: https://civada.net
 - GitHub: https://github.com/fosc19/coopconsum
