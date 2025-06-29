@@ -124,22 +124,22 @@ GET /api/eventos/{id}/
 
 ### Obtenir tots els proveïdors visibles
 ```bash
-curl "http://lacivada.com/api/proveedores/?visible_en_web=true"
+curl "http://civada.net/api/proveedores/?visible_en_web=true"
 ```
 
 ### Buscar productes d'una categoria específica
 ```bash
-curl "http://lacivada.com/api/productos/?categoria=1"
+curl "http://civada.net/api/productos/?categoria=1"
 ```
 
 ### Buscar productes per text
 ```bash
-curl "http://lacivada.com/api/productos/?search=tomàquet"
+curl "http://civada.net/api/productos/?search=tomàquet"
 ```
 
 ### Obtenir esdeveniments públics del proper mes
 ```bash
-curl "http://lacivada.com/api/eventos/?publico=true&fecha_inicio=2025-01-01"
+curl "http://civada.net/api/eventos/?publico=true&fecha_inicio=2025-01-01"
 ```
 
 ## 📄 Paginació
@@ -149,7 +149,7 @@ Tots els endpoints estan paginats amb 20 elements per pàgina:
 ```json
 {
   "count": 45,
-  "next": "http://lacivada.com/api/productos/?page=2",
+  "next": "http://civada.net/api/productos/?page=2",
   "previous": null,
   "results": [...]
 }
@@ -174,7 +174,7 @@ L'API permet peticions des de qualsevol origen per facilitar l'accés des d'altr
 ### Exemple JavaScript
 ```javascript
 // Obtenir proveïdors de La Civada
-fetch('http://lacivada.com/api/proveedores/')
+fetch('http://civada.net/api/proveedores/')
   .then(response => response.json())
   .then(data => {
     console.log('Proveïdors disponibles:', data.results);
@@ -186,7 +186,7 @@ fetch('http://lacivada.com/api/proveedores/')
 import requests
 
 # Obtenir productes destacats
-response = requests.get('http://lacivada.com/api/productos/?destacado_en_inicio=true')
+response = requests.get('http://civada.net/api/productos/?destacado_en_inicio=true')
 productos = response.json()
 
 for producto in productos['results']:
@@ -203,6 +203,6 @@ for producto in productos['results']:
 ## 📞 Contacte
 
 Per més informació sobre l'API o per afegir la teva cooperativa a la xarxa:
-- Email: api@lacivada.com
-- Web: https://lacivada.com
-- GitHub: https://github.com/fosc19/lacivada
+- Email: api@civada.net
+- Web: https://civada.net
+- GitHub: https://github.com/fosc19/coopconsum

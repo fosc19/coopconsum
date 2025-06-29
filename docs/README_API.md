@@ -156,7 +156,7 @@ Base per crear una xarxa federada de cooperatives que comparteixin informació.
 ## 📞 Contacte
 
 Per integrar la teva cooperativa amb la nostra API:
-- **Email**: api@lacivada.com
+- **Email**: api@civada.net
 - **Documentació**: Veure `API_COOPERATIVAS.md`
 - **Codi**: GitHub repository
 
