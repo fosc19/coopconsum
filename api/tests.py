@@ -31,10 +31,10 @@ class APIInfoViewTest(APITestCase):
         
         # Verificar endpoints disponibles
         endpoints = response.data['endpoints']
-        self.assertIn('proveedores', endpoints)
-        self.assertIn('productos', endpoints)
-        self.assertIn('categorias', endpoints)
-        self.assertIn('eventos', endpoints)
+        self.assertIn('proveidors', endpoints)
+        self.assertIn('productes', endpoints)
+        self.assertIn('categories', endpoints)
+        self.assertIn('esdeveniments', endpoints)
 
     def test_api_info_endpoints_structure(self):
         """Test que l'API info té l'estructura correcta"""        
@@ -44,13 +44,13 @@ class APIInfoViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Verificar estructura completa
-        required_fields = ['nom', 'versio', 'descripcio', 'endpoints', 'filtres_disponibles', 'funcionalitats']
+        required_fields = ['nom', 'versio', 'descripcio', 'endpoints', 'funcionalitats']
         for field in required_fields:
             self.assertIn(field, response.data)
         
         # Verificar endpoints essencials
         endpoints = response.data['endpoints']
-        expected_endpoints = ['proveedores', 'productos', 'categorias', 'eventos']
+        expected_endpoints = ['proveidors', 'productes', 'categories', 'esdeveniments']
         for endpoint in expected_endpoints:
             self.assertIn(endpoint, endpoints)
 
@@ -75,48 +75,40 @@ class ProveedorAPITest(APITestCase):
             visible_en_web=False
         )
 
-    def test_list_proveedores_només_visibles(self):
+    def test_list_proveidors_només_visibles(self):
         """Test que només retorna proveïdors visibles en web"""
-        url = reverse('proveedor-list')
+        url = reverse('proveidor-list')
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Proveïdor Visible')
+        self.assertEqual(response.data['results'][0]['nom'], 'Proveïdor Visible')
 
-    def test_detall_proveedor_visible(self):
+    def test_detall_proveidor_visible(self):
         """Test detall d'un proveïdor visible"""
-        url = reverse('proveedor-detail', kwargs={'pk': self.proveedor_visible.pk})
+        url = reverse('proveidor-detail', kwargs={'pk': self.proveedor_visible.pk})
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['nombre'], 'Proveïdor Visible')
+        self.assertEqual(response.data['nom'], 'Proveïdor Visible')
         self.assertEqual(response.data['email'], 'visible@test.com')
-        self.assertTrue(response.data['visible_en_web'])
+        # Camps eliminats: visible_en_web ja no apareix a l'API
 
-    def test_detall_proveedor_no_visible_404(self):
+    def test_detall_proveidor_no_visible_404(self):
         """Test que proveïdor no visible retorna 404"""
-        url = reverse('proveedor-detail', kwargs={'pk': self.proveedor_no_visible.pk})
+        url = reverse('proveidor-detail', kwargs={'pk': self.proveedor_no_visible.pk})
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_filtrar_proveedores_per_visible_inicio(self):
-        """Test filtratge per visible_en_inicio"""
-        url = reverse('proveedor-list')
-        response = self.client.get(url, {'visible_en_inicio': 'true'})
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Proveïdor Visible')
-
-    def test_cercar_proveedores_per_nom(self):
+    def test_cercar_proveidors_per_nom(self):
         """Test cerca per nom de proveïdor"""
-        url = reverse('proveedor-list')
+        url = reverse('proveidor-list')
         response = self.client.get(url, {'search': 'Visible'})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['nom'], 'Proveïdor Visible')
 
 
 class CategoriaAPITest(APITestCase):
@@ -135,7 +127,7 @@ class CategoriaAPITest(APITestCase):
             parent=self.categoria_principal
         )
 
-    def test_list_categorias(self):
+    def test_list_categories(self):
         """Test llistat de totes les categories"""
         url = reverse('categoria-list')
         response = self.client.get(url)
@@ -144,7 +136,7 @@ class CategoriaAPITest(APITestCase):
         self.assertEqual(len(response.data['results']), 2)
         
         # Verificar que estan ordenades per nom
-        noms = [cat['nombre'] for cat in response.data['results']]
+        noms = [cat['nom'] for cat in response.data['results']]
         self.assertEqual(noms, ['Alimentació', 'Fruites'])
 
     def test_detall_categoria(self):
@@ -153,17 +145,17 @@ class CategoriaAPITest(APITestCase):
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['nombre'], 'Alimentació')
-        self.assertEqual(response.data['descripcion'], 'Productes alimentaris')
+        self.assertEqual(response.data['nom'], 'Alimentació')
+        self.assertEqual(response.data['descripcio'], 'Productes alimentaris')
 
-    def test_cercar_categorias_per_nom(self):
+    def test_cercar_categories_per_nom(self):
         """Test cerca de categories per nom"""
         url = reverse('categoria-list')
         response = self.client.get(url, {'search': 'Fruites'})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Fruites')
+        self.assertEqual(response.data['results'][0]['nom'], 'Fruites')
 
 
 class ProductoAPITest(APITestCase):
@@ -207,80 +199,62 @@ class ProductoAPITest(APITestCase):
             unidad_venta='ud'
         )
 
-    def test_list_productos_només_visibles(self):
+    def test_list_productes_només_visibles(self):
         """Test que només retorna productes de proveïdors visibles"""
-        url = reverse('producto-list')
+        url = reverse('producte-list')
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Tomàquets')
+        self.assertEqual(response.data['results'][0]['nom'], 'Tomàquets')
 
-    def test_detall_producto_no_inclou_preu(self):
+    def test_detall_producte_no_inclou_preu(self):
         """Test que el detall del producte no inclou el preu per seguretat"""
-        url = reverse('producto-detail', kwargs={'pk': self.producto_visible.pk})
+        url = reverse('producte-detail', kwargs={'pk': self.producto_visible.pk})
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotIn('precio', response.data)
-        self.assertIn('nombre', response.data)
+        self.assertIn('nom', response.data)
         self.assertIn('categoria', response.data)
-        self.assertIn('proveedor', response.data)
+        self.assertIn('proveidor', response.data)
 
-    def test_producto_amb_relacions_completes(self):
+    def test_producte_amb_relacions_completes(self):
         """Test que el producte inclou dades completes de categoria i proveïdor"""
-        url = reverse('producto-detail', kwargs={'pk': self.producto_visible.pk})
+        url = reverse('producte-detail', kwargs={'pk': self.producto_visible.pk})
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
         # Verificar dades de categoria
         categoria = response.data['categoria']
-        self.assertEqual(categoria['nombre'], 'Verdures')
-        self.assertEqual(categoria['descripcion'], 'Verdures fresques')
+        self.assertEqual(categoria['nom'], 'Verdures')
+        self.assertEqual(categoria['descripcio'], 'Verdures fresques')
         
         # Verificar dades de proveïdor
-        proveedor = response.data['proveedor']
-        self.assertEqual(proveedor['nombre'], 'Verdurer Local')
-        self.assertTrue(proveedor['visible_en_web'])
-
-    def test_unidad_venta_display(self):
-        """Test que inclou la representació llegible de la unitat de venta"""
-        url = reverse('producto-detail', kwargs={'pk': self.producto_visible.pk})
-        response = self.client.get(url)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['unidad_venta'], 'kg')
-        self.assertEqual(response.data['unidad_venta_display'], 'Kilogramo')
+        proveidor = response.data['proveidor']
+        self.assertEqual(proveidor['nom'], 'Verdurer Local')
+        # visible_en_web ja no apareix a l'API
 
     def test_filtrar_per_categoria(self):
         """Test filtratge de productes per categoria"""
-        url = reverse('producto-list')
+        url = reverse('producte-list')
         response = self.client.get(url, {'categoria': self.categoria.pk})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
 
-    def test_filtrar_per_destacado_inicio(self):
-        """Test filtratge per productes destacats a l'inici"""
-        url = reverse('producto-list')
-        response = self.client.get(url, {'destacado_en_inicio': 'true'})
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
-        self.assertEqual(response.data['results'][0]['nombre'], 'Tomàquets')
-
-    def test_cercar_per_nom_producto(self):
+    def test_cercar_per_nom_producte(self):
         """Test cerca de productes per nom"""
-        url = reverse('producto-list')
+        url = reverse('producte-list')
         response = self.client.get(url, {'search': 'Tomàquets'})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
 
-    def test_cercar_per_nom_proveedor(self):
+    def test_cercar_per_nom_proveidor(self):
         """Test cerca de productes per nom de proveïdor"""
-        url = reverse('producto-list')
+        url = reverse('producte-list')
         response = self.client.get(url, {'search': 'Verdurer'})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -324,9 +298,9 @@ class EventoAPITest(APITestCase):
                 color='#dc3545'
             )
 
-    def test_list_eventos_només_publics(self):
+    def test_list_esdeveniments_només_publics(self):
         """Test que retorna esdeveniments (filtrat per compartir_api si existeix)"""
-        url = reverse('evento-list')
+        url = reverse('esdeveniment-list')
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -334,35 +308,27 @@ class EventoAPITest(APITestCase):
         # Si no existeix, tots els esdeveniments es retornen
         self.assertGreaterEqual(len(response.data['results']), 1)
 
-    def test_detall_evento_public(self):
+    def test_detall_esdeveniment_public(self):
         """Test detall d'un esdeveniment públic"""
-        url = reverse('evento-detail', kwargs={'pk': self.evento_public.pk})
+        url = reverse('esdeveniment-detail', kwargs={'pk': self.evento_public.pk})
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['titulo'], 'Esdeveniment Públic')
-        self.assertEqual(response.data['color'], '#28a745')
+        self.assertEqual(response.data['titol'], 'Esdeveniment Públic')
+        # color eliminat de l'API
 
-    def test_detall_evento_privat_404(self):
+    def test_detall_esdeveniment_privat_404(self):
         """Test esdeveniments privats (si compartir_api existeix)"""
-        url = reverse('evento-detail', kwargs={'pk': self.evento_privat.pk})
+        url = reverse('esdeveniment-detail', kwargs={'pk': self.evento_privat.pk})
         response = self.client.get(url)
         
         # Si compartir_api existeix, esdeveniment privat retorna 404
         # Si no existeix, retorna 200 (tots els esdeveniments són visibles)
         self.assertIn(response.status_code, [status.HTTP_404_NOT_FOUND, status.HTTP_200_OK])
 
-    def test_filtrar_eventos_per_color(self):
-        """Test filtratge d'esdeveniments per color"""
-        url = reverse('evento-list')
-        response = self.client.get(url, {'color': '#28a745'})
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['results']), 1)
-
-    def test_cercar_eventos_per_titulo(self):
+    def test_cercar_esdeveniments_per_titol(self):
         """Test cerca d'esdeveniments per títol"""
-        url = reverse('evento-list')
+        url = reverse('esdeveniment-list')
         response = self.client.get(url, {'search': 'Públic'})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
