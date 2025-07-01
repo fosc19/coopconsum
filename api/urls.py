@@ -2,17 +2,17 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-# Crear el router para los ViewSets
+# Crear el router per als ViewSets amb URLs en català
 router = DefaultRouter()
-router.register(r'proveedores', views.ProveedorViewSet, basename='proveedor')
-router.register(r'productos', views.ProductoViewSet, basename='producto')
-router.register(r'categorias', views.CategoriaViewSet, basename='categoria')
-router.register(r'eventos', views.EventoCalendarioViewSet, basename='evento')
+router.register(r'proveidors', views.ProveedorViewSet, basename='proveidor')
+router.register(r'productes', views.ProductoViewSet, basename='producte')
+router.register(r'categories', views.CategoriaViewSet, basename='categoria')
+router.register(r'esdeveniments', views.EventoCalendarioViewSet, basename='esdeveniment')
 
 urlpatterns = [
-    # Información de la API
+    # Informació de l'API
     path('', views.api_info, name='api_info'),
     
-    # Incluir todas las rutas del router
+    # Incloure totes les rutes del router
     path('', include(router.urls)),
 ]

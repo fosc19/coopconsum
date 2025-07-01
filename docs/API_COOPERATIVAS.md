@@ -14,13 +14,9 @@ Retorna informació bàsica de l'API i llista d'endpoints disponibles.
 
 ### 🏪 Proveïdors
 ```
-GET /api/proveedores/
-GET /api/proveedores/{id}/
+GET /api/proveidors/
+GET /api/proveidors/{id}/
 ```
-**Filtres disponibles:**
-- `visible_en_web`: true/false
-- `visible_en_inicio`: true/false
-
 **Cerca:**
 - `search`: Cerca en nom i descripció
 
@@ -28,25 +24,23 @@ GET /api/proveedores/{id}/
 ```json
 {
   "id": 1,
-  "nombre": "Nom del Proveïdor",
-  "descripcion": "Descripció del proveïdor",
-  "contacto": "info@proveedor.com",
-  "imagen": "/media/proveedores/imagen.jpg",
-  "visible_en_web": true,
-  "visible_en_inicio": false
+  "nom": "La Rural de Collserola",
+  "descripcio_curta": "Cooperativa agroecològica",
+  "contacte": "info@larural.com",
+  "email": "info@larural.com",
+  "direccio": "Valldoreix, Barcelona",
+  "imatge": "/media/proveedores/larural.jpg"
 }
 ```
 
 ### 🛒 Productes
 ```
-GET /api/productos/
-GET /api/productos/{id}/
+GET /api/productes/
+GET /api/productes/{id}/
 ```
 **Filtres disponibles:**
 - `categoria`: ID de categoria
 - `proveedor`: ID de proveïdor
-- `es_stock`: true/false
-- `destacado_en_inicio`: true/false
 
 **Cerca:**
 - `search`: Cerca en nom, descripció i nom del proveïdor
@@ -55,91 +49,81 @@ GET /api/productos/{id}/
 ```json
 {
   "id": 1,
-  "nombre": "Nom del Producte",
-  "descripcion": "Descripció del producte",
-  "precio": "12.50",
-  "unidad_venta": "kg",
-  "unidad_venta_display": "Kilogramo",
+  "nom": "Pa integral",
+  "descripcio": "Pa ecològic de farina integral de proximitat",
   "categoria": {
     "id": 1,
-    "nombre": "Verduras",
-    "descripcion": "Verduras frescas"
+    "nom": "Pa",
+    "descripcio": "Pans ecològics"
   },
-  "proveedor": {
+  "proveidor": {
     "id": 1,
-    "nombre": "Proveïdor Local"
+    "nom": "La Rural de Collserola",
+    "descripcio_curta": "Cooperativa agroecològica",
+    "contacte": "info@larural.com",
+    "email": "info@larural.com",
+    "direccio": "Valldoreix, Barcelona",
+    "imatge": "/media/proveedores/larural.jpg"
   },
-  "imagen": "/media/productos/imagen.jpg",
-  "es_stock": false,
-  "destacado_en_inicio": true
+  "imatge": "/media/productos/pa_integral.jpg"
 }
 ```
 
 ### 📂 Categories
 ```
-GET /api/categorias/
-GET /api/categorias/{id}/
+GET /api/categories/
+GET /api/categories/{id}/
 ```
 **Cerca:**
 - `search`: Cerca en nom i descripció
 
-**Camps retornats:
+**Camps retornats:**
 ```json
 {
   "id": 1,
-  "nombre": "Verduras",
-  "descripcion": "Verdures fresques de temporada"
+  "nom": "Pa",
+  "descripcio": "Pans ecològics de temporada"
 }
 ```
 
 ### 📅 Esdeveniments
 ```
-GET /api/eventos/
-GET /api/eventos/{id}/
+GET /api/esdeveniments/
+GET /api/esdeveniments/{id}/
 ```
-**Filtres disponibles:**
-- `publico`: true/false
-- `todo_el_dia`: true/false
-- `fecha_inicio`: YYYY-MM-DD
-- `fecha_fin`: YYYY-MM-DD
-
 **Cerca:**
 - `search`: Cerca en títol i descripció
 
-**Camps retornats:
+**Camps retornats:**
 ```json
 {
   "id": 1,
-  "titulo": "Assemblea General",
-  "descripcion": "Assemblea mensual de la cooperativa",
-  "fecha_inicio": "2025-01-15T18:00:00Z",
-  "fecha_fin": "2025-01-15T20:00:00Z",
-  "todo_el_dia": false,
-  "color": "#28a745",
-  "publico": true
+  "titol": "Assemblea General",
+  "descripcio": "Reunió mensual de la cooperativa",
+  "data": "2025-01-15"
 }
 ```
 
 ## 🔍 Exemples d'Ús
 
-### Obtenir tots els proveïdors visibles
+### Obtenir tots els proveïdors
 ```bash
-curl "http://civada.net/api/proveedores/?visible_en_web=true"
+curl "http://civada.net/api/proveidors/"
 ```
 
 ### Buscar productes d'una categoria específica
 ```bash
-curl "http://civada.net/api/productos/?categoria=1"
+curl "http://civada.net/api/productes/?categoria=1"
 ```
 
 ### Buscar productes per text
 ```bash
-curl "http://civada.net/api/productos/?search=tomàquet"
+curl "http://civada.net/api/productes/?search=tomàquet"
 ```
 
-### Obtenir esdeveniments públics del proper mes
+### Obtenir esdeveniments del calendari
 ```bash
-curl "http://civada.net/api/eventos/?publico=true&fecha_inicio=2025-01-01"
+curl "http://civada.net/api/esdeveniments/"
 ```
 
 ## 📄 Paginació
@@ -149,7 +133,7 @@ Tots els endpoints estan paginats amb 20 elements per pàgina:
 ```json
 {
   "count": 45,
-  "next": "http://civada.net/api/productos/?page=2",
+  "next": "http://civada.net/api/productes/?page=2",
   "previous": null,
   "results": [...]
 }
@@ -174,10 +158,13 @@ L'API permet peticions des de qualsevol origen per facilitar l'accés des d'altr
 ### Exemple JavaScript
 ```javascript
 // Obtenir proveïdors de La Civada
-fetch('http://civada.net/api/proveedores/')
+fetch('http://civada.net/api/proveidors/')
   .then(response => response.json())
   .then(data => {
     console.log('Proveïdors disponibles:', data.results);
+    data.results.forEach(proveidor => {
+      console.log(`${proveidor.nom} - ${proveidor.contacte}`);
+    });
   });
 ```
 
@@ -185,12 +172,12 @@ fetch('http://civada.net/api/proveedores/')
 ```python
 import requests
 
-# Obtenir productes destacats
-response = requests.get('http://civada.net/api/productos/?destacado_en_inicio=true')
-productos = response.json()
+# Obtenir tots els productes
+response = requests.get('http://civada.net/api/productes/')
+productes = response.json()
 
-for producto in productos['results']:
-    print(f"{producto['nombre']} - {producto['precio']}€")
+for producte in productes['results']:
+    print(f"{producte['nom']} de {producte['proveidor']['nom']}")
 ```
 
 ## 🚀 Properes Funcionalitats

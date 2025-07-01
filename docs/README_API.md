@@ -10,46 +10,46 @@ L'API REST per cooperatives ha estat implementada amb èxit i està completament
 - **GET** `/api/` - Informació de l'API i endpoints disponibles
 
 ### 🏪 Proveïdors
-- **GET** `/api/proveedores/` - Llista tots els proveïdors visibles
-- **GET** `/api/proveedores/{id}/` - Detall d'un proveïdor específic
+- **GET** `/api/proveidors/` - Llista tots els proveïdors visibles
+- **GET** `/api/proveidors/{id}/` - Detall d'un proveïdor específic
 
 ### 🛒 Productes  
-- **GET** `/api/productos/` - Llista tots els productes
-- **GET** `/api/productos/{id}/` - Detall d'un producte específic
+- **GET** `/api/productes/` - Llista tots els productes
+- **GET** `/api/productes/{id}/` - Detall d'un producte específic
 
 ### 📂 Categories
-- **GET** `/api/categorias/` - Llista totes les categories
-- **GET** `/api/categorias/{id}/` - Detall d'una categoria específica
+- **GET** `/api/categories/` - Llista totes les categories
+- **GET** `/api/categories/{id}/` - Detall d'una categoria específica
 
 ### 📅 Esdeveniments
-- **GET** `/api/eventos/` - Llista tots els esdeveniments del calendari
-- **GET** `/api/eventos/{id}/` - Detall d'un esdeveniment específic
+- **GET** `/api/esdeveniments/` - Llista tots els esdeveniments del calendari
+- **GET** `/api/esdeveniments/{id}/` - Detall d'un esdeveniment específic
 
 ## 🔍 Exemples d'Ús Provats
 
 ### Obtenir tots els proveïdors
 ```bash
-curl http://127.0.0.1:8000/api/proveedores/
+curl http://127.0.0.1:8000/api/proveidors/
 ```
-**Resultat**: ✅ 4 proveïdors (Aresta, Complet, La Rural, Pollatre Moli de Bonsfills)
+**Resultat**: ✅ Proveïdors amb camps: id, nom, descripcio_curta, contacte, email, direccio, imatge
 
-### Obtenir productes destacats
+### Obtenir tots els productes
 ```bash
-curl "http://127.0.0.1:8000/api/productos/?destacado_en_inicio=true"
+curl http://127.0.0.1:8000/api/productes/
 ```
-**Resultat**: ✅ 3 productes destacats (Pa integral, Pan 2, Pollastre Sencer)
+**Resultat**: ✅ Productes amb camps: id, nom, descripcio, categoria, proveidor, imatge
 
 ### Obtenir totes les categories
 ```bash
-curl http://127.0.0.1:8000/api/categorias/
+curl http://127.0.0.1:8000/api/categories/
 ```
-**Resultat**: ✅ 3 categories (Alvocats, Pan, Pollastre)
+**Resultat**: ✅ Categories amb camps: id, nom, descripcio
 
 ### Obtenir esdeveniments del calendari
 ```bash
-curl http://127.0.0.1:8000/api/eventos/
+curl http://127.0.0.1:8000/api/esdeveniments/
 ```
-**Resultat**: ✅ 1 esdeveniment (Master)
+**Resultat**: ✅ Esdeveniments amb camps: id, titol, descripcio, data
 
 ## 🛠️ Característiques Implementades
 
@@ -62,10 +62,9 @@ curl http://127.0.0.1:8000/api/eventos/
 - [x] Documentació automàtica amb Browsable API
 
 ### ✅ Filtres i Cerca
-- [x] **Productes**: Per categoria, proveïdor, stock, destacats
-- [x] **Proveïdors**: Per visibilitat a web/inici
-- [x] **Cerca**: En noms i descripcions
-- [x] **Ordenació**: Per múltiples camps
+- [x] **Productes**: Per categoria i proveïdor
+- [x] **Cerca**: En noms i descripcions de tots els endpoints
+- [x] **Ordenació**: Per nom i data segons l'endpoint
 
 ### ✅ Seguretat i Rendiment
 - [x] API pública (sense autenticació requerida)

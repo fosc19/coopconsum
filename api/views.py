@@ -33,19 +33,13 @@ def api_info(request):
             'exemples': '/docs/README_API.md'
         },
         'endpoints': {
-            'proveedores': '/api/proveedores/',
-            'productos': '/api/productos/',
-            'categorias': '/api/categorias/',
-            'eventos': '/api/eventos/',
-        },
-        'filtres_disponibles': {
-            'productos': ['categoria', 'proveedor', 'es_stock', 'destacado_en_inicio'],
-            'proveedores': ['visible_en_web', 'visible_en_inicio'],
-            'eventos': ['color', 'fecha_inicio', 'fecha_fin']
+            'proveidors': '/api/proveidors/',
+            'productes': '/api/productes/',
+            'categories': '/api/categories/',
+            'esdeveniments': '/api/esdeveniments/',
         },
         'funcionalitats': [
             'Cerca per text en noms i descripcions',
-            'Filtrat per múltiples camps',
             'Ordenació per diferents criteris',
             'Paginació automàtica (20 elements per pàgina)',
             'Format JSON estàndard',
@@ -56,24 +50,23 @@ def api_info(request):
 
 class ProveedorViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet para proveedores públicos.
-    Solo muestra proveedores marcados como visibles en web.
+    ViewSet per proveïdors públics.
+    Mostra tots els proveïdors visibles en web.
     """
     serializer_class = ProveedorSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['visible_en_web', 'visible_en_inicio']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['nombre', 'descripcion_corta']
     ordering_fields = ['nombre']
     ordering = ['nombre']
     
     def get_queryset(self):
-        # Solo proveedores visibles en web
+        # Només proveïdors visibles en web
         return Proveedor.objects.filter(visible_en_web=True)
 
 
 class CategoriaViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet para categorías de productos.
+    ViewSet per categories de productes.
     """
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
@@ -85,35 +78,34 @@ class CategoriaViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ProductoViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet para productos públicos.
-    Solo muestra productos de proveedores visibles en web.
+    ViewSet per productes públics.
+    Només mostra productes de proveïdors visibles en web.
     """
     serializer_class = ProductoSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['categoria', 'proveedor', 'es_stock', 'destacado_en_inicio']
+    filterset_fields = ['categoria', 'proveedor']
     search_fields = ['nombre', 'descripcion', 'proveedor__nombre', 'proveedor__descripcion_corta']
-    ordering_fields = ['nombre', 'precio']
+    ordering_fields = ['nombre']
     ordering = ['nombre']
     
     def get_queryset(self):
-        # Solo productos de proveedores visibles en web
+        # Només productes de proveïdors visibles en web
         return Producto.objects.filter(proveedor__visible_en_web=True)
 
 
 class EventoCalendarioViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    ViewSet para eventos del calendario.
-    Solo muestra eventos marcados para compartir en la API.
+    ViewSet per esdeveniments del calendari.
+    Mostra esdeveniments marcats per compartir a l'API.
     """
     serializer_class = EventoCalendarioSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['color']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['titulo', 'descripcion']
-    ordering_fields = ['fecha', 'fecha_creacion']
+    ordering_fields = ['fecha']
     ordering = ['fecha']
     
     def get_queryset(self):
-        # Solo eventos marcados para compartir en la API
+        # Esdeveniments marcats per compartir a l'API
         # Compatible amb BDs que no tenen el camp compartir_api encara
         try:
             return EventoCalendario.objects.filter(compartir_api=True)
