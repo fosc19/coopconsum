@@ -270,7 +270,7 @@ class EventoAPITest(APITestCase):
             self.evento_public = EventoCalendario.objects.create(
                 titulo='Esdeveniment Públic',
                 descripcion='Esdeveniment compartit via API',
-                fecha=date.today(),
+                fecha=django_timezone.now(),
                 color='#28a745',
                 compartir_api=True
             )
@@ -278,7 +278,7 @@ class EventoAPITest(APITestCase):
             self.evento_privat = EventoCalendario.objects.create(
                 titulo='Esdeveniment Privat',
                 descripcion='Esdeveniment intern',
-                fecha=date.today(),
+                fecha=django_timezone.now(),
                 color='#dc3545',
                 compartir_api=False
             )
@@ -287,14 +287,14 @@ class EventoAPITest(APITestCase):
             self.evento_public = EventoCalendario.objects.create(
                 titulo='Esdeveniment Públic',
                 descripcion='Esdeveniment compartit via API',
-                fecha=date.today(),
+                fecha=django_timezone.now(),
                 color='#28a745'
             )
             
             self.evento_privat = EventoCalendario.objects.create(
                 titulo='Esdeveniment Privat',
                 descripcion='Esdeveniment intern',
-                fecha=date.today(),
+                fecha=django_timezone.now(),
                 color='#dc3545'
             )
 
@@ -351,7 +351,7 @@ class APIPaginacioTest(APITestCase):
 
     def test_paginacio_proveedores(self):
         """Test que la paginació funciona correctament"""
-        url = reverse('proveedor-list')
+        url = reverse('proveidor-list')
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -370,7 +370,7 @@ class APIPaginacioTest(APITestCase):
 
     def test_segona_pagina(self):
         """Test navegació a la segona pàgina"""
-        url = reverse('proveedor-list')
+        url = reverse('proveidor-list')
         response = self.client.get(url, {'page': 2})
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -390,7 +390,7 @@ class APIMethodsTest(APITestCase):
 
     def test_post_no_permès(self):
         """Test que POST no està permès"""
-        url = reverse('proveedor-list')
+        url = reverse('proveidor-list')
         data = {'nombre': 'Nou Proveïdor'}
         response = self.client.post(url, data)
         
@@ -399,7 +399,7 @@ class APIMethodsTest(APITestCase):
 
     def test_put_no_permès(self):
         """Test que PUT no està permès"""
-        url = reverse('proveedor-detail', kwargs={'pk': self.proveedor.pk})
+        url = reverse('proveidor-detail', kwargs={'pk': self.proveedor.pk})
         data = {'nombre': 'Proveïdor Modificat'}
         response = self.client.put(url, data)
         
@@ -408,7 +408,7 @@ class APIMethodsTest(APITestCase):
 
     def test_delete_no_permès(self):
         """Test que DELETE no està permès"""
-        url = reverse('proveedor-detail', kwargs={'pk': self.proveedor.pk})
+        url = reverse('proveidor-detail', kwargs={'pk': self.proveedor.pk})
         response = self.client.delete(url)
         
         # ReadOnlyModelViewSet pot retornar 403 (FORBIDDEN) o 405 (METHOD_NOT_ALLOWED)
@@ -416,7 +416,7 @@ class APIMethodsTest(APITestCase):
 
     def test_patch_no_permès(self):
         """Test que PATCH no està permès"""
-        url = reverse('proveedor-detail', kwargs={'pk': self.proveedor.pk})
+        url = reverse('proveidor-detail', kwargs={'pk': self.proveedor.pk})
         data = {'nombre': 'Parcialment Modificat'}
         response = self.client.patch(url, data)
         

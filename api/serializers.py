@@ -58,7 +58,7 @@ class EventoCalendarioSerializer(serializers.ModelSerializer):
     """Serializer per esdeveniments del calendari en català"""
     titol = serializers.CharField(source='titulo')
     descripcio = serializers.CharField(source='descripcion')
-    data = serializers.DateField(source='fecha')
+    data = serializers.DateTimeField(source='fecha')
     
     class Meta:
         model = EventoCalendario
